@@ -17,3 +17,9 @@ xxh server
 * [Autojump](https://github.com/xonssh/xxh-plugin-autojump)
 
 [Search more plugins on Github](https://github.com/search?q=xxh-plugin)
+
+## Create xxh plugin
+
+To create xxh plugin you can create directory on your home host with files:
+* `install.xsh` will be executed once after xxh installation on the host
+* `xonshrc.xsh` will be eecuted every time you'll be connect via xxh to the host
