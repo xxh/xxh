@@ -5,8 +5,9 @@
   </p>
 </p>
 <p align="center">  
-  <img src="https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7.svg">
+  <a href="https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7"><img src="https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7.svg"></a>
 </p>
+
 
 ## Installation
 ```
