@@ -8,6 +8,8 @@ xonsh> cd ~
 xonsh> git clone --depth 1 https://github.com/xonssh/xxh ~/.xxh
 xonsh> echo "aliases['xxh'] = 'xonsh ~/.xxh/xxh.xsh'" >> ~/.xonshrc
 xonsh> aliases['xxh'] = 'xonsh ~/.xxh/xxh.xsh'
+
+xonsh> xxh server
 ```
 
 ## Usage
