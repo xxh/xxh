@@ -5,7 +5,7 @@
   </p>
 </p>
 <p align="center">  
-  <a href="https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7"><img src="https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7.svg"></a>
+  <a href="https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7" target="_blank"><img src="https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7.svg"></a>
 </p>
 
 
