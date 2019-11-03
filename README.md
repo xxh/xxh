@@ -75,3 +75,9 @@ When you run `xxh server` command:
 2. If it needed xxh script copies the portable xonsh on the host (`~/.xxh` by default) along with init scripts and plugins.
 
 3. Finally xxh makes ssh connection to server and running remote portable xonsh shell without any affection on of system.
+
+# Thanks
+
+* @niess for https://github.com/niess/linuxdeploy-plugin-python/
+* @gforsyth for https://github.com/xonsh/xonsh/issues/3374
+* @scopatz for https://github.com/xonsh/xonsh
