@@ -14,4 +14,6 @@ xxh server
 ## XXH plugins list
 
 * [Bar Theme](https://github.com/xonssh/xxh-plugin-theme-bar)
-* [Autojump](https://github.com/xonssh/xxh-plugin-autojump)
+* [Autojump](https://github.com/xonssh/xxh-plugin-autojump)
+
+[Search more plugins on Github](https://github.com/search?q=xxh-plugin)
