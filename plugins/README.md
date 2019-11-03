@@ -2,7 +2,7 @@
 
 ## Install xxh plugin
 
-To install xxh plugin just place the folder to this directory.
+To install xxh plugin just place the folder to the `plugins` directory.
 
 Example:
 ```xonsh
