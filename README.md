@@ -50,7 +50,7 @@ The xxh xonsh will use pip and python from `xonsh.AppImage` by default.
 
 You can install pip packages ordinally with `pip install`. They will appear in `$XXH_HOME/pip`.
 
-### Shortcut for reinstall xxh on host
+### Shortcut to reinstall xxh on host
 ```
 xxh server -i -f
 ```
