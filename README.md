@@ -4,6 +4,7 @@
     <b>xxh</b> is for using portable Xonsh shell wherever you go through the SSH.
   </p>
 </p>
+<br>
 <p align="center">  
   <a href="https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7" target="_blank"><img src="https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7.svg"></a>
 </p>
