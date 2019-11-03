@@ -11,7 +11,7 @@ git clone --depth 1 https://github.com/xonssh/xxh-plugin-theme-bar
 xxh server
 ```
 
-## XXH plugins list
+## xxh plugins list
 
 * [Bar Theme](https://github.com/xonssh/xxh-plugin-theme-bar)
 * [Autojump](https://github.com/xonssh/xxh-plugin-autojump)
