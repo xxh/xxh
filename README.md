@@ -12,12 +12,11 @@
 
 ## Installation
 ```
-xonsh> cd ~
 xonsh> git clone --depth 1 https://github.com/xonssh/xxh ~/.xxh
 xonsh> echo "aliases['xxh'] = 'xonsh ~/.xxh/xxh.xsh'" >> ~/.xonshrc
 xonsh> aliases['xxh'] = 'xonsh ~/.xxh/xxh.xsh'
 
-xonsh> xxh server
+xonsh> xxh <server>
 ```
 
 ## Usage
@@ -53,7 +52,7 @@ You can install pip packages ordinally with `pip install`. They will appear in `
 
 ### Shortcut to reinstall xxh on host
 ```
-xxh server -i -f
+xxh <server> -i -f
 ```
 
 ## Known Issues
@@ -73,7 +72,7 @@ This issue was addressed to Xonsh team in [3367](https://github.com/xonsh/xonsh/
 
 ## How it works?
 
-When you run `xxh server` command:
+When you run `xxh <server>` command:
 
 1. If it needed xxh script will download `xonsh.AppImage`. This is portable version of xonsh. URL you can find in `xxh.xsh`
 
