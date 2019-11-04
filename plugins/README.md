@@ -1,11 +1,11 @@
-**xxh plugins** - is the set of files which will be run when xonsh will be installed or started though xxh.
+**xxh plugins** — is the set of files which will be run when xonsh will be installed or started though xxh.
 
 ## Install xxh plugin
 
-To install xxh plugin just place the folder to the `plugins` directory.
+To install xxh plugin just place the plugin directory to the `plugins`.
 
 Example:
-```xonsh
+```
 cd ~/.xxh/plugins/
 git clone --depth 1 https://github.com/xonssh/xxh-plugin-theme-bar
 xxh server
