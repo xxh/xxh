@@ -1,5 +1,13 @@
 **xxh plugin** — is the set of files which will be run when xonsh will be installed or started though xxh.
 
+## xxh plugins list
+
+* [Pipe Liner](https://github.com/xonssh/xxh-plugin-pipe-liner)
+* [Bar Theme](https://github.com/xonssh/xxh-plugin-theme-bar)
+* [Autojump](https://github.com/xonssh/xxh-plugin-autojump)
+
+[Search more xxh plugins on Github](https://github.com/search?q=xxh-plugin)
+
 ## Install xxh plugin
 
 To install xxh plugin just place the plugin directory to the `plugins`. Example:
@@ -11,13 +19,6 @@ Then run:
 ```
 xxh <server>
 ```
-
-## xxh plugins list
-
-* [Bar Theme](https://github.com/xonssh/xxh-plugin-theme-bar)
-* [Autojump](https://github.com/xonssh/xxh-plugin-autojump)
-
-[Search more xxh plugins on Github](https://github.com/search?q=xxh-plugin)
 
 ## Create xxh plugin
 
