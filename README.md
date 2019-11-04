@@ -43,15 +43,13 @@ optional arguments:
 
 ## Plugins
 
-You can [add plugins to xxh](plugins/README.md).
+You can [add or create plugins to xxh with your own lovely functions](plugins/README.md).
 
 ## Notes
 
 ### Using pip and python
 
-The xxh xonsh will use pip and python from `xonsh.AppImage` by default.
-
-You can install pip packages ordinally with `pip install`. They will appear in `$XXH_HOME/pip`.
+The xxh xonsh will use pip and python from `xonsh.AppImage` by default. You can install pip packages ordinally with `pip install`. They will appear in `$XXH_HOME/pip`.
 
 ### Shortcut to reinstall xxh on host
 ```
