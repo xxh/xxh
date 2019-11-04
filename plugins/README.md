@@ -2,13 +2,14 @@
 
 ## Install xxh plugin
 
-To install xxh plugin just place the plugin directory to the `plugins`.
-
-Example:
+To install xxh plugin just place the plugin directory to the `plugins`. Example:
 ```
 cd ~/.xxh/plugins/
 git clone --depth 1 https://github.com/xonssh/xxh-plugin-theme-bar
-xxh server
+```
+Then run:
+```
+xxh <server>
 ```
 
 ## xxh plugins list
