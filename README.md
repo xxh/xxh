@@ -1,7 +1,7 @@
 <p align="center">
   <img src="https://avatars2.githubusercontent.com/u/57318034?s=60&v=4&"><br>
   <p align="center">
-    <b>xxh</b> is for using portable Xonsh shell wherever you go through the SSH.
+    <b>xxh</b> is for using portable <a href="https://xon.sh/">xonsh shell</a> wherever you go through the SSH.
   </p>
 </p>
 <br>
