@@ -11,12 +11,15 @@
 
 
 ## Installation
+Run in your xonsh:
 ```
-xonsh> git clone --depth 1 https://github.com/xonssh/xxh ~/.xxh
-xonsh> echo "aliases['xxh'] = 'xonsh ~/.xxh/xxh.xsh'" >> ~/.xonshrc
-xonsh> aliases['xxh'] = 'xonsh ~/.xxh/xxh.xsh'
-
-xonsh> xxh <server>
+git clone --depth 1 https://github.com/xonssh/xxh ~/.xxh
+echo "aliases['xxh'] = 'xonsh ~/.xxh/xxh.xsh'" >> ~/.xonshrc
+aliases['xxh'] = 'xonsh ~/.xxh/xxh.xsh'
+```
+Then try:
+```
+xxh <server>
 ```
 
 ## Usage
