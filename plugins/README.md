@@ -1,4 +1,4 @@
-**xxh plugins** — is the set of files which will be run when xonsh will be installed or started though xxh.
+**xxh plugin** — is the set of files which will be run when xonsh will be installed or started though xxh.
 
 ## Install xxh plugin
 
