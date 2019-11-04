@@ -58,6 +58,10 @@ xxh server -i -f
 
 ## Known Issues
 
+### GLIBs versions
+
+Current method to make xonsh portable is using an [AppImage](https://appimage.org/) which was built on [manylinux2010 (PEP 571)](https://github.com/niess/linuxdeploy-plugin-python/issues/12). In case you see the error like ``/xonsh-x86_64.AppImage: /lib/x86_64-linux-gnu/libc.so.6: version GLIBC_2.25 not found (required by /ppp/xonsh-x86_64.AppImage)`` this means you should rebuild the AppImage for older version of linux distributive. Try [linuxdeploy-plugin-python](https://github.com/niess/linuxdeploy-plugin-python/).
+
 ### WSL1: ^Z
 
 ```
@@ -65,7 +69,7 @@ xxh server -i -f
 ^Z
 Unknown answer from server when checking direcotry /home/hansolo/.xxh:
 ```
-This issue was addressed to Xonsh team in [3367](https://github.com/xonsh/xonsh/issues/3367)
+This issue was addressed to Xonsh team in [3367](https://github.com/xonsh/xonsh/issues/3367). Just try to run command again.
 
 ## How it works?
 
