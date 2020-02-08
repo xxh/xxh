@@ -22,21 +22,36 @@ xxh <server>
 
 ## Usage
 ```
-> xxh -h
-usage: xxh.xsh [-h] [-i] [-p TARGET_PATH] [-m METHOD] [-f] server
+$ xxh --help                                                                                                                                                                                                 
+usage: xxh [-h] [-i] [-if] [-rxh REMOTE_XXH_HOME] [-m METHOD] [-lh LOCAL_HOME]
+           [-V]
+           [destination]
+
+The xxh is for using the xonsh shell wherever you go through the ssh. 
+
+     ____  _________     @    @    
+  ______  /         \     \__/     
+   ____  /   ____    \   /   \           contribution
+ _____  /   /    \    \ /   _/   https://github.com/xonssh/xxh   
+   ___ (    \  \_/     )   /          
+        \    \_____/  /   /                plugins            
+      ___\           /   /   https://github.com/search?q=xxh-plugin
+     /____\_________/___/       
 
 positional arguments:
-  server                Destination may be specified as hostname or server
-                        name from ~/.ssh/config
+  destination           Destination may be specified as hostname or server name from ~/.ssh/config
 
 optional arguments:
   -h, --help            show this help message and exit
-  -i, --install         Install xonsh to host
-  -p TARGET_PATH, --target-path TARGET_PATH
-                        Target path. Default: ~/.xxh
+  -i, --install         Install xxh to distanation host
+  -if, --install-force  Delete remote xxh home and install xonsh to distanation host
+  -rxh REMOTE_XXH_HOME, --remote-xxh-home REMOTE_XXH_HOME
+                        Set the remote xxh home directory. Default: ~/.xxh
   -m METHOD, --method METHOD
-                        Currently supported single 'appimage' method
-  -f, --force           Delete target directory when install xonsh to host
+                        Installation method. Currently supported only 'appimage' method
+  -lh LOCAL_HOME, --local-home LOCAL_HOME
+                        Local xxh home path. Default: ~/.xxh
+  -V, --version         Show xxh version
 ```
 
 ## Plugins
@@ -51,7 +66,7 @@ The xxh xonsh will use pip and python from `xonsh.AppImage` by default. You can 
 
 ### Shortcut to reinstall xxh on host
 ```
-xxh <server> -i -f
+xxh <server> -if
 ```
 
 ## How it works?
@@ -84,3 +99,5 @@ Current method to make xonsh portable is using an [AppImage](https://appimage.or
 Unknown answer from server when checking direcotry /home/hansolo/.xxh:
 ```
 This issue was addressed to Xonsh team in [3367](https://github.com/xonsh/xonsh/issues/3367). Just try to run command again.
+
+WSL2 is not tested yet.
