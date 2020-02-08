@@ -26,21 +26,21 @@ xxh <hostname or servername from ~/.ssh/config>
 
 ## Usage
 ```
-$ xxh -h
-usage: xxh [-h] [-i] [-if] [-rxh REMOTE_XXH_HOME] [-m METHOD]
-           [-lxh LOCAL_XXH_HOME] [-V]
+$ ./xxh --help                                                                                                                                                                                               
+usage: xxh [-h] [-i] [-if] [-lxh LOCAL_XXH_HOME] [-rxh REMOTE_XXH_HOME]
+           [-m METHOD] [-V]
            [destination]
 
 The xxh is for using the xonsh shell wherever you go through the ssh. 
 
-      ___  _________     @    @    
-   _____  /         \     \__/     
-    ___  /   ____    \   /   \           contribution
-  ____  /   /    \    \ /   _/   https://github.com/xonssh/xxh   
-    __ (    \  \_/     )   /          
+     ____  _________     _    @    
+  ______  /         \     \__/     
+   ____  /   ____    \   /   \           contribution
+ _____  /   /    \    \ /   _/   https://github.com/xonssh/xxh   
+   ___ (    \  \_/     )   /          
         \    \_____/  /   /                plugins            
-       __\___________/   /   https://github.com/search?q=xxh-plugin
-      /_________________/       
+      ___\___________/   /   https://github.com/search?q=xxh-plugin
+     /__________________/       
 
 positional arguments:
   destination           Destination may be specified as hostname or server name from ~/.ssh/config
@@ -49,12 +49,12 @@ optional arguments:
   -h, --help            show this help message and exit
   -i, --install         Install xxh to distanation host
   -if, --install-force  Delete remote xxh home and install xonsh to distanation host
-  -rxh REMOTE_XXH_HOME, --remote-xxh-home REMOTE_XXH_HOME
-                        Set the remote xxh home directory. Default: ~/.xxh
-  -m METHOD, --method METHOD
-                        Installation method. Currently supported only 'appimage' method
   -lxh LOCAL_XXH_HOME, --local-xxh-home LOCAL_XXH_HOME
                         Local xxh home path. Default: ~/.xxh
+  -rxh REMOTE_XXH_HOME, --remote-xxh-home REMOTE_XXH_HOME
+                        Remote xxh home path. Default: ~/.xxh
+  -m METHOD, --method METHOD
+                        Installation method. Currently supported only 'appimage' method
   -V, --version         Show xxh version
 ```
 
