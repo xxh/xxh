@@ -4,11 +4,11 @@
     <b>xxh</b> is for using <a href="https://xon.sh/">xonsh shell</a> wherever you go through the ssh.
   </p>
 </p>
-<br>
 <p align="center">  
-  <a href="https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7" target="_blank"><img src="https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7.svg"></a>
+  <a href="https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7" target="_blank"><img src="https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7.svg"></a><br>
+<sup>(in the demo is used <a href="https://github.com/xonssh/xxh-plugin-theme-bar">xxh-plugin-theme-bar</a>)</sup>
 </p>
-
+<br>
 <p align="center">  
   <a href="https://pypi.org/project/xonssh-xxh/" target="_blank" alt="PyPI Latest Release"><img src="https://img.shields.io/pypi/v/xonssh-xxh.svg"></a>
  <img alt="PyPI - License" src="https://img.shields.io/pypi/l/xonssh-xxh">
