@@ -40,8 +40,8 @@ def xonssh():
  {s}____  /   /    \\    \\ /   _/   {url_xxh_github}   
    {s}__ (    \\  \\_/     )   /          
         \\    \\_____/  /   /                plugins            
-{' ' if not t else ''}      _{t}_\\           /   /   {url_xxh_plugins_search}
-{' ' if not t else ''}     /_{t}__\\_________/___/       
+{' ' if not t else ''}      _{t}_\\___________/   /   {url_xxh_plugins_search}
+{' ' if not t else ''}     /_{t}________________/       
 
 """
 

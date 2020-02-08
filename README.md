@@ -22,21 +22,21 @@ xxh <server>
 
 ## Usage
 ```
-$ xxh --help                                                                                                                                                                                                 
-usage: xxh [-h] [-i] [-if] [-rxh REMOTE_XXH_HOME] [-m METHOD] [-lh LOCAL_HOME]
-           [-V]
+$ xxh -h
+usage: xxh [-h] [-i] [-if] [-rxh REMOTE_XXH_HOME] [-m METHOD]
+           [-lxh LOCAL_XXH_HOME] [-V]
            [destination]
 
 The xxh is for using the xonsh shell wherever you go through the ssh. 
 
-     ____  _________     @    @    
-  ______  /         \     \__/     
-   ____  /   ____    \   /   \           contribution
- _____  /   /    \    \ /   _/   https://github.com/xonssh/xxh   
-   ___ (    \  \_/     )   /          
+      ___  _________     @    @    
+   _____  /         \     \__/     
+    ___  /   ____    \   /   \           contribution
+  ____  /   /    \    \ /   _/   https://github.com/xonssh/xxh   
+    __ (    \  \_/     )   /          
         \    \_____/  /   /                plugins            
-      ___\           /   /   https://github.com/search?q=xxh-plugin
-     /____\_________/___/       
+       __\___________/   /   https://github.com/search?q=xxh-plugin
+      /_________________/       
 
 positional arguments:
   destination           Destination may be specified as hostname or server name from ~/.ssh/config
@@ -49,7 +49,7 @@ optional arguments:
                         Set the remote xxh home directory. Default: ~/.xxh
   -m METHOD, --method METHOD
                         Installation method. Currently supported only 'appimage' method
-  -lh LOCAL_HOME, --local-home LOCAL_HOME
+  -lxh LOCAL_XXH_HOME, --local-xxh-home LOCAL_XXH_HOME
                         Local xxh home path. Default: ~/.xxh
   -V, --version         Show xxh version
 ```
