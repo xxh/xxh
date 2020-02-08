@@ -11,11 +11,9 @@
 
 
 ## Installation
-Run in your xonsh:
+Run:
 ```
-git clone --depth 1 https://github.com/xonssh/xxh ~/.xxh
-echo "aliases['xxh'] = 'xonsh ~/.xxh/xxh.xsh'" >> ~/.xonshrc
-aliases['xxh'] = 'xonsh ~/.xxh/xxh.xsh'
+pip install xonssh-xxh
 ```
 Then try:
 ```
@@ -43,7 +41,7 @@ optional arguments:
 
 ## Plugins
 
-You can [add or create plugins to xxh with your own lovely functions](plugins/README.md).
+[Search xxh plugins on Github](https://github.com/search?q=xxh-plugin) or [create plugin with your own lovely functions](README.plugins.md).
 
 ## Notes
 

@@ -2,11 +2,13 @@
 
 ## xxh plugins list
 
+[Search xxh plugins on Github](https://github.com/search?q=xxh-plugin)
+
+Pinned plugins:
+
 * [Pipe Liner](https://github.com/xonssh/xxh-plugin-pipe-liner)
 * [Bar Theme](https://github.com/xonssh/xxh-plugin-theme-bar)
 * [Autojump](https://github.com/xonssh/xxh-plugin-autojump)
-
-[Search more xxh plugins on Github](https://github.com/search?q=xxh-plugin)
 
 ## Install xxh plugin
 

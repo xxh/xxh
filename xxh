@@ -1,0 +1,210 @@
+#!/usr/bin/env xonsh
+
+import os, sys, glob, argparse
+from argparse import RawTextHelpFormatter
+from random import randint
+import datetime
+
+sys.path.append(os.path.dirname(os.path.realpath(__file__)))
+import xonssh_xxh
+from xonssh_xxh.settings import global_settings
+
+url_xxh_github = 'https://github.com/xonssh/xxh'
+url_xxh_plugins_search = 'https://github.com/search?q=xxh-plugin'
+local_xxh_home_path = '~/.xxh'
+local_xxh_version = global_settings['XXH_VERSION']
+remote_xxh_home_path = '~/.xxh'
+appimage_url = 'https://github.com/niess/linuxdeploy-plugin-python/releases/download/continuous/xonsh-x86_64.AppImage'
+
+if os.name == 'nt':
+    print(f"Windows is not supported. WSL1 not recommended also. WSL2 is not tested yet.\nTry to contribution: {url_xxh_github}")
+    sys.exit(1)
+
+def xonssh():
+    try:
+        terminal = os.get_terminal_size()
+        terminal_cols = terminal.columns
+    except:
+        terminal_cols=70
+
+    if terminal_cols < 70:
+        return f"\n\nContribution: {url_xxh_github}\n\nPlugins: {url_xxh_plugins_search}"
+
+    # Try: watch -n.2 xxh --help
+    l,r,s,t = (['@','-','_'][randint(0,2)], ['@','-','_'][randint(0,2)], ['_',' '][randint(0,1)], ['_',''][randint(0,1)])
+    return f"""
+
+     {s}___  _________     {l}    {r}    
+  {s}_____  /         \\     \\__/     
+   {s}___  /   ____    \\   /   \\           contribution
+ {s}____  /   /    \\    \\ /   _/   {url_xxh_github}   
+   {s}__ (    \\  \\_/     )   /          
+        \\    \\_____/  /   /                plugins            
+{' ' if not t else ''}      _{t}_\\           /   /   {url_xxh_plugins_search}
+{' ' if not t else ''}     /_{t}__\\_________/___/       
+
+"""
+
+argp = argparse.ArgumentParser(description=f"The xxh is for using the xonsh shell wherever you go through the ssh. {xonssh()}", formatter_class=RawTextHelpFormatter)
+argp.add_argument('destination', nargs='?', help="Destination may be specified as hostname or server name from ~/.ssh/config")
+argp.add_argument('-i','--install', default=False, action='store_true', help="Install xxh to distanation host")
+argp.add_argument('-if','--install-force', default=False, action='store_true', help="Delete remote xxh home and install xonsh to distanation host")
+argp.add_argument('-rxh','--remote-xxh-home', default=remote_xxh_home_path, help=f"Set the remote xxh home directory. Default: {remote_xxh_home_path}")
+argp.add_argument('-m','--method', default='appimage', help="Installation method. Currently supported only 'appimage' method")
+argp.add_argument('-lxh','--local-xxh-home', default=local_xxh_home_path, help=f"Local xxh home path. Default: {local_xxh_home_path}")
+argp.add_argument('-V','--version', default=False, action='store_true', help="Show xxh version")
+opt = argp.parse_args()
+
+if opt.version:
+    print(f"xonssh-xxh/{local_xxh_version}")
+    sys.exit(0)
+
+if not opt.destination:
+    print('Destination required. Try --help')
+    sys.exit(1)
+
+dst = opt.destination
+opt.install = True if opt.install_force else opt.install
+
+local_xxh_home_path = os.path.expanduser(opt.local_xxh_home)
+local_xxh_home_parent = os.path.dirname(os.path.expanduser(local_xxh_home_path))
+package_dir_path = os.path.dirname(os.path.realpath(xonssh_xxh.__file__))
+
+if os.path.exists(local_xxh_home_path):
+    if not os.access(local_xxh_home_path, os.W_OK):
+        print(f"The local xxh home path isn't writable: {local_xxh_home_path}" )
+        sys.exit(1)
+elif os.path.exists(local_xxh_home_parent):
+    if os.access(local_xxh_home_parent, os.W_OK):
+        print(f'Create xxh home path: {local_xxh_home_path}')
+        mkdir -p @(local_xxh_home_path) @(local_xxh_home_path)/plugins
+    else:
+        print(f"Parent for local xxh home path isn't writable: {local_xxh_home_parent}")
+        sys.exit(1)
+else:
+    print(f"Paths aren't writable:\n  {local_xxh_home_parent}\n  {local_xxh_home_path}")
+    sys.exit(1)
+
+# Fix env to avoid ssh warnings
+for lc in ['LC_TIME','LC_MONETARY','LC_ADDRESS','LC_IDENTIFICATION','LC_MEASUREMENT','LC_NAME','LC_NUMERIC','LC_PAPER','LC_TELEPHONE']:
+    ${...}[lc] = "en_US.UTF-8"
+
+if opt.remote_xxh_home == '~/.xxh':
+    dst_user_home = $(ssh @(dst) -T "bash -c 'cd ~ && pwd'").strip()
+
+    if dst_user_home == '':
+        # https://github.com/xonsh/xonsh/issues/3367
+        print('Unknown answer from host when checking user home path')
+        sys.exit(1)
+
+    dst_xxh_home = os.path.join(dst_user_home, '.xxh')
+else:
+    dst_xxh_home = opt.remote_xxh_home_path
+
+dst_xxh_home_abspath = os.path.abspath(dst_xxh_home)
+if dst_xxh_home_abspath == '/':
+    print("Remote xxh home path {dst_xxh_home} looks like / and is not supported ;)")
+    exit(1)
+
+xonsh_bin = 'xonsh'
+dst_xonsh_bin = os.path.join(dst_xxh_home, xonsh_bin)
+dst_xonshrc = os.path.join( dst_xxh_home, 'xonshrc.xsh')
+dst_xonsh_plugins_rc = os.path.join( dst_xxh_home, 'xxh_plugins_rc.xsh')
+
+dst_has_xxh = $(echo @(f"[[ -d {dst_xxh_home} ]] && echo -n 1 || echo -n 0") | ssh @(dst) -T "bash -s")
+
+if dst_has_xxh not in ['0','1']:
+    # https://github.com/xonsh/xonsh/issues/3367
+    print(f'Unknown answer from host when checking direcotry {dst_xxh_home}: {dst_has_xxh}')
+    sys.exit(1)
+
+if dst_has_xxh == '1' and opt.install_force == False:
+    # Check version
+    try:
+        dst_xxh_settings = os.path.join(dst_xxh_home, 'settings.py')
+        dst_xxh_version = $(ssh -o LogLevel=QUIET @(dst) -t @(dst_xonsh_bin) --no-script-cache @(dst_xxh_settings) XXH_VERSION).strip()
+    except:
+        dst_xxh_version = None
+
+    ask_type = None
+    ask = False
+    if dst_xxh_version is None:
+        ask_type = 1
+        ask = f'Something went wrong while getting the remote xxh version.'
+    elif dst_xxh_version != local_xxh_version:
+        ask_type = 2
+        ask = f"Local xxh version {local_xxh_version} is not equal remote xxh version '{dst_xxh_version}'."
+
+    if ask:
+        choice = input(f"{ask} What's next? \n"
+                       + f"s - [default] Stop here. You'll try to connect via ordinary ssh for backup current xxh home.\n"
+                       + f"u - Safe update. Remote xxh dir will be renamed and local xxh version will be installed.\n"
+                       + f"f - Force install local xxh version on remote host. Remote xxh   installation will be lost.\n"
+                       + f"i - Ignore, cross fingers and continue the connection.\n"
+                       + f"S/u/f/i? ").lower()
+
+        if choice == 's' or choice.strip() == '':
+            print('Stopped')
+            sys.exit(0)
+        elif choice == 'u':
+            local_time = datetime.datetime.now().isoformat()[:19]
+            print(f"Move {dst_xxh_home} to {dst_xxh_home}-{local_time}")
+            echo @(f"mv {dst_xxh_home} {dst_xxh_home}-{local_time}" ) | ssh -o LogLevel=QUIET @(dst) -T "bash -s"
+            opt.install = True
+            dst_has_xxh = '0'
+        elif choice == 'f':
+            opt.install = True
+            opt.install_force = True
+        elif choice == 'i':
+            pass
+        else:
+            print('Unknown answer')
+            sys.exit(1)
+
+
+if not opt.install and dst_has_xxh == '0':
+    yn = input(f"{dst}:{dst_xxh_home} not found. Install xxh? [y/n] ").lower()
+    if yn == 'y':
+        opt.install = True
+    else:
+        print('Unknown answer')
+        sys.exit(1)
+
+if opt.install:
+    print("\033[0;33m", end='')
+    if opt.method == 'appimage':
+        appimage_fullpath = os.path.join(local_xxh_home_path, xonsh_bin)
+        if not os.path.isfile(appimage_fullpath):
+            print(f'Download xonsh AppImage from {appimage_url}')
+            wget -q --show-progress @(appimage_url) -O @(appimage_fullpath)
+            chmod +x @(appimage_fullpath)
+    else:
+        print(f'Method "{opt.method}" is not supported now')
+
+    if dst_has_xxh == "1":
+        if opt.install_force:
+            print(f'Before install xxh remove remote directory {dst}:{dst_xxh_home}')
+            echo @(f"rm -rf {dst_xxh_home}" ) | ssh -o LogLevel=QUIET @(dst) -T "bash -s"
+        else:
+            print(f'Remote directory exists: {dst_xxh_home}')
+            sys.exit(1)
+
+    print(f"Install xxh to {dst}:{dst_xxh_home}" )
+    rsync  -az --info=progress2 --include ".*" @(local_xxh_home_path)/ @(dst):@(dst_xxh_home)/
+    rsync  -az --info=progress2 --include ".*" @(package_dir_path)/ @(dst):@(dst_xxh_home)/
+
+    plugins_fullpath = os.path.join(local_xxh_home_path, 'plugins')
+    if os.path.exists(plugins_fullpath):
+        print(f'Run plugins post install on {dst}')
+        scripts=''
+        for script in sorted(glob.glob(os.path.join(plugins_fullpath, os.path.join('*','install.xsh')), recursive=True)):
+            scripts += " && %s -i --rc %s -- %s" % (dst_xonsh_bin, dst_xonshrc, script.replace(local_xxh_home_path + os.sep, ''))
+            print(f' * {script}')
+
+        if scripts:
+            echo @(f"cd {dst_xxh_home} {scripts}" ) | ssh -o LogLevel=QUIET @(dst) -T "bash -s"
+
+    print(f'First run xonsh on {dst}\033[0m')
+
+dst_plugins_rc = $(ssh -o LogLevel=QUIET @(dst) -t @(dst_xonsh_bin) --no-script-cache -i --rc @(dst_xonshrc) -- @(dst_xonsh_plugins_rc)).split('xxh-plugins#')[1]
+ssh -o LogLevel=QUIET @(dst) -t @(dst_xonsh_bin) --no-script-cache -i --rc @(dst_xonshrc) @(dst_plugins_rc)
