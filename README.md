@@ -11,6 +11,8 @@
 
 <p align="center">  
   <a href="https://pypi.org/project/xonssh-xxh/" target="_blank" alt="PyPI Latest Release"><img src="https://img.shields.io/pypi/v/xonssh-xxh.svg"></a>
+ <img alt="PyPI - License" src="https://img.shields.io/pypi/l/xonssh-xxh">
+  
 </p>
 
 ## Installation
