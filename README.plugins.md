@@ -2,7 +2,7 @@
 
 ## xxh plugins list
 
-[Search xxh plugins on Github](https://github.com/search?q=xxh-plugin)
+[Search xxh plugins on Github](https://github.com/search?q=xxh-plugin&type=Repositories)
 
 Pinned plugins:
 
