@@ -24,6 +24,6 @@ xxh <server>
 
 ## Create xxh plugin
 
-To create xxh plugin you can create directory in `~/.xxh` (by default) on your home host with files:
+To create xxh plugin you can create `your_plugin` directory in `~/.xxh/plugins/your_plugin` (by default) on your home host with files:
 * `install.xsh` will be executed once after xxh installation on the host
 * `xonshrc.xsh` will be executed every time you'll be connect via xxh to the host
