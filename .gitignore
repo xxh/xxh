@@ -1,0 +1,26 @@
+*.pyc
+*.out
+*.xcf
+*.egg
+.eggs/
+.pytest_cache/
+build/
+dist/
+xonssh_xxh.egg-info/
+venv/
+
+# temporary files from vim and emacs
+*~
+*#
+.#*
+*.swp
+*.swo
+
+# Editor project files
+*.komodo*
+.cache
+.idea
+.vscode/
+
+# Mac
+.DS_Store

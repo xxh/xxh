@@ -9,13 +9,12 @@
   <a href="https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7" target="_blank"><img src="https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7.svg"></a>
 </p>
 
+[![PyPI Latest Release](https://img.shields.io/pypi/v/xonssh-xxh.svg)](https://pypi.org/project/xonssh-xxh/) [![Package Status](https://img.shields.io/pypi/status/xonssh-xxh.svg)](https://pypi.org/project/xonssh-xxh/)
 
 ## Installation
-Run in your xonsh:
+Run:
 ```
-git clone --depth 1 https://github.com/xonssh/xxh ~/.xxh
-echo "aliases['xxh'] = 'xonsh ~/.xxh/xxh.xsh'" >> ~/.xonshrc
-aliases['xxh'] = 'xonsh ~/.xxh/xxh.xsh'
+pip install xonssh-xxh
 ```
 Then try:
 ```
@@ -24,26 +23,41 @@ xxh <server>
 
 ## Usage
 ```
-> xxh -h
-usage: xxh.xsh [-h] [-i] [-p TARGET_PATH] [-m METHOD] [-f] server
+$ xxh -h
+usage: xxh [-h] [-i] [-if] [-rxh REMOTE_XXH_HOME] [-m METHOD]
+           [-lxh LOCAL_XXH_HOME] [-V]
+           [destination]
+
+The xxh is for using the xonsh shell wherever you go through the ssh. 
+
+      ___  _________     @    @    
+   _____  /         \     \__/     
+    ___  /   ____    \   /   \           contribution
+  ____  /   /    \    \ /   _/   https://github.com/xonssh/xxh   
+    __ (    \  \_/     )   /          
+        \    \_____/  /   /                plugins            
+       __\___________/   /   https://github.com/search?q=xxh-plugin
+      /_________________/       
 
 positional arguments:
-  server                Destination may be specified as hostname or server
-                        name from ~/.ssh/config
+  destination           Destination may be specified as hostname or server name from ~/.ssh/config
 
 optional arguments:
   -h, --help            show this help message and exit
-  -i, --install         Install xonsh to host
-  -p TARGET_PATH, --target-path TARGET_PATH
-                        Target path. Default: ~/.xxh
+  -i, --install         Install xxh to distanation host
+  -if, --install-force  Delete remote xxh home and install xonsh to distanation host
+  -rxh REMOTE_XXH_HOME, --remote-xxh-home REMOTE_XXH_HOME
+                        Set the remote xxh home directory. Default: ~/.xxh
   -m METHOD, --method METHOD
-                        Currently supported single 'appimage' method
-  -f, --force           Delete target directory when install xonsh to host
+                        Installation method. Currently supported only 'appimage' method
+  -lxh LOCAL_XXH_HOME, --local-xxh-home LOCAL_XXH_HOME
+                        Local xxh home path. Default: ~/.xxh
+  -V, --version         Show xxh version
 ```
 
 ## Plugins
 
-You can [add or create plugins to xxh with your own lovely functions](plugins/README.md).
+[Search xxh plugins on Github](https://github.com/search?q=xxh-plugin) or [create plugin with your own lovely functions](README.plugins.md).
 
 ## Notes
 
@@ -53,7 +67,7 @@ The xxh xonsh will use pip and python from `xonsh.AppImage` by default. You can 
 
 ### Shortcut to reinstall xxh on host
 ```
-xxh <server> -i -f
+xxh <server> -if
 ```
 
 ## How it works?
@@ -86,3 +100,5 @@ Current method to make xonsh portable is using an [AppImage](https://appimage.or
 Unknown answer from server when checking direcotry /home/hansolo/.xxh:
 ```
 This issue was addressed to Xonsh team in [3367](https://github.com/xonsh/xonsh/issues/3367). Just try to run command again.
+
+WSL2 is not tested yet.
