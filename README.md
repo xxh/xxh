@@ -9,6 +9,7 @@
   <a href="https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7" target="_blank"><img src="https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7.svg"></a>
 </p>
 
+[![PyPI Latest Release](https://img.shields.io/pypi/v/xonssh-xxh.svg)](https://pypi.org/project/xonssh-xxh/) [![Package Status](https://img.shields.io/pypi/status/xonssh-xxh.svg)](https://pypi.org/project/xonssh-xxh/)
 
 ## Installation
 Run:
