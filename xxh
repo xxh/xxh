@@ -133,7 +133,7 @@ if dst_has_xxh == '1' and opt.install_force == False:
         ask = f'Something went wrong while getting the remote xxh version.'
     elif dst_xxh_version != local_xxh_version:
         ask_type = 2
-        ask = f"Local xxh version {local_xxh_version} is not equal remote xxh version '{dst_xxh_version}'."
+        ask = f"Local xxh version '{local_xxh_version}' is not equal remote xxh version '{dst_xxh_version}'."
 
     if ask:
         choice = input(f"{ask} What's next? \n"
