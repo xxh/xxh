@@ -148,7 +148,7 @@ if dst_has_xxh == '1' and opt.install_force == False:
             sys.exit(0)
         elif choice == 'u':
             local_time = datetime.datetime.now().isoformat()[:19]
-            print(f"Move {dst_xxh_home} to {dst_xxh_home}-{local_time}")
+            print(f"Move {dst}:{dst_xxh_home} to {dst}:{dst_xxh_home}-{local_time}")
             echo @(f"mv {dst_xxh_home} {dst_xxh_home}-{local_time}" ) | ssh -o LogLevel=QUIET @(dst) -T "bash -s"
             opt.install = True
             dst_has_xxh = '0'
