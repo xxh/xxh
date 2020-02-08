@@ -60,6 +60,12 @@ optional arguments:
 
 [Search xxh plugins on Github](https://github.com/search?q=xxh-plugin&type=Repositories) or [create plugin with your own lovely functions](README.plugins.md).
 
+Pinned plugins:
+
+* [Pipe Liner](https://github.com/xonssh/xxh-plugin-pipe-liner) — processing the lines easy with python and classic shell pipes
+* [Bar Theme](https://github.com/xonssh/xxh-plugin-theme-bar) — theme to stay focused
+* [Autojump](https://github.com/xonssh/xxh-plugin-autojump) — save time on moving thru directories
+
 ## Notes
 
 ### Using pip and python
