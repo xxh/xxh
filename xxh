@@ -175,7 +175,7 @@ if opt.install:
     if opt.method == 'appimage':
         appimage_fullpath = os.path.join(local_xxh_home_path, xonsh_bin)
         if not os.path.isfile(appimage_fullpath):
-            print(f'Download xonsh AppImage from {appimage_url}')
+            print(f'First time download and save xonsh AppImage from {appimage_url}')
             wget -q --show-progress @(appimage_url) -O @(appimage_fullpath)
             chmod +x @(appimage_fullpath)
     else:
