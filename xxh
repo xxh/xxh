@@ -11,10 +11,10 @@ from xonssh_xxh.settings import global_settings
 
 url_xxh_github = 'https://github.com/xonssh/xxh'
 url_xxh_plugins_search = 'https://github.com/search?q=xxh-plugin'
+url_appimage = 'https://github.com/niess/linuxdeploy-plugin-python/releases/download/continuous/xonsh-x86_64.AppImage'
 local_xxh_home_path = '~/.xxh'
 local_xxh_version = global_settings['XXH_VERSION']
 remote_xxh_home_path = '~/.xxh'
-appimage_url = 'https://github.com/niess/linuxdeploy-plugin-python/releases/download/continuous/xonsh-x86_64.AppImage'
 
 if os.name == 'nt':
     print(f"Windows is not supported. WSL1 not recommended also. WSL2 is not tested yet.\nTry to contribution: {url_xxh_github}")
@@ -49,9 +49,9 @@ argp = argparse.ArgumentParser(description=f"The xxh is for using the xonsh shel
 argp.add_argument('destination', nargs='?', help="Destination may be specified as hostname or server name from ~/.ssh/config")
 argp.add_argument('-i','--install', default=False, action='store_true', help="Install xxh to distanation host")
 argp.add_argument('-if','--install-force', default=False, action='store_true', help="Delete remote xxh home and install xonsh to distanation host")
-argp.add_argument('-rxh','--remote-xxh-home', default=remote_xxh_home_path, help=f"Set the remote xxh home directory. Default: {remote_xxh_home_path}")
-argp.add_argument('-m','--method', default='appimage', help="Installation method. Currently supported only 'appimage' method")
 argp.add_argument('-lxh','--local-xxh-home', default=local_xxh_home_path, help=f"Local xxh home path. Default: {local_xxh_home_path}")
+argp.add_argument('-rxh','--remote-xxh-home', default=remote_xxh_home_path, help=f"Remote xxh home path. Default: {remote_xxh_home_path}")
+argp.add_argument('-m','--method', default='appimage', help="Installation method. Currently supported only 'appimage' method")
 argp.add_argument('-V','--version', default=False, action='store_true', help="Show xxh version")
 opt = argp.parse_args()
 
@@ -175,8 +175,8 @@ if opt.install:
     if opt.method == 'appimage':
         appimage_fullpath = os.path.join(local_xxh_home_path, xonsh_bin)
         if not os.path.isfile(appimage_fullpath):
-            print(f'First time download and save xonsh AppImage from {appimage_url}')
-            wget -q --show-progress @(appimage_url) -O @(appimage_fullpath)
+            print(f'First time download and save xonsh AppImage from {url_appimage}')
+            wget -q --show-progress @(url_appimage) -O @(appimage_fullpath)
             chmod +x @(appimage_fullpath)
     else:
         print(f'Method "{opt.method}" is not supported now')
