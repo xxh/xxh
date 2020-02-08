@@ -33,7 +33,7 @@ usage: xxh [-h] [-i] [-if] [-lxh LOCAL_XXH_HOME] [-rxh REMOTE_XXH_HOME]
 
 The xxh is for using the xonsh shell wherever you go through the ssh. 
 
-     ____  _________     _    @    
+     ____  _________     @    @    
   ______  /         \     \__/     
    ____  /   ____    \   /   \           contribution
  _____  /   /    \    \ /   _/   https://github.com/xonssh/xxh   
@@ -73,11 +73,6 @@ Pinned plugins:
 ### Using pip and python
 
 The xxh xonsh will use pip and python from `xonsh.AppImage` by default. You can install pip packages ordinally with `pip install`. They will appear in `$XXH_HOME/pip`.
-
-### Shortcut to reinstall xxh on host
-```
-xxh <server> -if
-```
 
 ## How it works?
 
