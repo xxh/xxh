@@ -13,6 +13,7 @@ setuptools.setup(
     package_data={'xonssh_xxh':['*.xsh']},
     packages=setuptools.find_packages(),
     classifiers=["Programming Language :: Python :: 3"],
+    license="BSD",
     author="xonssh",
     author_email="author@example.com"
 )
