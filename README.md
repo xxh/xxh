@@ -84,12 +84,6 @@ When you run `xxh <server>` command:
 
 3. Finally xxh makes ssh connection to server and running remote portable xonsh shell without any affection on the target system.
 
-# Thanks
-
-* @niess for https://github.com/niess/linuxdeploy-plugin-python/
-* @gforsyth for https://github.com/xonsh/xonsh/issues/3374
-* @scopatz for https://github.com/xonsh/xonsh
-
 ## Known Issues
 
 ### GLIBs versions
@@ -106,3 +100,9 @@ Unknown answer from server when checking direcotry /home/hansolo/.xxh:
 This issue was addressed to Xonsh team in [3367](https://github.com/xonsh/xonsh/issues/3367). Just try to run command again.
 
 WSL2 is not tested yet.
+
+## Thanks
+* @scopatz for https://github.com/xonsh/xonsh
+* @probonopd for https://github.com/AppImage
+* @niess for https://github.com/niess/linuxdeploy-plugin-python/
+* @gforsyth for https://github.com/xonsh/xonsh/issues/3374
