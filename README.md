@@ -62,8 +62,8 @@ ssh arguments:
   -o SSH_OPTIONS        Options in the ssh configuration format. See ssh man page. Example: xxh -o Port=22 -o User=snail host
 
 xxh arguments:
-  +i, ++install         Install xxh to distanation host.
-  +if, ++install-force  Delete remote xxh home and install xonsh to distanation host.
+  +i, ++install         Install xxh to destination host.
+  +if, ++install-force  Delete remote xxh home and install xonsh to destination host.
   +lxh LOCAL_XXH_HOME, ++local-xxh-home LOCAL_XXH_HOME
                         Local xxh home path. Default: ~/.xxh
   +rxh REMOTE_XXH_HOME, ++remote-xxh-home REMOTE_XXH_HOME
