@@ -38,7 +38,7 @@ usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN_NAME] [-i SSH_IDENTITY_FILE]
 
 The xxh is for using the xonsh shell wherever you go through the ssh. 
 
-      ___  __________     @    _    
+      ___  __________     @    @    
    _____  /          \     \__/     
     ___  /    ______  \   /   \           contribution
   ____  /    / __   \  \ /   _/   https://github.com/xonssh/xxh   
