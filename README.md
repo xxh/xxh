@@ -21,41 +21,56 @@ pip install xonssh-xxh
 ```
 Then try:
 ```
-xxh <hostname or servername from ~/.ssh/config>
+xxh <[user@]host[:port] or servername from ~/.ssh/config>
 ```
 
 ## Usage
 ```
-$ ./xxh --help                                                                                                                                                                                               
-usage: xxh [-h] [-i] [-if] [-lxh LOCAL_XXH_HOME] [-rxh REMOTE_XXH_HOME]
-           [-m METHOD] [-V]
+$ ./xxh --help                                                                                                                                                                                                                         
+usage: xxh [user@]host[:port]
+
+usage: xxh [ssh arguments] destination [xxh arguments]
+
+usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN_NAME] [-i SSH_IDENTITY_FILE]
+           [-o SSH_OPTIONS] [+i] [+if] [+lxh LOCAL_XXH_HOME]
+           [+rxh REMOTE_XXH_HOME] [+m METHOD] [+v]
            [destination]
 
 The xxh is for using the xonsh shell wherever you go through the ssh. 
 
-     ____  _________     @    @    
-  ______  /         \     \__/     
-   ____  /   ____    \   /   \           contribution
- _____  /   /    \    \ /   _/   https://github.com/xonssh/xxh   
-   ___ (    \  \_/     )   /          
-        \    \_____/  /   /                plugins            
-      ___\___________/   /   https://github.com/search?q=xxh-plugin
-     /__________________/       
+      ___  __________     @    _    
+   _____  /          \     \__/     
+    ___  /    ______  \   /   \           contribution
+  ____  /    / __   \  \ /   _/   https://github.com/xonssh/xxh   
+    __ (    / /  /   \  \   /          
+        \   \___/    /  /  /                plugins            
+     ____\          /__/  /   https://github.com/search?q=xxh-plugin
+    /     \________/     /                           
+   /____________________/       
 
-positional arguments:
-  destination           Destination may be specified as hostname or server name from ~/.ssh/config
+required arguments:
+  destination           Destination may be specified as [user@]hostname[:port] or server name from ~/.ssh/config
 
-optional arguments:
+common arguments:
   -h, --help            show this help message and exit
-  -i, --install         Install xxh to distanation host
-  -if, --install-force  Delete remote xxh home and install xonsh to distanation host
-  -lxh LOCAL_XXH_HOME, --local-xxh-home LOCAL_XXH_HOME
-                        Local xxh home path. Default: ~/.xxh
-  -rxh REMOTE_XXH_HOME, --remote-xxh-home REMOTE_XXH_HOME
-                        Remote xxh home path. Default: ~/.xxh
-  -m METHOD, --method METHOD
-                        Installation method. Currently supported only 'appimage' method
   -V, --version         Show xxh version
+
+ssh arguments:
+  -p SSH_PORT           Port to connect to on the remote host.
+  -l SSH_LOGIN_NAME     Specifies the user to log in as on the remote machine.
+  -i SSH_IDENTITY_FILE  Selects a file from which the identity (private key) for public key authentication is read.
+  -o SSH_OPTIONS        Options in the ssh configuration format. See ssh man page. Example: xxh -o Port=22 -o User=snail host
+
+xxh arguments:
+  +i, ++install         Install xxh to distanation host.
+  +if, ++install-force  Delete remote xxh home and install xonsh to distanation host.
+  +lxh LOCAL_XXH_HOME, ++local-xxh-home LOCAL_XXH_HOME
+                        Local xxh home path. Default: ~/.xxh
+  +rxh REMOTE_XXH_HOME, ++remote-xxh-home REMOTE_XXH_HOME
+                        Remote xxh home path. Default: ~/.xxh
+  +m METHOD, ++method METHOD
+                        Installation method: appimage
+  +v, ++verbose         Verbose mode.
 ```
 
 ## Plugins
