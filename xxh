@@ -241,11 +241,11 @@ if opt.install:
         echo @(f"rm -rf {host_xxh_home}/*") | ssh @(ssh_arguments) @(host) -T "bash -s"
 
     print(f"Install xxh to {host}:{host_xxh_home}" )
-    if which('rsync'):
+    if which('rsync') and host_info['rsync']:
         print('Upload using rsync')
         rsync -e @(f"ssh {' '.join(ssh_arguments)}") -az --info=progress2 --include ".*" @(local_xxh_home_path)/ @(host):@(host_xxh_home)/
         rsync -e @(f"ssh {' '.join(ssh_arguments)}") -az --info=progress2 --include ".*" @(package_dir_path)/ @(host):@(host_xxh_home)/
-    elif which('scp'):
+    elif which('scp') and host_info['scp']:
         print("Upload using scp. Note: install rsync on local and remote host to increase speed.")
         scp_host = f"{host}:{host_xxh_home}/"
         scp @(ssh_arguments) -r -C @([] if opt.verbose else ['-q']) @(local_xxh_home_path)/* @(scp_host)
