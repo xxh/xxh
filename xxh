@@ -19,6 +19,7 @@ local_xxh_home_path = '~/.xxh'
 host_xxh_home_path = '~/.xxh'
 portable_methods = ['appimage']
 portable_methods_str = ', '.join(portable_methods)
+xonsh_bin = 'xonsh'
 
 if os.name == 'nt':
     print(f"Windows is not supported. WSL1 not recommended also. WSL2 is not tested yet.\nTry to contribution: {url_xxh_github}")
@@ -142,53 +143,42 @@ else:
 for lc in ['LC_TIME','LC_MONETARY','LC_ADDRESS','LC_IDENTIFICATION','LC_MEASUREMENT','LC_NAME','LC_NUMERIC','LC_PAPER','LC_TELEPHONE']:
     ${...}[lc] = "en_US.UTF-8"
 
-if opt.host_xxh_home[:2] == '~/':
-    host_user_home = $(echo 'cd ~ && pwd' | ssh @(ssh_arguments) @(host) -T "bash -s").strip()
-
-    if host_user_home == '':
-        # https://github.com/xonsh/xonsh/issues/3367
-        print(f'Unknown answer from host when checking user home path. Check your connection parameters using ordinary ssh')
-        exit(1)
-
-    host_xxh_home = os.path.join(host_user_home, opt.host_xxh_home[2:])
-else:
-    host_xxh_home = opt.host_xxh_home_path
-
-host_xxh_home = os.path.abspath(host_xxh_home)
-
-if host_xxh_home == '/':
-    print("Host xxh home path {host_xxh_home} looks like / and is not supported ;)")
+if os.path.abspath(opt.host_xxh_home) == '/':
+    print("Host xxh home path {host_xxh_home} looks like /. Please check twice!")
     exit(1)
 
-xonsh_bin = 'xonsh'
+host_info = $(cat host_info.sh | sed @(f's|_xxh_home_|{opt.host_xxh_home}|') | ssh @(ssh_arguments) @(host) -T "bash -s" ).strip()
+
+if host_info == '':
+    print(f'Unknown answer from host when checking user home path. Check your connection parameters using ordinary ssh')
+    exit(1)
+
+host_info = dict([l.split('=') for l in host_info.split('\n')])
+
+if opt.verbose:
+    print(f'host_info: {host_info}')
+
+if host_info['xxh_home_realpath'] == '':
+    print(f'Unknown answer from host when getting realpath for directory {host_xxh_home}')
+    exit(1)
+
+if host_info['xxh_version'] == '':
+    print(f'Unknown answer from host when getting version for directory {host_xxh_home}')
+    exit(1)
+
+host_xxh_home = host_info['xxh_home_realpath']
 host_xonsh_bin = os.path.join(host_xxh_home, xonsh_bin)
 host_xonshrc = os.path.join(host_xxh_home, 'xonshrc.xsh')
 host_xonsh_plugins_rc = os.path.join(host_xxh_home, 'xxh_plugins_rc.xsh')
 
-host_has_xxh = $(echo @(f"[[ -d {host_xxh_home} ]] && echo -n 1 || echo -n 0") | ssh @(ssh_arguments) @(host) -T "bash -s")
+host_xxh_version = host_info['xxh_version']
 
-if host_has_xxh not in ['0','1']:
-    # https://github.com/xonsh/xonsh/issues/3367
-    print(f'Unknown answer from host when checking direcotry {host_xxh_home}: {host_has_xxh}')
-    exit(1)
-
-host_has_xxh = host_has_xxh == '1'
-
-if host_has_xxh and opt.install_force == False:
+if opt.install_force == False:
     # Check version
-    try:
-        host_xxh_settings = os.path.join(host_xxh_home, 'settings.py')
-        host_xxh_version = $(ssh @(ssh_arguments) @(host) -t @(host_xonsh_bin) --no-script-cache @(host_xxh_settings) XXH_VERSION).strip()
-    except:
-        host_xxh_version = None
-
-    ask_type = None
     ask = False
-    if host_xxh_version is None:
-        ask_type = 1
-        ask = f'Something went wrong while getting the host xxh version.'
-    elif host_xxh_version != local_xxh_version:
-        ask_type = 2
+    if host_xxh_version is '0':
+        ask = f'Host xxh home is not empty but something went wrong while getting host xxh version.'
+    elif host_xxh_version != '-1' and host_xxh_version != local_xxh_version:
         ask = f"Local xxh version '{local_xxh_version}' is not equal host xxh version '{host_xxh_version}'."
 
     if ask:
@@ -207,7 +197,6 @@ if host_has_xxh and opt.install_force == False:
             print(f"Move {host}:{host_xxh_home} to {host}:{host_xxh_home}-{local_time}")
             echo @(f"mv {host_xxh_home} {host_xxh_home}-{local_time}") | ssh @(ssh_arguments) @(host) -T "bash -s"
             opt.install = True
-            host_has_xxh = False
         elif choice == 'f':
             opt.install = True
             opt.install_force = True
@@ -217,9 +206,9 @@ if host_has_xxh and opt.install_force == False:
             print('Unknown answer')
             exit(1)
 
-if not opt.install and not host_has_xxh:
-    yn = input(f"{host}:{host_xxh_home} not found. Install xxh? [y/n] ").lower()
-    if yn == 'y':
+if host_xxh_version == '-1':
+    yn = input(f"{host}:{host_xxh_home} not found. Install xxh? [Y/n] ").strip().lower()
+    if yn == 'y' or yn == '':
         opt.install = True
     else:
         print('Unknown answer')
@@ -243,16 +232,9 @@ if opt.install:
     else:
         print(f'Method "{opt.method}" is not supported now')
 
-    if host_has_xxh:
-        if opt.install_force:
-            print(f'Before upload xxh remove host directory {host}:{host_xxh_home}')
-            echo @(f"rm -rf {host_xxh_home}") | ssh @(ssh_arguments) @(host) -T "bash -s"
-        else:
-            print(f'Host directory exists: {host_xxh_home}')
-            exit(1)
-    else:
-        print(f'Create {host}:{host_xxh_home} ')
-        echo @(f"mkdir -p {host_xxh_home}") | ssh @(ssh_arguments) @(host) -T "bash -s"
+    if opt.install_force:
+        print(f'Before upload xxh remove host directory {host}:{host_xxh_home}')
+        echo @(f"rm -rf {host_xxh_home}/*") | ssh @(ssh_arguments) @(host) -T "bash -s"
 
     print(f"Install xxh to {host}:{host_xxh_home}" )
     if which('rsync'):
