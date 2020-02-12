@@ -99,6 +99,9 @@ When you run `xxh <server>` command:
 
 3. Finally xxh makes ssh connection to server and running remote portable xonsh shell without any affection on the target system.
 
+## Development
+Use [xxh-tests](https://github.com/xonssh/xxh-tests) environment or your own hosts for development.
+
 ## Known Issues
 
 ### GLIBs versions
