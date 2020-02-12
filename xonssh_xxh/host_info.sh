@@ -11,3 +11,6 @@ fi
 
 echo xxh_home_realpath=$xxh_home_realpath
 echo xxh_version=$xxh_version
+echo bash=`command -v bash`
+echo rsync=`command -v rsync`
+echo scp=`command -v scp`

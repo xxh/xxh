@@ -166,6 +166,10 @@ if host_info['xxh_version'] == '':
     print(f'Unknown answer from host when getting version for directory {host_xxh_home}')
     exit(1)
 
+if host_info['scp'] == '' and host_info['rsync'] == '':
+    print(f"There are no rsync or scp on target host. Sad but files can't be uploaded.")
+    exit(1)
+
 host_xxh_home = host_info['xxh_home_realpath']
 host_xonsh_bin = os.path.join(host_xxh_home, xonsh_bin)
 host_xonshrc = os.path.join(host_xxh_home, 'xonshrc.xsh')
@@ -242,7 +246,7 @@ if opt.install:
         rsync -e @(f"ssh {' '.join(ssh_arguments)}") -az --info=progress2 --include ".*" @(local_xxh_home_path)/ @(host):@(host_xxh_home)/
         rsync -e @(f"ssh {' '.join(ssh_arguments)}") -az --info=progress2 --include ".*" @(package_dir_path)/ @(host):@(host_xxh_home)/
     elif which('scp'):
-        print("Upload using scp. To increase speed install rsync!")
+        print("Upload using scp. Note: install rsync on local and remote host to increase speed.")
         scp_host = f"{host}:{host_xxh_home}/"
         scp @(ssh_arguments) -r -C @([] if opt.verbose else ['-q']) @(local_xxh_home_path)/* @(scp_host)
         scp @(ssh_arguments) -r -C @([] if opt.verbose else ['-q']) @(package_dir_path)/* @(scp_host)
