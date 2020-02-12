@@ -147,7 +147,7 @@ if os.path.abspath(opt.host_xxh_home) == '/':
     print("Host xxh home path {host_xxh_home} looks like /. Please check twice!")
     exit(1)
 
-host_info = $(cat host_info.sh | sed @(f's|_xxh_home_|{opt.host_xxh_home}|') | ssh @(ssh_arguments) @(host) -T "bash -s" ).strip()
+host_info = $(cat @(f"{package_dir_path}/host_info.sh") | sed @(f's|_xxh_home_|{opt.host_xxh_home}|') | ssh @(ssh_arguments) @(host) -T "bash -s" ).strip()
 
 if host_info == '':
     print(f'Unknown answer from host when checking user home path. Check your connection parameters using ordinary ssh')

@@ -10,7 +10,7 @@ setuptools.setup(
     install_requires=['xonsh'],
     platforms='Unix-like',
     scripts=['xxh'],
-    package_data={'xonssh_xxh':['*.xsh']},
+    package_data={'xonssh_xxh':['*.xsh', '*.sh']},
     packages=setuptools.find_packages(),
     classifiers=["Programming Language :: Python :: 3"],
     license="BSD",
