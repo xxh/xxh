@@ -130,7 +130,7 @@ if os.path.exists(local_xxh_home_path):
         exit(1)
 elif os.path.exists(local_xxh_home_parent):
     if os.access(local_xxh_home_parent, os.W_OK):
-        print(f'Create xxh home path: {local_xxh_home_path}')
+        print(f'Create local xxh home path: {local_xxh_home_path}')
         mkdir -p @(local_xxh_home_path) @(local_xxh_home_path)/plugins
     else:
         print(f"Parent for local xxh home path isn't writable: {local_xxh_home_parent}")
