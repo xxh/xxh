@@ -14,3 +14,4 @@ echo xxh_version=$xxh_version
 echo bash=`command -v bash`
 echo rsync=`command -v rsync`
 echo scp=`command -v scp`
+echo xxh_home_freespace=`df -k --output=avail $xxh_home_realpath | tail -n1`
