@@ -57,7 +57,7 @@ argp.add_argument('-p', dest='ssh_port', help="Port to connect to on the remote 
 argp.add_argument('-l', dest='ssh_login', help="Specifies the user to log in as on the remote machine.")
 argp.add_argument('-i', dest='ssh_private_key', help="File from which the identity (private key) for public key authentication is read.")
 argp.add_argument('-o', dest='ssh_options', metavar='SSH_OPTION -o ...', action='append', help="SSH options are described in ssh man page. Example: -o Port=22 -o User=snail")
-argp.add_argument('destination', metavar='[user@]host[:port]', nargs=1, help="Destination may be specified as [user@]host[:port] or server name from ~/.ssh/config")
+argp.add_argument('destination', metavar='[user@]host[:port]', help="Destination may be specified as [user@]host[:port] or server name from ~/.ssh/config")
 argp.add_argument('+i','++install', default=False, action='store_true', help="Install xxh to destination host.")
 argp.add_argument('+if','++install-force', default=False, action='store_true', help="Removing the host xxh home and install xxh again.")
 argp.add_argument('+lxh','++local-xxh-home', default=local_xxh_home_path, help=f"Local xxh home path. Default: {local_xxh_home_path}")
@@ -154,10 +154,11 @@ if os.path.abspath(opt.host_xxh_home) == '/':
     print("Host xxh home path {host_xxh_home} looks like /. Please check twice!")
     exit(1)
 
-host_info = $(cat @(f"{package_dir_path}/host_info.sh") | sed @(f's|_xxh_home_|{opt.host_xxh_home}|') | ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s" ).strip()
+host_info_sh = os.path.join(package_dir_path, 'host_info.sh')
+host_info = $(cat @(host_info_sh) | sed @(f's|_xxh_home_|{opt.host_xxh_home}|') | ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s" ).strip()
 
 if host_info == '':
-    print(f'Unknown answer from host when checking user home path. Check your connection parameters using ordinary ssh')
+    print(f'Unknown answer from host when getting host info. Check your connection parameters using ordinary ssh.')
     exit(1)
 
 host_info = dict([l.split('=') for l in host_info.split('\n')])
