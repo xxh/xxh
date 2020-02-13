@@ -22,13 +22,11 @@ pip install xonssh-xxh
 
 ## Usage
 ```
-$ xxh --help                                                                                                                                          
-usage: xxh [user@]host[:port]
+$ xxh --help
+usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]
 
-usage: xxh [ssh arguments] destination [xxh arguments]
-
-usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY] [-o SSH_OPTIONS] 
-           [destination]
+usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY] [-o SSH_OPTION -o ...] 
+           [user@]host[:port]
            [+i] [+if] [+lxh LOCAL_XXH_HOME] [+hxh HOST_XXH_HOME] [+m METHOD] [+v] [+vv]
 
 The xxh is for using the xonsh shell wherever you go through the ssh. 
@@ -39,22 +37,22 @@ The xxh is for using the xonsh shell wherever you go through the ssh.
  _____  /    / __   \  \ /   _/   https://github.com/xonssh/xxh   
    ___ (    / /  /   \  \   /          
         \   \___/    /  /  /                plugins            
-     ____\          /__/  /   https://github.com/search?q=xxh-plugin
-    /     \________/     /                           
-   /____________________/       
+      ___\          /__/  /   https://github.com/search?q=xxh-plugin
+     /    \________/     /                           
+    /___________________/       
 
 required arguments:
-  destination           Destination may be specified as [user@]hostname[:port] or server name from ~/.ssh/config
+  [user@]host[:port]    Destination may be specified as [user@]host[:port] or server name from ~/.ssh/config
 
 common arguments:
   -h, --help            show this help message and exit
-  -V, --version         Show xxh version
+  --version, -V         show program's version number and exit
 
 ssh arguments:
   -p SSH_PORT           Port to connect to on the remote host.
   -l SSH_LOGIN          Specifies the user to log in as on the remote machine.
-  -i SSH_PRIVATE_KEY    Selects a file from which the identity (private key) for public key authentication is read.
-  -o SSH_OPTIONS        Options in the ssh configuration format. See ssh man page. Example: xxh -o Port=22 -o User=snail host
+  -i SSH_PRIVATE_KEY    File from which the identity (private key) for public key authentication is read.
+  -o SSH_OPTION -o ...  SSH options are described in ssh man page. Example: -o Port=22 -o User=snail
 
 xxh arguments:
   +i, ++install         Install xxh to destination host.
