@@ -100,7 +100,11 @@ When you run `xxh <server>` command:
 3. Finally xxh makes ssh connection to server and running remote portable xonsh shell without any affection on the target system.
 
 ## Development
-Use [xxh-tests](https://github.com/xonssh/xxh-tests) environment or your own hosts for development.
+Use [xxh-tests](https://github.com/xonssh/xxh-tests) environment for development and contribution.
+
+What will make xxh more universal and stable in the future:
+* [AppImages run on Alpine](https://github.com/AppImage/AppImageKit/issues/1015) 
+* [Fix xonsh for WSL1](https://github.com/xonsh/xonsh/issues/3367)
 
 ## Known Issues
 
