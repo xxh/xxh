@@ -59,7 +59,7 @@ argp.add_argument('-i', dest='ssh_private_key', help="File from which the identi
 argp.add_argument('-o', dest='ssh_options', metavar='SSH_OPTION -o ...', action='append', help="SSH options are described in ssh man page. Example: -o Port=22 -o User=snail")
 argp.add_argument('destination', metavar='[user@]host[:port]', nargs=1, help="Destination may be specified as [user@]host[:port] or server name from ~/.ssh/config")
 argp.add_argument('+i','++install', default=False, action='store_true', help="Install xxh to destination host.")
-argp.add_argument('+if','++install-force', default=False, action='store_true', help="Delete remote xxh home and install xonsh to destination host.")
+argp.add_argument('+if','++install-force', default=False, action='store_true', help="Removing the host xxh home and install xxh again.")
 argp.add_argument('+lxh','++local-xxh-home', default=local_xxh_home_path, help=f"Local xxh home path. Default: {local_xxh_home_path}")
 argp.add_argument('+hxh','++host-xxh-home', default=host_xxh_home_path, help=f"Host xxh home path. Default: {host_xxh_home_path}")
 argp.add_argument('+m','++method', default='appimage', help=f"Portable method: {portable_methods_str}")
