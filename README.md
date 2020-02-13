@@ -21,41 +21,57 @@ pip install xonssh-xxh
 ```
 Then try:
 ```
-xxh <hostname or servername from ~/.ssh/config>
+xxh <[user@]host[:port] or servername from ~/.ssh/config>
 ```
 
 ## Usage
 ```
-$ ./xxh --help                                                                                                                                                                                               
-usage: xxh [-h] [-i] [-if] [-lxh LOCAL_XXH_HOME] [-rxh REMOTE_XXH_HOME]
-           [-m METHOD] [-V]
+$ xxh --help                                                                                                                                            
+usage: xxh [user@]host[:port]
+
+usage: xxh [ssh arguments] destination [xxh arguments]
+
+usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN_NAME] [-i SSH_IDENTITY_FILE]
+           [-o SSH_OPTIONS] [+i] [+if] [+lxh LOCAL_XXH_HOME]
+           [+hxh HOST_XXH_HOME] [+m METHOD] [+v] [+vv]
            [destination]
 
 The xxh is for using the xonsh shell wherever you go through the ssh. 
 
-     ____  _________     @    @    
-  ______  /         \     \__/     
-   ____  /   ____    \   /   \           contribution
- _____  /   /    \    \ /   _/   https://github.com/xonssh/xxh   
-   ___ (    \  \_/     )   /          
-        \    \_____/  /   /                plugins            
-      ___\___________/   /   https://github.com/search?q=xxh-plugin
-     /__________________/       
+      ___  __________     @    @    
+   _____  /          \     \__/     
+    ___  /    ______  \   /   \           contribution
+  ____  /    / __   \  \ /   _/   https://github.com/xonssh/xxh   
+    __ (    / /  /   \  \   /          
+        \   \___/    /  /  /                plugins            
+      ___\          /__/  /   https://github.com/search?q=xxh-plugin
+     /    \________/     /                           
+    /___________________/       
 
-positional arguments:
-  destination           Destination may be specified as hostname or server name from ~/.ssh/config
+required arguments:
+  destination           Destination may be specified as [user@]hostname[:port] or server name from ~/.ssh/config
 
-optional arguments:
+common arguments:
   -h, --help            show this help message and exit
-  -i, --install         Install xxh to distanation host
-  -if, --install-force  Delete remote xxh home and install xonsh to distanation host
-  -lxh LOCAL_XXH_HOME, --local-xxh-home LOCAL_XXH_HOME
-                        Local xxh home path. Default: ~/.xxh
-  -rxh REMOTE_XXH_HOME, --remote-xxh-home REMOTE_XXH_HOME
-                        Remote xxh home path. Default: ~/.xxh
-  -m METHOD, --method METHOD
-                        Installation method. Currently supported only 'appimage' method
   -V, --version         Show xxh version
+
+ssh arguments:
+  -p SSH_PORT           Port to connect to on the remote host.
+  -l SSH_LOGIN_NAME     Specifies the user to log in as on the remote machine.
+  -i SSH_IDENTITY_FILE  Selects a file from which the identity (private key) for public key authentication is read.
+  -o SSH_OPTIONS        Options in the ssh configuration format. See ssh man page. Example: xxh -o Port=22 -o User=snail host
+
+xxh arguments:
+  +i, ++install         Install xxh to destination host.
+  +if, ++install-force  Delete remote xxh home and install xonsh to destination host.
+  +lxh LOCAL_XXH_HOME, ++local-xxh-home LOCAL_XXH_HOME
+                        Local xxh home path. Default: ~/.xxh
+  +hxh HOST_XXH_HOME, ++host-xxh-home HOST_XXH_HOME
+                        Host xxh home path. Default: ~/.xxh
+  +m METHOD, ++method METHOD
+                        Portable method: appimage
+  +v, ++verbose         Verbose mode.
+  +vv, ++vverbose       Super verbose mode.
 ```
 
 ## Plugins
@@ -83,6 +99,13 @@ When you run `xxh <server>` command:
 2. If it needed xxh script copies the portable xonsh on the host (`~/.xxh` by default) along with init scripts and plugins.
 
 3. Finally xxh makes ssh connection to server and running remote portable xonsh shell without any affection on the target system.
+
+## Development
+Use [xxh-tests](https://github.com/xonssh/xxh-tests) environment for development and contribution.
+
+What will make xxh more universal and stable in the future:
+* [AppImages run on Alpine](https://github.com/AppImage/AppImageKit/issues/1015) 
+* [Fix xonsh for WSL1](https://github.com/xonsh/xonsh/issues/3367)
 
 ## Known Issues
 
