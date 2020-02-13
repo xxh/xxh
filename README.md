@@ -98,10 +98,6 @@ When you run `xxh <server>` command:
 ## Development
 Use [xxh-tests](https://github.com/xonssh/xxh-tests) environment for development and contribution.
 
-What will make xxh more universal and stable in the future:
-* [AppImages run on Alpine](https://github.com/AppImage/AppImageKit/issues/1015) 
-* [Fix xonsh for WSL1](https://github.com/xonsh/xonsh/issues/3367)
-
 ## Known Issues
 
 ### GLIBs versions
@@ -118,6 +114,13 @@ Unknown answer from server when checking direcotry /home/hansolo/.xxh:
 This issue was addressed to Xonsh team in [3367](https://github.com/xonsh/xonsh/issues/3367). Just try to run command again.
 
 WSL2 is not tested yet.
+
+### Related issues
+
+What will make xxh more universal and stable in the future:
+* [AppImages run on Alpine](https://github.com/AppImage/AppImageKit/issues/1015) 
+* [Fix xonsh for WSL1](https://github.com/xonsh/xonsh/issues/3367)
+
 
 ## Thanks
 * @scopatz for https://github.com/xonsh/xonsh
