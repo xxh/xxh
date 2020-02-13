@@ -54,8 +54,8 @@ def xonssh():
 argp = argparse.ArgumentParser(description=f"The xxh is for using the xonsh shell wherever you go through the ssh. {xonssh()}", formatter_class=RawTextHelpFormatter, prefix_chars='-+')
 argp.add_argument('-V','--version', default=False, action='store_true', help="Show xxh version")
 argp.add_argument('-p', dest='ssh_port', help="Port to connect to on the remote host.")
-argp.add_argument('-l', dest='ssh_login_name', help="Specifies the user to log in as on the remote machine.")
-argp.add_argument('-i', dest='ssh_identity_file', help="Selects a file from which the identity (private key) for public key authentication is read.")
+argp.add_argument('-l', dest='ssh_login', help="Specifies the user to log in as on the remote machine.")
+argp.add_argument('-i', dest='ssh_private_key', help="Selects a file from which the identity (private key) for public key authentication is read.")
 argp.add_argument('-o', dest='ssh_options', action='append', help="Options in the ssh configuration format. See ssh man page. Example: xxh -o Port=22 -o User=snail host")
 argp.add_argument('destination', nargs='?', help="Destination may be specified as [user@]hostname[:port] or server name from ~/.ssh/config")
 argp.add_argument('+i','++install', default=False, action='store_true', help="Install xxh to destination host.")
@@ -100,17 +100,17 @@ if url.port:
     opt.ssh_port = url.port
 
 if url.username:
-    opt.ssh_login_name = url.username
+    opt.ssh_login = url.username
 
 ssh_arguments = []
 if not opt.verbose:
    ssh_arguments = ['-o', 'LogLevel=QUIET']
 if opt.ssh_port:
     ssh_arguments += ['-o', f'Port={opt.ssh_port}']
-if opt.ssh_identity_file:
-    ssh_arguments += ['-o', f'IdentityFile={opt.ssh_identity_file}']
-if opt.ssh_login_name:
-    ssh_arguments += ['-o', f'User={opt.ssh_login_name}']
+if opt.ssh_private_key:
+    ssh_arguments += ['-o', f'IdentityFile={opt.ssh_private_key}']
+if opt.ssh_login:
+    ssh_arguments += ['-o', f'User={opt.ssh_login}']
 if opt.ssh_options:
     for ssh_option in opt.ssh_options:
         ssh_arguments += ['-o', ssh_option]

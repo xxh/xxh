@@ -26,27 +26,26 @@ xxh <[user@]host[:port] or servername from ~/.ssh/config>
 
 ## Usage
 ```
-$ xxh --help                                                                                                                                            
+$ xxh --help                                                                                                                                          
 usage: xxh [user@]host[:port]
 
 usage: xxh [ssh arguments] destination [xxh arguments]
 
-usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_IDENTITY_FILE] [-o SSH_OPTIONS] 
+usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY] [-o SSH_OPTIONS] 
            [destination]
            [+i] [+if] [+lxh LOCAL_XXH_HOME] [+hxh HOST_XXH_HOME] [+m METHOD] [+v] [+vv]
-           
 
 The xxh is for using the xonsh shell wherever you go through the ssh. 
 
-      ___  __________     @    @    
-   _____  /          \     \__/     
-    ___  /    ______  \   /   \           contribution
-  ____  /    / __   \  \ /   _/   https://github.com/xonssh/xxh   
-    __ (    / /  /   \  \   /          
+     ____  __________     @    @    
+  ______  /          \     \__/     
+   ____  /    ______  \   /   \           contribution
+ _____  /    / __   \  \ /   _/   https://github.com/xonssh/xxh   
+   ___ (    / /  /   \  \   /          
         \   \___/    /  /  /                plugins            
-      ___\          /__/  /   https://github.com/search?q=xxh-plugin
-     /    \________/     /                           
-    /___________________/       
+     ____\          /__/  /   https://github.com/search?q=xxh-plugin
+    /     \________/     /                           
+   /____________________/       
 
 required arguments:
   destination           Destination may be specified as [user@]hostname[:port] or server name from ~/.ssh/config
@@ -57,8 +56,8 @@ common arguments:
 
 ssh arguments:
   -p SSH_PORT           Port to connect to on the remote host.
-  -l SSH_LOGIN_NAME     Specifies the user to log in as on the remote machine.
-  -i SSH_IDENTITY_FILE  Selects a file from which the identity (private key) for public key authentication is read.
+  -l SSH_LOGIN          Specifies the user to log in as on the remote machine.
+  -i SSH_PRIVATE_KEY    Selects a file from which the identity (private key) for public key authentication is read.
   -o SSH_OPTIONS        Options in the ssh configuration format. See ssh man page. Example: xxh -o Port=22 -o User=snail host
 
 xxh arguments:
