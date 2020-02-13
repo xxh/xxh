@@ -31,10 +31,10 @@ usage: xxh [user@]host[:port]
 
 usage: xxh [ssh arguments] destination [xxh arguments]
 
-usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN_NAME] [-i SSH_IDENTITY_FILE]
-           [-o SSH_OPTIONS] [+i] [+if] [+lxh LOCAL_XXH_HOME]
-           [+hxh HOST_XXH_HOME] [+m METHOD] [+v] [+vv]
+usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_IDENTITY_FILE] [-o SSH_OPTIONS] 
            [destination]
+           [+i] [+if] [+lxh LOCAL_XXH_HOME] [+hxh HOST_XXH_HOME] [+m METHOD] [+v] [+vv]
+           
 
 The xxh is for using the xonsh shell wherever you go through the ssh. 
 
