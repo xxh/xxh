@@ -19,10 +19,6 @@
 ```
 pip install xonssh-xxh
 ```
-Then try:
-```
-xxh <[user@]host[:port] or servername from ~/.ssh/config>
-```
 
 ## Usage
 ```
