@@ -35,7 +35,6 @@ def xonssh():
     if terminal_cols < 70:
         return f"\n\nContribution: {url_xxh_github}\n\nPlugins: {url_xxh_plugins_search}"
 
-
     l,r,s,t = (['@','-','_'][randint(0,2)], ['@','-','_'][randint(0,2)], ['_',' '][randint(0,1)], ['_',''][randint(0,1)])
     return f"""
 
@@ -49,7 +48,7 @@ def xonssh():
 {' ' if not t else ''}    / {'' if not t else ' '}   \\________/     /                           
 {' ' if not t else ''}   /_{t}__________________/       
 
-""" # watch -n.2 xxh --help
+""" # watch -n.2 xxh -h
 
 argp = argparse.ArgumentParser(description=f"The xxh is for using the xonsh shell wherever you go through the ssh. {xonssh()}", formatter_class=RawTextHelpFormatter, prefix_chars='-+')
 argp.add_argument('--version', '-V', action='version', version=f"xonssh-xxh/{local_xxh_version}")
@@ -60,8 +59,8 @@ argp.add_argument('-o', dest='ssh_options', metavar='SSH_OPTION -o ...', action=
 argp.add_argument('destination', metavar='[user@]host[:port]', help="Destination may be specified as [user@]host[:port] or server name from ~/.ssh/config")
 argp.add_argument('+i','++install', default=False, action='store_true', help="Install xxh to destination host.")
 argp.add_argument('+if','++install-force', default=False, action='store_true', help="Removing the host xxh home and install xxh again.")
-argp.add_argument('+lxh','++local-xxh-home', default=local_xxh_home_path, help=f"Local xxh home path. Default: {local_xxh_home_path}")
-argp.add_argument('+hxh','++host-xxh-home', default=host_xxh_home_path, help=f"Host xxh home path. Default: {host_xxh_home_path}")
+argp.add_argument('+lh','++local-xxh-home', default=local_xxh_home_path, help=f"Local xxh home path. Default: {local_xxh_home_path}")
+argp.add_argument('+hh','++host-xxh-home', default=host_xxh_home_path, help=f"Host xxh home path. Default: {host_xxh_home_path}")
 argp.add_argument('+m','++method', default='appimage', help=f"Portable method: {portable_methods_str}")
 argp.add_argument('+v','++verbose', default=False, action='store_true', help="Verbose mode.")
 argp.add_argument('+vv','++vverbose', default=False, action='store_true', help="Super verbose mode.")
