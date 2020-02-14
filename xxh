@@ -277,7 +277,7 @@ if opt.install:
     if check == '' or 'AppImages require FUSE to run' in check:
         eprint('Check failed. Unpack AppImage...')
         host_xonsh_bin_new = os.path.join(host_xxh_home, 'xonsh-squashfs/usr/python/bin/xonsh')
-        ssh @(ssh_v) @(ssh_arguments) @(host) -t @(f"cd {host_xxh_home} && ./{xonsh_bin_name} --appimage-extract | grep -E 'usr/python/bin/xonsh$' && mv squashfs-root xonsh-squashfs && mv {host_xonsh_bin} {host_xonsh_bin}-disabled && ln -s {host_xonsh_bin_new}")
+        ssh @(ssh_v) @(ssh_arguments) @(host) -t @(f"cd {host_xxh_home} && ./{xonsh_bin_name} --appimage-extract | grep -E 'usr/python/bin/xonsh$' && mv squashfs-root xonsh-squashfs && mv {host_xonsh_bin} {host_xonsh_bin}-disabled && ln -s {host_xonsh_bin_new}") 1>&2
         host_xonsh_bin = host_xonsh_bin_new
 
     eprint(f'First run xonsh on {host}\033[0m')
