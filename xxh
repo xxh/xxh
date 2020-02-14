@@ -21,8 +21,11 @@ portable_methods = ['appimage']
 portable_methods_str = ', '.join(portable_methods)
 xonsh_bin_name = 'xonsh'
 
-if os.name == 'nt':
-    print(f"Windows is not supported. WSL1 not recommended also. WSL2 is not tested yet.\nTry to contribution: {url_xxh_github}")
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
+def eeprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
     exit(1)
 
 def xonssh():
@@ -34,7 +37,6 @@ def xonssh():
 
     if terminal_cols < 70:
         return f"\n\nContribution: {url_xxh_github}\n\nPlugins: {url_xxh_plugins_search}"
-
 
     l,r,s,t = (['@','-','_'][randint(0,2)], ['@','-','_'][randint(0,2)], ['_',' '][randint(0,1)], ['_',''][randint(0,1)])
     return f"""
@@ -49,7 +51,10 @@ def xonssh():
 {' ' if not t else ''}    / {'' if not t else ' '}   \\________/     /                           
 {' ' if not t else ''}   /_{t}__________________/       
 
-""" # watch -n.2 xxh --help
+""" # watch -n.2 xxh -h
+
+if os.name == 'nt':
+    eeprint(f"Windows is not supported. WSL1 is not recommended also. WSL2 is not tested yet.\nContribution: {url_xxh_github}")
 
 argp = argparse.ArgumentParser(description=f"The xxh is for using the xonsh shell wherever you go through the ssh. {xonssh()}", formatter_class=RawTextHelpFormatter, prefix_chars='-+')
 argp.add_argument('--version', '-V', action='version', version=f"xonssh-xxh/{local_xxh_version}")
@@ -59,9 +64,10 @@ argp.add_argument('-i', dest='ssh_private_key', help="File from which the identi
 argp.add_argument('-o', dest='ssh_options', metavar='SSH_OPTION -o ...', action='append', help="SSH options are described in ssh man page. Example: -o Port=22 -o User=snail")
 argp.add_argument('destination', metavar='[user@]host[:port]', help="Destination may be specified as [user@]host[:port] or server name from ~/.ssh/config")
 argp.add_argument('+i','++install', default=False, action='store_true', help="Install xxh to destination host.")
-argp.add_argument('+if','++install-force', default=False, action='store_true', help="Delete remote xxh home and install xonsh to destination host.")
-argp.add_argument('+lxh','++local-xxh-home', default=local_xxh_home_path, help=f"Local xxh home path. Default: {local_xxh_home_path}")
-argp.add_argument('+hxh','++host-xxh-home', default=host_xxh_home_path, help=f"Host xxh home path. Default: {host_xxh_home_path}")
+argp.add_argument('+if','++install-force', default=False, action='store_true', help="Removing the host xxh home and install xxh again.")
+argp.add_argument('+lh','++local-xxh-home', default=local_xxh_home_path, help=f"Local xxh home path. Default: {local_xxh_home_path}")
+argp.add_argument('+hh','++host-xxh-home', default=host_xxh_home_path, help=f"Host xxh home path. Default: {host_xxh_home_path}")
+argp.add_argument('+he','++host-execute-file', help=f"Execute script file placed on host and exit")
 argp.add_argument('+m','++method', default='appimage', help=f"Portable method: {portable_methods_str}")
 argp.add_argument('+v','++verbose', default=False, action='store_true', help="Verbose mode.")
 argp.add_argument('+vv','++vverbose', default=False, action='store_true', help="Super verbose mode.")
@@ -69,7 +75,8 @@ argp.usage = """xxh [ssh arguments] [user@]host[:port] [xxh arguments]
 
 usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY] [-o SSH_OPTION -o ...] 
            [user@]host[:port]
-           [+i] [+if] [+lxh LOCAL_XXH_HOME] [+hxh HOST_XXH_HOME] [+m METHOD] [+v] [+vv]
+           [+i] [+if] [+lxh LOCAL_XXH_HOME] [+hxh HOST_XXH_HOME] [+he HOST_EXECUTE_FILE] 
+           [+m METHOD] [+v] [+vv]
 """
 help = argp.format_help().replace('\n  +','\n\nxxh arguments:\n  +',1).replace('optional ', 'common ')\
     .replace('number and exit', 'number and exit\n\nssh arguments:').replace('positional ', 'required ')
@@ -79,13 +86,8 @@ opt = argp.parse_args()
 if opt.vverbose:
     opt.verbose = True
 
-if not opt.destination:
-    print('Destination required. Try --help')
-    exit(1)
-
 if opt.method not in portable_methods:
-    print(f'Currently supported methods: {portable_methods_str}')
-    exit(1)
+    eeprint(f'Currently supported methods: {portable_methods_str}')
 
 if 'ssh://' not in opt.destination:
     opt.destination = f'ssh://{opt.destination}'
@@ -94,8 +96,7 @@ url = urlparse(opt.destination)
 host = url.hostname
 
 if not host:
-    print(f"Wrong distination '{host}'")
-    exit(1)
+    eeprint(f"Wrong distination '{host}'")
 
 if url.port:
     opt.ssh_port = url.port
@@ -117,11 +118,10 @@ if opt.ssh_options:
         ssh_arguments += ['-o', ssh_option]
 
 if opt.verbose:
-    print(f'ssh arguments: {ssh_arguments}')
+    eprint(f'ssh arguments: {ssh_arguments}')
 
 if not which('ssh'):
-    print('Install OpenSSH client before using xxh: https://duckduckgo.com/?q=how+to+install+openssh+client+in+linux')
-    exit(1)
+    eeprint('Install OpenSSH client before using xxh: https://duckduckgo.com/?q=how+to+install+openssh+client+in+linux')
 
 opt.install = True if opt.install_force else opt.install
 
@@ -133,55 +133,52 @@ package_dir_path = os.path.dirname(os.path.realpath(xonssh_xxh.__file__))
 
 if os.path.exists(local_xxh_home_path):
     if not os.access(local_xxh_home_path, os.W_OK):
-        print(f"The local xxh home path isn't writable: {local_xxh_home_path}" )
-        exit(1)
+        eeprint(f"The local xxh home path isn't writable: {local_xxh_home_path}" )
+
 elif os.path.exists(local_xxh_home_parent):
     if os.access(local_xxh_home_parent, os.W_OK):
-        print(f'Create local xxh home path: {local_xxh_home_path}')
+        eprint(f'Create local xxh home path: {local_xxh_home_path}')
         mkdir @(ssh_v) -p @(local_xxh_home_path) @(local_xxh_home_path)/plugins
     else:
-        print(f"Parent for local xxh home path isn't writable: {local_xxh_home_parent}")
-        exit(1)
+        eeprint(f"Parent for local xxh home path isn't writable: {local_xxh_home_parent}")
+
 else:
-    print(f"Paths aren't writable:\n  {local_xxh_home_parent}\n  {local_xxh_home_path}")
-    exit(1)
+    eeprint(f"Paths aren't writable:\n  {local_xxh_home_parent}\n  {local_xxh_home_path}")
 
 # Fix env to avoid ssh warnings
 for lc in ['LC_TIME','LC_MONETARY','LC_ADDRESS','LC_IDENTIFICATION','LC_MEASUREMENT','LC_NAME','LC_NUMERIC','LC_PAPER','LC_TELEPHONE']:
     ${...}[lc] = "POSIX"
 
 if os.path.abspath(opt.host_xxh_home) == '/':
-    print("Host xxh home path {host_xxh_home} looks like /. Please check twice!")
-    exit(1)
+    eeprint("Host xxh home path {host_xxh_home} looks like /. Please check twice!")
 
-host_info_sh = os.path.join(package_dir_path, 'host_info.sh')
-host_info = $(cat @(host_info_sh) | sed @(f's|_xxh_home_|{opt.host_xxh_home}|') | ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s" ).strip()
+def get_host_info():
+    host_info_sh = os.path.join(package_dir_path, 'host_info.sh')
+    r = $(cat @(host_info_sh) | sed @(f's|_xxh_home_|{opt.host_xxh_home}|') | ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s" ).strip()
 
-if host_info == '':
-    print(f'Unknown answer from host when getting host info. Check your connection parameters using ordinary ssh.')
-    exit(1)
+    if opt.verbose:
+        eprint(f'host_info: {r}')
 
-host_info = dict([l.split('=') for l in host_info.split('\n')])
+    if r == '':
+        eeprint(f'Unknown answer from host when getting host info. Check your connection parameters using ordinary ssh.')
 
-if opt.verbose:
-    print(f'host_info: {host_info}')
+    r = dict([l.split('=') for l in r.split('\n')])
+    return r
+
+host_info = get_host_info()
 
 if host_info['xxh_home_realpath'] == '':
-    print(f'Unknown answer from host when getting realpath for directory {host_xxh_home}')
-    exit(1)
+    eeprint(f'Unknown answer from host when getting realpath for directory {host_xxh_home}')
 
 if host_info['xxh_version'] == '':
-    print(f'Unknown answer from host when getting version for directory {host_xxh_home}')
-    exit(1)
+    eeprint(f'Unknown answer from host when getting version for directory {host_xxh_home}')
 
 if host_info['scp'] == '' and host_info['rsync'] == '':
-    print(f"There are no rsync or scp on target host. Sad but files can't be uploaded.")
-    exit(1)
+    eeprint(f"There are no rsync or scp on target host. Sad but files can't be uploaded.")
 
 host_xxh_home = host_info['xxh_home_realpath']
 host_xonsh_bin = os.path.join(host_xxh_home, xonsh_bin_name)
 host_xonshrc = os.path.join(host_xxh_home, 'xonshrc.xsh')
-host_xonsh_plugins_rc = os.path.join(host_xxh_home, 'xxh_plugins_rc.xsh')
 
 host_xxh_version = host_info['xxh_version']
 
@@ -206,7 +203,7 @@ if opt.install_force == False:
             exit(0)
         elif choice == 'u':
             local_time = datetime.datetime.now().isoformat()[:19]
-            print(f"Move {host}:{host_xxh_home} to {host}:{host_xxh_home}-{local_time}")
+            eprint(f"Move {host}:{host_xxh_home} to {host}:{host_xxh_home}-{local_time}")
             echo @(f"mv {host_xxh_home} {host_xxh_home}-{local_time}") | ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s"
             opt.install = True
         elif choice == 'f':
@@ -215,91 +212,84 @@ if opt.install_force == False:
         elif choice == 'i':
             pass
         else:
-            print('Unknown answer')
-            exit(1)
+            eeprint('Unknown answer')
 
 if host_xxh_version == '-1':
     yn = input(f"{host}:{host_xxh_home} not found. Install xxh? [Y/n] ").strip().lower()
     if yn == 'y' or yn == '':
         opt.install = True
     else:
-        print('Unknown answer')
-        exit(1)
+        eeprint('Unknown answer')
 
 if opt.install:
-    print("\033[0;33m", end='')
+    eprint("\033[0;33m", end='')
     if opt.method == 'appimage':
         local_xonsh_appimage_fullpath = os.path.join(local_xxh_home_path, xonsh_bin_name)
         if not os.path.isfile(local_xonsh_appimage_fullpath):
-            print(f'First time download and save xonsh AppImage from {url_appimage}')
+            eprint(f'First time download and save xonsh AppImage from {url_appimage}')
             if which('wget'):
                 r=![wget -q --show-progress @(url_appimage) -O @(local_xonsh_appimage_fullpath)]
                 if r.returncode != 0:
-                    print(f'Error while download appimage using wget: {r}')
-                    exit(0)
+                    eeprint(f'Error while download appimage using wget: {r}')
             elif which('curl'):
                 r=![curl @(url_appimage) -o @(local_xonsh_appimage_fullpath)]
                 if r.returncode != 0:
-                    print(f'Error while download appimage using curl: {r}')
-                    exit(0)
+                    eeprint(f'Error while download appimage using curl: {r}')
             else:
-                print('Please install wget or curl and try again. Howto: https://duckduckgo.com/?q=how+to+install+wget+in+linux')
-                exit(1)
+                eeprint('Please install wget or curl and try again. Howto: https://duckduckgo.com/?q=how+to+install+wget+in+linux')
 
             chmod +x @(local_xonsh_appimage_fullpath)
     else:
-        print(f'Method "{opt.method}" is not supported now')
+        eprint(f'Method "{opt.method}" is not supported now')
 
     if opt.install_force:
-        print(f'Before upload xxh remove host directory {host}:{host_xxh_home}')
+        eprint(f'Before upload xxh remove host directory {host}:{host_xxh_home}')
         echo @(f"rm -rf {host_xxh_home}/*") | ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s"
 
-    print(f"Install xxh to {host}:{host_xxh_home}" )
+    eprint(f"Install xxh to {host}:{host_xxh_home}" )
     if which('rsync') and host_info['rsync']:
-        print('Upload using rsync')
-        rsync @(ssh_v) -e @(f"ssh {'' if ssh_v == [] else '-v'} {' '.join(ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(local_xxh_home_path)/ @(host):@(host_xxh_home)/
-        rsync @(ssh_v) -e @(f"ssh {'' if ssh_v == [] else '-v'} {' '.join(ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(package_dir_path)/ @(host):@(host_xxh_home)/
+        eprint('Upload using rsync')
+        rsync @(ssh_v) -e @(f"ssh {'' if ssh_v == [] else '-v'} {' '.join(ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(local_xxh_home_path)/ @(host):@(host_xxh_home)/ 1>&2
+        rsync @(ssh_v) -e @(f"ssh {'' if ssh_v == [] else '-v'} {' '.join(ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(package_dir_path)/ @(host):@(host_xxh_home)/ 1>&2
     elif which('scp') and host_info['scp']:
-        print("Upload using scp. Note: install rsync on local and remote host to increase speed.")
+        eprint("Upload using scp. Note: install rsync on local and remote host to increase speed.")
         scp_host = f"{host}:{host_xxh_home}/"
-        scp @(ssh_v) @(ssh_arguments) -r -C @([] if opt.verbose else ['-q']) @(local_xxh_home_path)/* @(scp_host)
-        scp @(ssh_v) @(ssh_arguments) -r -C @([] if opt.verbose else ['-q']) @(package_dir_path)/* @(scp_host)
+        scp @(ssh_v) @(ssh_arguments) -r -C @([] if opt.verbose else ['-q']) @(local_xxh_home_path)/* @(scp_host) 1>&2
+        scp @(ssh_v) @(ssh_arguments) -r -C @([] if opt.verbose else ['-q']) @(package_dir_path)/* @(scp_host) 1>&2
     else:
-        print('scp or rsync not found!')
+        eprint('scp or rsync not found!')
 
     plugins_fullpath = os.path.join(local_xxh_home_path, 'plugins')
     if os.path.exists(plugins_fullpath):
-        print(f'Run plugins post install on {host}')
+        eprint(f'Run plugins post install on {host}')
         scripts=''
         for script in sorted(glob.glob(os.path.join(plugins_fullpath, os.path.join('*','install.xsh')), recursive=True)):
             scripts += " && %s -i --rc %s -- %s" % (host_xonsh_bin, host_xonshrc, script.replace(local_xxh_home_path + os.sep, ''))
-            print(f' * {script}')
+            eprint(f' * {script}')
 
         if scripts:
-            echo @(f"cd {host_xxh_home} {scripts}" ) | ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s"
+            echo @(f"cd {host_xxh_home} {scripts}" ) | ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s" 1>&2
 
-    print('Check xonsh')
+    eprint('Check xonsh')
     host_settings_file = os.path.join(host_xxh_home, 'settings.py')
     check = $(ssh @(ssh_v) @(ssh_arguments) @(host) -t @(host_xonsh_bin) --no-script-cache -i --rc @(host_xonshrc) -- @(host_settings_file) )
 
     if opt.verbose:
-        print(f'Check xonsh result:\n{check}')
+        eprint(f'Check xonsh result:\n{check}')
 
     if check == '' or 'AppImages require FUSE to run' in check:
-        print('Check failed. Unpack AppImage...')
+        eprint('Check failed. Unpack AppImage...')
         host_xonsh_bin_new = os.path.join(host_xxh_home, 'xonsh-squashfs/usr/python/bin/xonsh')
-        ssh @(ssh_v) @(ssh_arguments) @(host) -t @(f"cd {host_xxh_home} && ./{xonsh_bin_name} --appimage-extract | grep -E 'usr/python/bin/xonsh$' && mv squashfs-root xonsh-squashfs && mv {host_xonsh_bin} {host_xonsh_bin}-disabled && ln -s {host_xonsh_bin_new}")
+        ssh @(ssh_v) @(ssh_arguments) @(host) -t @(f"cd {host_xxh_home} && ./{xonsh_bin_name} --appimage-extract | grep -E 'usr/python/bin/xonsh$' && mv squashfs-root xonsh-squashfs && mv {host_xonsh_bin} {host_xonsh_bin}-disabled && ln -s {host_xonsh_bin_new}") 1>&2
         host_xonsh_bin = host_xonsh_bin_new
 
-    print(f'First run xonsh on {host}\033[0m')
+    host_info = get_host_info()
 
-host_plugins_rc = $(ssh @(ssh_v) @(ssh_arguments) @(host) -t @(host_xonsh_bin) --no-script-cache -i --rc @(host_xonshrc) -- @(host_xonsh_plugins_rc) )
+    eprint(f'First run xonsh on {host}\033[0m')
 
-host_plugins_rc_list = host_plugins_rc.split('xxh-plugins#')
-if len(host_plugins_rc_list) > 1:
-    host_plugins_rc_list = host_plugins_rc_list[1]
+host_plugins_rc_list = host_info['xxh_plugins_rc'].split(' ')
+
+if opt.host_execute_file:
+    ssh @(ssh_v) @(ssh_arguments) @(host) -t @(host_xonsh_bin) --no-script-cache -i --rc @(host_xonshrc) -- @(opt.host_execute_file)
 else:
-    print(f'Something went wrong while getting plugins info. Host answer: {host_plugins_rc}')
-    exit(1)
-
-ssh @(ssh_v) @(ssh_arguments) @(host) -t @(host_xonsh_bin) --no-script-cache -i --rc @(host_xonshrc) @(host_plugins_rc_list)
+    ssh @(ssh_v) @(ssh_arguments) @(host) -t @(host_xonsh_bin) --no-script-cache -i --rc @(host_xonshrc) @(host_plugins_rc_list)
