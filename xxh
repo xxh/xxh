@@ -282,13 +282,7 @@ if opt.install:
 
     eprint(f'First run xonsh on {host}\033[0m')
 
-host_plugins_rc = $(ssh @(ssh_v) @(ssh_arguments) @(host) -t @(host_xonsh_bin) --no-script-cache -i --rc @(host_xonshrc) -- @(host_xonsh_plugins_rc) )
-
-host_plugins_rc_list = host_plugins_rc.split('xxh-plugins#')
-if len(host_plugins_rc_list) > 1:
-    host_plugins_rc_list = host_plugins_rc_list[1]
-else:
-    eeprint(f'Something went wrong while getting plugins info. Host answer: {host_plugins_rc}')
+host_plugins_rc_list = host_info['xxh_plugins_rc'].split(' ')
 
 if opt.host_execute_file:
     ssh @(ssh_v) @(ssh_arguments) @(host) -t @(host_xonsh_bin) --no-script-cache -i --rc @(host_xonshrc) -- @(opt.host_execute_file)
