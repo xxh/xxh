@@ -152,16 +152,20 @@ for lc in ['LC_TIME','LC_MONETARY','LC_ADDRESS','LC_IDENTIFICATION','LC_MEASUREM
 if os.path.abspath(opt.host_xxh_home) == '/':
     eeprint("Host xxh home path {host_xxh_home} looks like /. Please check twice!")
 
-host_info_sh = os.path.join(package_dir_path, 'host_info.sh')
-host_info = $(cat @(host_info_sh) | sed @(f's|_xxh_home_|{opt.host_xxh_home}|') | ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s" ).strip()
+def get_host_info():
+    host_info_sh = os.path.join(package_dir_path, 'host_info.sh')
+    r = $(cat @(host_info_sh) | sed @(f's|_xxh_home_|{opt.host_xxh_home}|') | ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s" ).strip()
 
-if host_info == '':
-    eeprint(f'Unknown answer from host when getting host info. Check your connection parameters using ordinary ssh.')
+    if opt.verbose:
+        eprint(f'host_info: {r}')
 
-host_info = dict([l.split('=') for l in host_info.split('\n')])
+    if r == '':
+        eeprint(f'Unknown answer from host when getting host info. Check your connection parameters using ordinary ssh.')
 
-if opt.verbose:
-    eprint(f'host_info: {host_info}')
+    r = dict([l.split('=') for l in r.split('\n')])
+    return r
+
+host_info = get_host_info()
 
 if host_info['xxh_home_realpath'] == '':
     eeprint(f'Unknown answer from host when getting realpath for directory {host_xxh_home}')
@@ -175,7 +179,6 @@ if host_info['scp'] == '' and host_info['rsync'] == '':
 host_xxh_home = host_info['xxh_home_realpath']
 host_xonsh_bin = os.path.join(host_xxh_home, xonsh_bin_name)
 host_xonshrc = os.path.join(host_xxh_home, 'xonshrc.xsh')
-host_xonsh_plugins_rc = os.path.join(host_xxh_home, 'xxh_plugins_rc.xsh')
 
 host_xxh_version = host_info['xxh_version']
 
@@ -279,6 +282,8 @@ if opt.install:
         host_xonsh_bin_new = os.path.join(host_xxh_home, 'xonsh-squashfs/usr/python/bin/xonsh')
         ssh @(ssh_v) @(ssh_arguments) @(host) -t @(f"cd {host_xxh_home} && ./{xonsh_bin_name} --appimage-extract | grep -E 'usr/python/bin/xonsh$' && mv squashfs-root xonsh-squashfs && mv {host_xonsh_bin} {host_xonsh_bin}-disabled && ln -s {host_xonsh_bin_new}") 1>&2
         host_xonsh_bin = host_xonsh_bin_new
+
+    host_info = get_host_info()
 
     eprint(f'First run xonsh on {host}\033[0m')
 
