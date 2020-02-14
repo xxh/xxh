@@ -22,12 +22,13 @@ pip install xonssh-xxh
 
 ## Usage
 ```
-$ xxh --help
+$ xxh --help                                                                                                                                          
 usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]
 
 usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY] [-o SSH_OPTION -o ...] 
            [user@]host[:port]
-           [+i] [+if] [+lxh LOCAL_XXH_HOME] [+hxh HOST_XXH_HOME] [+m METHOD] [+v] [+vv]
+           [+i] [+if] [+lxh LOCAL_XXH_HOME] [+hxh HOST_XXH_HOME] [+he HOST_EXECUTE_FILE] 
+           [+m METHOD] [+v] [+vv]
 
 The xxh is for using the xonsh shell wherever you go through the ssh. 
 
@@ -56,11 +57,13 @@ ssh arguments:
 
 xxh arguments:
   +i, ++install         Install xxh to destination host.
-  +if, ++install-force  Delete remote xxh home and install xonsh to destination host.
-  +lxh LOCAL_XXH_HOME, ++local-xxh-home LOCAL_XXH_HOME
+  +if, ++install-force  Removing the host xxh home and install xxh again.
+  +lh LOCAL_XXH_HOME, ++local-xxh-home LOCAL_XXH_HOME
                         Local xxh home path. Default: ~/.xxh
-  +hxh HOST_XXH_HOME, ++host-xxh-home HOST_XXH_HOME
+  +hh HOST_XXH_HOME, ++host-xxh-home HOST_XXH_HOME
                         Host xxh home path. Default: ~/.xxh
+  +he HOST_EXECUTE_FILE, ++host-execute-file HOST_EXECUTE_FILE
+                        Execute script file placed on host and exit
   +m METHOD, ++method METHOD
                         Portable method: appimage
   +v, ++verbose         Verbose mode.
