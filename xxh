@@ -61,6 +61,7 @@ argp.add_argument('+i','++install', default=False, action='store_true', help="In
 argp.add_argument('+if','++install-force', default=False, action='store_true', help="Removing the host xxh home and install xxh again.")
 argp.add_argument('+lh','++local-xxh-home', default=local_xxh_home_path, help=f"Local xxh home path. Default: {local_xxh_home_path}")
 argp.add_argument('+hh','++host-xxh-home', default=host_xxh_home_path, help=f"Host xxh home path. Default: {host_xxh_home_path}")
+argp.add_argument('+he','++host-execute-file', help=f"Execute script file placed on host and exit")
 argp.add_argument('+m','++method', default='appimage', help=f"Portable method: {portable_methods_str}")
 argp.add_argument('+v','++verbose', default=False, action='store_true', help="Verbose mode.")
 argp.add_argument('+vv','++vverbose', default=False, action='store_true', help="Super verbose mode.")
@@ -301,4 +302,7 @@ else:
     print(f'Something went wrong while getting plugins info. Host answer: {host_plugins_rc}')
     exit(1)
 
-ssh @(ssh_v) @(ssh_arguments) @(host) -t @(host_xonsh_bin) --no-script-cache -i --rc @(host_xonshrc) @(host_plugins_rc_list)
+if opt.host_execute_file:
+    ssh @(ssh_v) @(ssh_arguments) @(host) -t @(host_xonsh_bin) --no-script-cache -i --rc @(host_xonshrc) -- @(opt.host_execute_file)
+else:
+    ssh @(ssh_v) @(ssh_arguments) @(host) -t @(host_xonsh_bin) --no-script-cache -i --rc @(host_xonshrc) @(host_plugins_rc_list)
