@@ -19,6 +19,7 @@
 ```
 pip install xonssh-xxh
 ```
+After install you can just using `xxh` command as replace `ssh` to connecting to the hosts because `xxh` has seamless support of basic `ssh` command arguments.
 
 ## Usage
 ```
