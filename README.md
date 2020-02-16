@@ -91,7 +91,7 @@ xxh arguments:
 
 The xxh xonsh will use pip and python from `xonsh.AppImage` by default. You can install pip packages ordinally with `pip install`. They will appear in `$XXH_HOME/pip`.
 
-## How it works?
+### How it works?
 
 When you run `xxh <server>` command:
 
@@ -104,13 +104,13 @@ When you run `xxh <server>` command:
 ## Development
 Use [xxh-tests](https://github.com/xonssh/xxh-tests) environment for development and contribution.
 
-## Known Issues
+### Known Issues
 
-### GLIBs versions
+#### GLIBs versions
 
 Current method to make xonsh portable is using an [AppImage](https://appimage.org/) which was built on [manylinux2010 (PEP 571)](https://github.com/niess/linuxdeploy-plugin-python/issues/12). In case you see the error like ``/xonsh-x86_64.AppImage: /lib/x86_64-linux-gnu/libc.so.6: version GLIBC_2.25 not found (required by /ppp/xonsh-x86_64.AppImage)`` this means you should rebuild the AppImage for older version of linux distributive. Try [linuxdeploy-plugin-python](https://github.com/niess/linuxdeploy-plugin-python/).
 
-### WSL1: ^Z
+#### WSL1: ^Z
 
 ```
 # xxh YT-1300
@@ -121,7 +121,7 @@ This issue was addressed to Xonsh team in [3367](https://github.com/xonsh/xonsh/
 
 WSL2 is not tested yet.
 
-### Related issues
+#### Related issues
 
 What will make xxh more universal and stable in the future:
 * [AppImages run on Alpine](https://github.com/AppImage/AppImageKit/issues/1015) 
