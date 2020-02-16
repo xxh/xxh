@@ -77,7 +77,7 @@ xxh arguments:
 
 🔎 [Search xxh plugins on Github](https://github.com/search?q=xxh-plugin&type=Repositories)
 
-⛏️ [Create plugin with your own lovely aliases, functions or color themes](https://github.com/xonssh/xxh-plugin-sample).
+⛏️ [Create xxh plugin](https://github.com/xonssh/xxh-plugin-sample).
 
 📌 Pinned plugins:
 
