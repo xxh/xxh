@@ -1,7 +1,7 @@
-import sys, os
+import sys
 
 global_settings = {
-    'XXH_VERSION': '0.2.6'
+    'XXH_VERSION': '0.2.7'
 }
 
 if __name__ == "__main__":
