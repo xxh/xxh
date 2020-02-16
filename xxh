@@ -134,14 +134,12 @@ package_dir_path = os.path.dirname(os.path.realpath(xonssh_xxh.__file__))
 if os.path.exists(local_xxh_home_path):
     if not os.access(local_xxh_home_path, os.W_OK):
         eeprint(f"The local xxh home path isn't writable: {local_xxh_home_path}" )
-
 elif os.path.exists(local_xxh_home_parent):
     if os.access(local_xxh_home_parent, os.W_OK):
         eprint(f'Create local xxh home path: {local_xxh_home_path}')
-        mkdir @(ssh_v) -p @(local_xxh_home_path) @(local_xxh_home_path)/plugins
+        mkdir @(ssh_v) -p @(local_xxh_home_path) @(os.path.join(local_xxh_home_path, 'plugins'))
     else:
         eeprint(f"Parent for local xxh home path isn't writable: {local_xxh_home_parent}")
-
 else:
     eeprint(f"Paths aren't writable:\n  {local_xxh_home_parent}\n  {local_xxh_home_path}")
 
@@ -297,9 +295,7 @@ if opt.install:
 
     eprint(f'First run xonsh on {host}\033[0m')
 
-host_plugins_rc_list = host_info['xxh_plugins_rc'].split(' ')
-
 if opt.host_execute_file:
     ssh @(ssh_v) @(ssh_arguments) @(host) -t @(host_xonsh_bin) --no-script-cache -i --rc @(host_xonshrc) -- @(opt.host_execute_file)
 else:
-    ssh @(ssh_v) @(ssh_arguments) @(host) -t @(host_xonsh_bin) --no-script-cache -i --rc @(host_xonshrc) @(host_plugins_rc_list)
+    ssh @(ssh_v) @(ssh_arguments) @(host) -t @(host_xonsh_bin) --no-script-cache -i --rc @(host_xonshrc)
