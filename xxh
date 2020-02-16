@@ -1,6 +1,6 @@
 #!/usr/bin/env xonsh
 
-import os, sys, glob, argparse, datetime, re
+import os, sys, glob, argparse, datetime
 from shutil import which
 from sys import exit
 from argparse import RawTextHelpFormatter
@@ -134,14 +134,12 @@ package_dir_path = os.path.dirname(os.path.realpath(xonssh_xxh.__file__))
 if os.path.exists(local_xxh_home_path):
     if not os.access(local_xxh_home_path, os.W_OK):
         eeprint(f"The local xxh home path isn't writable: {local_xxh_home_path}" )
-
 elif os.path.exists(local_xxh_home_parent):
     if os.access(local_xxh_home_parent, os.W_OK):
         eprint(f'Create local xxh home path: {local_xxh_home_path}')
-        mkdir @(ssh_v) -p @(local_xxh_home_path) @(local_xxh_home_path)/plugins
+        mkdir @(ssh_v) -p @(local_xxh_home_path) @(os.path.join(local_xxh_home_path, 'plugins'))
     else:
         eeprint(f"Parent for local xxh home path isn't writable: {local_xxh_home_parent}")
-
 else:
     eeprint(f"Paths aren't writable:\n  {local_xxh_home_parent}\n  {local_xxh_home_path}")
 
@@ -157,7 +155,7 @@ def get_host_info():
     r = $(cat @(host_info_sh) | sed @(f's|_xxh_home_|{opt.host_xxh_home}|') | ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s" ).strip()
 
     if opt.verbose:
-        eprint(f'host_info: {r}')
+        eprint(f'Host info:\n{r}')
 
     if r == '':
         eeprint(f'Unknown answer from host when getting host info. Check your connection parameters using ordinary ssh.')
@@ -167,27 +165,32 @@ def get_host_info():
 
 host_info = get_host_info()
 
-if host_info['xxh_home_realpath'] == '':
+host_xxh_home = host_info['xxh_home_realpath']
+host_xxh_version = host_info['xxh_version']
+
+if host_xxh_home == '':
     eeprint(f'Unknown answer from host when getting realpath for directory {host_xxh_home}')
 
-if host_info['xxh_version'] == '':
+if host_xxh_version == '':
     eeprint(f'Unknown answer from host when getting version for directory {host_xxh_home}')
+
+if host_info['xxh_home_writable'] == '0' and host_info['xxh_parent_home_writable'] == '0':
+    yn = input(f"{host}:{host_xxh_home} is not writable. Continue? [y/n] ").strip().lower()
+    if yn != 'y':
+        eeprint('Stopped')
 
 if host_info['scp'] == '' and host_info['rsync'] == '':
     eeprint(f"There are no rsync or scp on target host. Sad but files can't be uploaded.")
 
-host_xxh_home = host_info['xxh_home_realpath']
 host_xonsh_bin = os.path.join(host_xxh_home, xonsh_bin_name)
 host_xonshrc = os.path.join(host_xxh_home, 'xonshrc.xsh')
-
-host_xxh_version = host_info['xxh_version']
 
 if opt.install_force == False:
     # Check version
     ask = False
-    if host_xxh_version is '0':
+    if host_xxh_version is 'version_not_found':
         ask = f'Host xxh home is not empty but something went wrong while getting host xxh version.'
-    elif host_xxh_version != '-1' and host_xxh_version != local_xxh_version:
+    elif host_xxh_version not in ['dir_not_found','dir_empty'] and host_xxh_version != local_xxh_version:
         ask = f"Local xxh version '{local_xxh_version}' is not equal host xxh version '{host_xxh_version}'."
 
     if ask:
@@ -214,7 +217,7 @@ if opt.install_force == False:
         else:
             eeprint('Unknown answer')
 
-if host_xxh_version == '-1':
+if host_xxh_version in ['dir_not_found','dir_empty'] and opt.install_force == False:
     yn = input(f"{host}:{host_xxh_home} not found. Install xxh? [Y/n] ").strip().lower()
     if yn == 'y' or yn == '':
         opt.install = True
@@ -247,6 +250,11 @@ if opt.install:
         echo @(f"rm -rf {host_xxh_home}/*") | ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s"
 
     eprint(f"Install xxh to {host}:{host_xxh_home}" )
+
+    if host_xxh_version in ['dir_not_found']:
+        eprint(f'Create xxh home {host_xxh_home}')
+        echo @(f"mkdir -p {host_xxh_home}") | ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s"
+
     if which('rsync') and host_info['rsync']:
         eprint('Upload using rsync')
         rsync @(ssh_v) -e @(f"ssh {'' if ssh_v == [] else '-v'} {' '.join(ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(local_xxh_home_path)/ @(host):@(host_xxh_home)/ 1>&2
@@ -283,13 +291,7 @@ if opt.install:
         ssh @(ssh_v) @(ssh_arguments) @(host) -t @(f"cd {host_xxh_home} && ./{xonsh_bin_name} --appimage-extract | grep -E 'usr/python/bin/xonsh$' && mv squashfs-root xonsh-squashfs && mv {host_xonsh_bin} {host_xonsh_bin}-disabled && ln -s {host_xonsh_bin_new}") 1>&2
         host_xonsh_bin = host_xonsh_bin_new
 
-    host_info = get_host_info()
-
     eprint(f'First run xonsh on {host}\033[0m')
 
-host_plugins_rc_list = host_info['xxh_plugins_rc'].split(' ')
-
-if opt.host_execute_file:
-    ssh @(ssh_v) @(ssh_arguments) @(host) -t @(host_xonsh_bin) --no-script-cache -i --rc @(host_xonshrc) -- @(opt.host_execute_file)
-else:
-    ssh @(ssh_v) @(ssh_arguments) @(host) -t @(host_xonsh_bin) --no-script-cache -i --rc @(host_xonshrc) @(host_plugins_rc_list)
+host_execute_file = ['--', opt.host_execute_file] if opt.host_execute_file else []
+ssh @(ssh_v) @(ssh_arguments) @(host) -t @(host_xonsh_bin) --no-script-cache -i --rc @(host_xonshrc) @(host_execute_file)
