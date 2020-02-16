@@ -252,7 +252,7 @@ if opt.install:
     eprint(f"Install xxh to {host}:{host_xxh_home}" )
 
     if host_xxh_version in ['dir_not_found']:
-        print(f'Create xxh home {host_xxh_home}')
+        eprint(f'Create xxh home {host_xxh_home}')
         echo @(f"mkdir -p {host_xxh_home}") | ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s"
 
     if which('rsync') and host_info['rsync']:
