@@ -217,7 +217,7 @@ if opt.install_force == False:
         else:
             eeprint('Unknown answer')
 
-if host_xxh_version in ['dir_not_found','dir_empty']:
+if host_xxh_version in ['dir_not_found','dir_empty'] and opt.install_force == False:
     yn = input(f"{host}:{host_xxh_home} not found. Install xxh? [Y/n] ").strip().lower()
     if yn == 'y' or yn == '':
         opt.install = True
