@@ -295,7 +295,5 @@ if opt.install:
 
     eprint(f'First run xonsh on {host}\033[0m')
 
-if opt.host_execute_file:
-    ssh @(ssh_v) @(ssh_arguments) @(host) -t @(host_xonsh_bin) --no-script-cache -i --rc @(host_xonshrc) -- @(opt.host_execute_file)
-else:
-    ssh @(ssh_v) @(ssh_arguments) @(host) -t @(host_xonsh_bin) --no-script-cache -i --rc @(host_xonshrc)
+host_execute_file = ['--', opt.host_execute_file] if opt.host_execute_file else []
+ssh @(ssh_v) @(ssh_arguments) @(host) -t @(host_xonsh_bin) --no-script-cache -i --rc @(host_xonshrc) @(host_execute_file)
