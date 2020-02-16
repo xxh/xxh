@@ -73,11 +73,13 @@ xxh arguments:
 
 ## Plugins
 
+**xxh plugin** is the set of xsh scripts which will be run when you'll use xxh. You can create xxh plugin with your lovely aliases, tools or color theme and xxh will bring them to your ssh sessions.
+
 🔎 [Search xxh plugins on Github](https://github.com/search?q=xxh-plugin&type=Repositories)
 
 ⛏️ [Create plugin with your own lovely aliases, functions or color themes](https://github.com/xonssh/xxh-plugin-sample).
 
-Pinned plugins:
+📌 Pinned plugins:
 
 * [Pipe Liner](https://github.com/xonssh/xxh-plugin-pipe-liner) — processing the lines easy with python and classic shell pipes
 * [Bar Theme](https://github.com/xonssh/xxh-plugin-theme-bar) — theme to stay focused
