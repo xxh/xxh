@@ -246,7 +246,7 @@ if opt.install:
         eprint(f'Method "{opt.method}" is not supported now')
 
     if opt.install_force:
-        eprint(f'Before upload xxh remove host directory {host}:{host_xxh_home}')
+        eprint(f'Remove host xxh home {host}:{host_xxh_home}')
         echo @(f"rm -rf {host_xxh_home}/*") | ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s"
 
     eprint(f"Install xxh to {host}:{host_xxh_home}" )
@@ -269,16 +269,18 @@ if opt.install:
 
     plugins_fullpath = os.path.join(local_xxh_home_path, 'plugins')
     if os.path.exists(plugins_fullpath):
-        eprint(f'Run plugins post install on {host}')
-        scripts=''
-        for script in sorted(glob.glob(os.path.join(plugins_fullpath, os.path.join('*','post_install.xsh')), recursive=True)):
-            scripts += " && %s -i --rc %s -- %s" % (host_xonsh_bin, host_xonshrc, script.replace(local_xxh_home_path + os.sep, ''))
-            eprint(f' * {script}')
+        plugin_post_installs = sorted(glob.glob(os.path.join(plugins_fullpath, os.path.join('*', 'post_install.xsh')), recursive=True))
+        if len(plugin_post_installs) > 0:
+            eprint(f'Run plugins post install on {host}')
+            scripts=''
+            for script in plugin_post_installs:
+                scripts += " && %s -i --rc %s -- %s" % (host_xonsh_bin, host_xonshrc, script.replace(local_xxh_home_path + os.sep, ''))
+                eprint(f' * {script}')
 
-        if scripts:
-            echo @(f"cd {host_xxh_home} {scripts}" ) | ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s" 1>&2
+            if scripts:
+                echo @(f"cd {host_xxh_home} {scripts}" ) | ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s" 1>&2
 
-    eprint('Check xonsh')
+    eprint(f'Check {opt.method}')
     host_settings_file = os.path.join(host_xxh_home, 'settings.py')
     check = $(ssh @(ssh_v) @(ssh_arguments) @(host) -t @(host_xonsh_bin) --no-script-cache -i --rc @(host_xonshrc) -- @(host_settings_file) )
 
@@ -286,7 +288,7 @@ if opt.install:
         eprint(f'Check xonsh result:\n{check}')
 
     if check == '' or 'AppImages require FUSE to run' in check:
-        eprint('Check failed. Unpack AppImage...')
+        eprint('AppImage is not supported by host. Trying to unpack and run...')
         host_xonsh_bin_new = os.path.join(host_xxh_home, 'xonsh-squashfs/usr/python/bin/xonsh')
         ssh @(ssh_v) @(ssh_arguments) @(host) -t @(f"cd {host_xxh_home} && ./{xonsh_bin_name} --appimage-extract | grep -E 'usr/python/bin/xonsh$' && mv squashfs-root xonsh-squashfs && mv {host_xonsh_bin} {host_xonsh_bin}-disabled && ln -s {host_xonsh_bin_new}") 1>&2
         host_xonsh_bin = host_xonsh_bin_new
