@@ -1,6 +1,6 @@
 #!/usr/bin/env xonsh
 
-import os, sys, glob, argparse, datetime, re
+import os, sys, glob, argparse, datetime
 from shutil import which
 from sys import exit
 from argparse import RawTextHelpFormatter
