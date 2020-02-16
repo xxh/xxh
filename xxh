@@ -271,7 +271,7 @@ if opt.install:
     if os.path.exists(plugins_fullpath):
         eprint(f'Run plugins post install on {host}')
         scripts=''
-        for script in sorted(glob.glob(os.path.join(plugins_fullpath, os.path.join('*','install.xsh')), recursive=True)):
+        for script in sorted(glob.glob(os.path.join(plugins_fullpath, os.path.join('*','post_install.xsh')), recursive=True)):
             scripts += " && %s -i --rc %s -- %s" % (host_xonsh_bin, host_xonshrc, script.replace(local_xxh_home_path + os.sep, ''))
             eprint(f' * {script}')
 
