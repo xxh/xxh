@@ -73,7 +73,9 @@ xxh arguments:
 
 ## Plugins
 
-[Search xxh plugins on Github](https://github.com/search?q=xxh-plugin&type=Repositories) or [create plugin with your own lovely functions](README.plugins.md).
+🔎 [Search xxh plugins on Github](https://github.com/search?q=xxh-plugin&type=Repositories)
+
+⛏️ [Create plugin with your own lovely aliases, functions or color themes](https://github.com/xonssh/xxh-plugin-sample).
 
 Pinned plugins:
 
