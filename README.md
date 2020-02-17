@@ -93,13 +93,13 @@ The xxh xonsh will use pip and python from `xonsh.AppImage` by default. You can 
 
 ### How it works?
 
-When you run `xxh <server>` command:
+When you run `xxh <host>` command:
 
-1. If it needed xxh script will download `xonsh.AppImage`. This is portable version of xonsh. URL you can find in `xxh.xsh`
+1. If it needed xxh will download portable xonsh shell and store locally to future use. 
 
-2. If it needed xxh script copies the portable xonsh on the host (`~/.xxh` by default) along with init scripts and plugins.
+2. If it needed xxh upload the portable xonsh to the host (`~/.xxh` by default) along with init scripts and plugins.
 
-3. Finally xxh makes ssh connection to server and running remote portable xonsh shell without any affection on the target system.
+3. Finally xxh will makes ssh connection to the server and run portable xonsh shell without any addition installatio and affection on the target host.
 
 ## Development
 Use [xxh-tests](https://github.com/xonssh/xxh-tests) environment for development and contribution.
