@@ -1,5 +1,7 @@
 import os, sys, glob
 
+$UPDATE_OS_ENVIRON=True
+
 $XXH_HOME = os.path.dirname(os.path.realpath(__file__))
 $PIP_TARGET = os.path.join($XXH_HOME, 'pip')
 $PYTHONPATH = $PIP_TARGET
