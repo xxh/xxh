@@ -8,6 +8,9 @@
  <a href="https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7" target="_blank"><img alt="asciinema demo" src="https://img.shields.io/badge/demo-asciinema-grass"></a>
   <img alt="PyPI - License" src="https://img.shields.io/pypi/l/xonssh-xxh">
 </p>
+<p>
+Please help spread the word about xxh! Click ⭐ on the repo and share the link! 
+</p>
 
 ## Installation
 ```
