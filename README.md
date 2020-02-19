@@ -9,7 +9,7 @@
   <img alt="PyPI - License" src="https://img.shields.io/pypi/l/xonssh-xxh">
 </p>
 <p align="center">
-Please help spread the word about xxh! Click ⭐ on the repo and share the link! 
+Spread the word about xxh! Click ⭐ on the repo and share the link! 
 </p>
 
 ## Installation
