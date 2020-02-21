@@ -16,10 +16,7 @@ Spread the word about xxh! Click ⭐ on the repo and share the link!
 ```
 python3 -m pip install --upgrade xonssh-xxh
 ```
-After install you can just using `xxh` command as replace `ssh` to connecting to the hosts because `xxh` has seamless support of basic `ssh` command arguments. Example:
-```
-xxh -i ~/.ssh/id_rsa snail@hostname:2222
-```
+After install you can just using `xxh` command as replace `ssh` to connecting to the host because `xxh` has seamless support of basic `ssh` command arguments. 
 
 ## Usage
 ```
@@ -101,7 +98,7 @@ When you run `xxh <host>` command:
 
 2. If it needed xxh upload the portable xonsh to the host (`~/.xxh` by default) along with init scripts and plugins.
 
-3. Finally xxh will makes ssh connection to the server and run portable xonsh shell without any addition installatio and affection on the target host.
+3. Finally xxh will make ssh connection to the server and run portable xonsh shell without any addition installs and affection on the target host.
 
 ## Development
 Use [xxh-tests](https://github.com/xonssh/xxh-tests) environment for development and contribution.
@@ -117,18 +114,15 @@ Current method to make xonsh portable is using an [AppImage](https://appimage.or
 ```
 # xxh YT-1300
 ^Z
-Unknown answer from server when checking direcotry /home/hansolo/.xxh:
+# 
 ```
 This issue was addressed to Xonsh team in [3367](https://github.com/xonsh/xonsh/issues/3367). Just try to run command again.
-
-WSL2 is not tested yet.
 
 #### Related issues
 
 What will make xxh more universal and stable in the future:
 * [AppImages run on Alpine](https://github.com/AppImage/AppImageKit/issues/1015) 
 * [Fix xonsh for WSL1](https://github.com/xonsh/xonsh/issues/3367)
-
 
 ## Thanks
 * @scopatz for https://github.com/xonsh/xonsh
