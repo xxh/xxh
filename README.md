@@ -6,6 +6,7 @@
 <p align="center">  
   <a href="https://pypi.org/project/xonssh-xxh/" target="_blank" alt="PyPI Latest Release"><img src="https://img.shields.io/pypi/v/xonssh-xxh.svg"></a>
  <a href="https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7" target="_blank"><img alt="asciinema demo" src="https://img.shields.io/badge/demo-asciinema-grass"></a>
+  <a href="https://gitter.im/xonssh-xxh/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge" target="_blank"><img alt="Chat on Gitter" src="https://badges.gitter.im/xonssh-xxh/community.svg"></a>
   <img alt="PyPI - License" src="https://img.shields.io/pypi/l/xonssh-xxh">
 </p>
 <p align="center">
