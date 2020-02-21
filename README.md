@@ -16,11 +16,16 @@ Spread the word about xxh! Click ⭐ on the repo and share the link!
 ```
 python3 -m pip install --upgrade xonssh-xxh
 ```
-After install you can just using `xxh` command as replace `ssh` to connecting to the hosts because `xxh` has seamless support of basic `ssh` command arguments.
+After install you can just using `xxh` command as replace `ssh` to connecting to the hosts because `xxh` has seamless support of basic `ssh` command arguments. Example:
+```
+xxh -i ~/.ssh/id_rsa snail@hostname:2222
+```
 
 ## Usage
 ```
-$ xxh --help                                                                                                                                          
+$ xxh --help                                                                                                                 
+usage: xxh [config name from ssh config]
+
 usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]
 
 usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY] [-o SSH_OPTION -o ...] 
