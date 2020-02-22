@@ -107,7 +107,7 @@ When you run `xxh <host>` command:
 3. Finally xxh will make ssh connection to the server and run portable xonsh shell without any addition installs and affection on the target host.
 
 ## Development
-Use [xxh-dev](https://github.com/xonssh/xxh-dev) environment for development, testing and contribution.
+🛠️ Use [xxh-dev](https://github.com/xonssh/xxh-dev) environment for development, testing and contribution.
 
 ### Known Issues
 
