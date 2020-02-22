@@ -111,15 +111,15 @@ Use [xxh-tests](https://github.com/xonssh/xxh-tests) environment for development
 
 ### Known Issues
 
-### Sometimes xontribs or pip packages not found after install sometimes
+##### Sometimes xontribs or pip packages not found after install sometimes
 
 If an xontrib or pip package is not found immediately after install you can do reconnect. Xontribs could be reloaded manually without reconnect by executing `import importlib; importlib.reload(sys.modules['xontrib'])`.
 
-#### GLIBs versions
+##### GLIBs versions
 
 Current method to make xonsh portable is using an [AppImage](https://appimage.org/) which was built on [manylinux2010 (PEP 571)](https://github.com/niess/linuxdeploy-plugin-python/issues/12). In case you see the error like ``/xonsh-x86_64.AppImage: /lib/x86_64-linux-gnu/libc.so.6: version GLIBC_2.25 not found (required by /ppp/xonsh-x86_64.AppImage)`` this means you should rebuild the AppImage for older version of linux distributive. Try [linuxdeploy-plugin-python](https://github.com/niess/linuxdeploy-plugin-python/).
 
-#### WSL1: ^Z
+##### WSL1: ^Z
 
 ```
 # xxh YT-1300
@@ -127,7 +127,7 @@ Current method to make xonsh portable is using an [AppImage](https://appimage.or
 ```
 This issue was addressed to Xonsh team in [3367](https://github.com/xonsh/xonsh/issues/3367). Just try to run command again.
 
-#### Related issues
+##### Related issues
 
 What will make xxh more universal and stable in the future:
 * [AppImages run on Alpine](https://github.com/AppImage/AppImageKit/issues/1015) 
