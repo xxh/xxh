@@ -10,7 +10,7 @@
   <img alt="PyPI - License" src="https://img.shields.io/pypi/l/xonssh-xxh">
 </p>
 <p align="center">
-Spread the word about xxh! Click ⭐ on the repo and share the link! 
+Help spread the word about xxh! Click ⭐ on the repo and <a href="https://twitter.com/intent/tweet?text=Python-powered%20shell%20wherever%20you%20go%20through%20the%20ssh&url=https%3A%2F%2Fgithub.com%2Fxonssh%2Fxxh&related=" target="_blank">tweet the link</a>! 
 </p>
 
 ## Installation
