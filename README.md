@@ -89,7 +89,12 @@ xxh arguments:
 
 ### Using pip and python
 
-The xxh xonsh will use pip and python from `xonsh.AppImage` by default. You can install pip packages ordinally with `pip install`. They will appear in `$XXH_HOME/pip`.
+The xxh xonsh will use pip and python from `xonsh.AppImage` by default. You can update pip and install packages ordinally: 
+```
+$ python3 -m pip install --upgrade pip
+$ python3 -m pip install --upgrade pandas
+```
+The packages will appear in `$XXH_HOME/pip` (`~/.xxh/pip` by default).
 
 ### How it works?
 
