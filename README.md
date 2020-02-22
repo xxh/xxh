@@ -91,8 +91,8 @@ xxh arguments:
 
 The xxh xonsh will use pip and python from `xonsh.AppImage` by default. You can update pip and install packages ordinally: 
 ```
-$ python3 -m pip install --upgrade pip
-$ python3 -m pip install --upgrade pandas
+$ python3 -m pip install --upgrade pip      # or: xpip install --upgrade pip
+$ python3 -m pip install --upgrade pandas   # or: xpip install --upgrade pandas
 ```
 The packages will appear in `$XXH_HOME/pip` (`~/.xxh/pip` by default).
 
@@ -107,7 +107,7 @@ When you run `xxh <host>` command:
 3. Finally xxh will make ssh connection to the server and run portable xonsh shell without any addition installs and affection on the target host.
 
 ## Development
-Use [xxh-tests](https://github.com/xonssh/xxh-tests) environment for development and contribution.
+Use [xxh-dev](https://github.com/xonssh/xxh-dev) environment for development, testing and contribution.
 
 ### Known Issues
 
@@ -119,19 +119,12 @@ If an xontrib or pip package is not found immediately after install you can do r
 
 Current method to make xonsh portable is using an [AppImage](https://appimage.org/) which was built on [manylinux2010 (PEP 571)](https://github.com/niess/linuxdeploy-plugin-python/issues/12). In case you see the error like ``/xonsh-x86_64.AppImage: /lib/x86_64-linux-gnu/libc.so.6: version GLIBC_2.25 not found (required by /ppp/xonsh-x86_64.AppImage)`` this means you should rebuild the AppImage for older version of linux distributive. Try [linuxdeploy-plugin-python](https://github.com/niess/linuxdeploy-plugin-python/).
 
-##### WSL1: ^Z
-
-```
-# xxh YT-1300
-^Z
-```
-This issue was addressed to Xonsh team in [3367](https://github.com/xonsh/xonsh/issues/3367). Just try to run command again.
-
 ##### Related issues
 
 What will make xxh more universal and stable in the future:
 * [AppImages run on Alpine](https://github.com/AppImage/AppImageKit/issues/1015) 
 * [Fix xonsh for WSL1](https://github.com/xonsh/xonsh/issues/3367)
+* [Captured subprocess attributes not queryable until result is evaluated](https://github.com/xonsh/xonsh/issues/3394)
 
 ## Thanks
 * @scopatz for https://github.com/xonsh/xonsh
