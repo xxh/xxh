@@ -111,7 +111,7 @@ When you run `xxh <host>` command:
 
 ### Known Issues
 
-##### Sometimes xontribs or pip packages not found after install sometimes
+##### Sometimes xontribs or pip packages not found after install
 
 If an xontrib or pip package is not found immediately after install you can do reconnect. Xontribs could be reloaded manually without reconnect by executing `import importlib; importlib.reload(sys.modules['xontrib'])`.
 
