@@ -7,7 +7,7 @@ from argparse import RawTextHelpFormatter
 from urllib.parse import urlparse
 from random import randint
 
-sys.path.append(os.path.dirname(os.path.realpath(__file__)))
+sys.path.append(str(pf"{__file__}".absolute().parent))
 import xonssh_xxh
 from xonssh_xxh.settings import global_settings
 
@@ -127,17 +127,17 @@ opt.install = True if opt.install_force else opt.install
 
 ssh_v = ['-v'] if opt.vverbose else []
 
-local_xxh_home_path = os.path.expanduser(opt.local_xxh_home)
-local_xxh_home_parent = os.path.dirname(os.path.expanduser(local_xxh_home_path))
-package_dir_path = os.path.dirname(os.path.realpath(xonssh_xxh.__file__))
+local_xxh_home_path = pf"{opt.local_xxh_home}"
+local_xxh_home_parent = local_xxh_home_path.parent
+package_dir_path = pf"{xonssh_xxh.__file__}".parent
 
-if os.path.exists(local_xxh_home_path):
+if local_xxh_home_path.exists():
     if not os.access(local_xxh_home_path, os.W_OK):
         eeprint(f"The local xxh home path isn't writable: {local_xxh_home_path}" )
-elif os.path.exists(local_xxh_home_parent):
+elif local_xxh_home_parent.exists():
     if os.access(local_xxh_home_parent, os.W_OK):
         eprint(f'Create local xxh home path: {local_xxh_home_path}')
-        mkdir @(ssh_v) -p @(local_xxh_home_path) @(os.path.join(local_xxh_home_path, 'plugins'))
+        mkdir @(ssh_v) -p @(local_xxh_home_path) @(local_xxh_home_path / 'plugins')
     else:
         eeprint(f"Parent for local xxh home path isn't writable: {local_xxh_home_parent}")
 else:
@@ -147,11 +147,11 @@ else:
 for lc in ['LC_TIME','LC_MONETARY','LC_ADDRESS','LC_IDENTIFICATION','LC_MEASUREMENT','LC_NAME','LC_NUMERIC','LC_PAPER','LC_TELEPHONE']:
     ${...}[lc] = "POSIX"
 
-if os.path.abspath(opt.host_xxh_home) == '/':
+if pf'{opt.host_xxh_home}' == pf'/':
     eeprint("Host xxh home path {host_xxh_home} looks like /. Please check twice!")
 
 def get_host_info():
-    host_info_sh = os.path.join(package_dir_path, 'host_info.sh')
+    host_info_sh = package_dir_path / 'host_info.sh'
     r = $(cat @(host_info_sh) | sed @(f's|_xxh_home_|{opt.host_xxh_home}|') | ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s" ).strip()
 
     if opt.verbose:
@@ -174,6 +174,8 @@ if host_xxh_home == '':
 if host_xxh_version == '':
     eeprint(f'Unknown answer from host when getting version for directory {host_xxh_home}')
 
+host_xxh_home = pf"{host_xxh_home}"
+
 if host_info['xxh_home_writable'] == '0' and host_info['xxh_parent_home_writable'] == '0':
     yn = input(f"{host}:{host_xxh_home} is not writable. Continue? [y/n] ").strip().lower()
     if yn != 'y':
@@ -182,8 +184,8 @@ if host_info['xxh_home_writable'] == '0' and host_info['xxh_parent_home_writable
 if host_info['scp'] == '' and host_info['rsync'] == '':
     eeprint(f"There are no rsync or scp on target host. Sad but files can't be uploaded.")
 
-host_xonsh_bin = os.path.join(host_xxh_home, xonsh_bin_name)
-host_xonshrc = os.path.join(host_xxh_home, 'xonshrc.xsh')
+host_xonsh_bin = host_xxh_home / xonsh_bin_name
+host_xonshrc = host_xxh_home / 'xonshrc.xsh'
 
 if opt.install_force == False:
     # Check version
@@ -227,8 +229,8 @@ if host_xxh_version in ['dir_not_found','dir_empty'] and opt.install_force == Fa
 if opt.install:
     eprint("\033[0;33m", end='')
     if opt.method == 'appimage':
-        local_xonsh_appimage_fullpath = os.path.join(local_xxh_home_path, xonsh_bin_name)
-        if not os.path.isfile(local_xonsh_appimage_fullpath):
+        local_xonsh_appimage_fullpath = local_xxh_home_path / xonsh_bin_name
+        if not local_xonsh_appimage_fullpath.is_file():
             eprint(f'First time download and save xonsh AppImage from {url_appimage}')
             if which('wget'):
                 r=![wget -q --show-progress @(url_appimage) -O @(local_xonsh_appimage_fullpath)]
@@ -267,21 +269,21 @@ if opt.install:
     else:
         eprint('scp or rsync not found!')
 
-    plugins_fullpath = os.path.join(local_xxh_home_path, 'plugins')
-    if os.path.exists(plugins_fullpath):
-        plugin_post_installs = sorted(glob.glob(os.path.join(plugins_fullpath, os.path.join('*', 'post_install.xsh')), recursive=True))
+    plugins_fullpath = local_xxh_home_path / 'plugins'
+    if plugins_fullpath.exists():
+        plugin_post_installs = sorted(plugins_fullpath.glob('*/post_install.xsh'))
         if len(plugin_post_installs) > 0:
             eprint(f'Run plugins post install on {host}')
             scripts=''
             for script in plugin_post_installs:
-                scripts += " && %s -i --rc %s -- %s" % (host_xonsh_bin, host_xonshrc, script.replace(local_xxh_home_path + os.sep, ''))
+                scripts += " && %s -i --rc %s -- %s" % (host_xonsh_bin, host_xonshrc, str(script).replace(str(local_xxh_home_path)+'/', ''))
                 eprint(f' * {script}')
 
             if scripts:
                 echo @(f"cd {host_xxh_home} {scripts}" ) | ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s" 1>&2
 
     eprint(f'Check {opt.method}')
-    host_settings_file = os.path.join(host_xxh_home, 'settings.py')
+    host_settings_file = host_xxh_home / 'settings.py'
     check = $(ssh @(ssh_v) @(ssh_arguments) @(host) -t @(host_xonsh_bin) --no-script-cache -i --rc @(host_xonshrc) -- @(host_settings_file) )
 
     if opt.verbose:
@@ -289,7 +291,7 @@ if opt.install:
 
     if check == '' or 'AppImages require FUSE to run' in check:
         eprint('AppImage is not supported by host. Trying to unpack and run...')
-        host_xonsh_bin_new = os.path.join(host_xxh_home, 'xonsh-squashfs/usr/python/bin/xonsh')
+        host_xonsh_bin_new = host_xxh_home / 'xonsh-squashfs/usr/python/bin/xonsh'
         ssh @(ssh_v) @(ssh_arguments) @(host) -t @(f"cd {host_xxh_home} && ./{xonsh_bin_name} --appimage-extract | grep -E 'usr/python/bin/xonsh$' && mv squashfs-root xonsh-squashfs && mv {host_xonsh_bin} {host_xonsh_bin}-disabled && ln -s {host_xonsh_bin_new}") 1>&2
         host_xonsh_bin = host_xonsh_bin_new
 
