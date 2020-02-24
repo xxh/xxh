@@ -102,7 +102,7 @@ The xxh xonsh will use pip and python from `xonsh.AppImage` by default. You can 
 $ pip install --upgrade pip
 $ pip install --upgrade pandas
 ```
-The packages will appear in `$XXH_HOME/pip` (`~/.xxh/pip` by default).
+The packages will appear in `~/.xxh/pip` by default.
 
 ### How it works?
 
@@ -110,9 +110,9 @@ When you run `xxh <host>` command:
 
 1. If it needed xxh will download portable xonsh shell and store locally to future use. 
 
-2. If it needed xxh upload the portable xonsh to the host (`~/.xxh` by default) along with init scripts and plugins.
+2. If it needed xxh will upload the portable xonsh, init scripts and plugins to the host.
 
-3. Finally xxh will make ssh connection to the server and run portable xonsh shell without any addition installs and affection on the target host.
+3. Finally xxh will make ssh connection to the server and run portable xonsh shell without any system installs and affection on the target host.
 
 ## Development
 🛠️ Use [xxh-dev](https://github.com/xonssh/xxh-dev) environment for development, testing and contribution.
