@@ -19,7 +19,7 @@ python3 -m pip install --upgrade xonssh-xxh
 ```
 🔁 After install you can just using `xxh` command as replace `ssh` to connecting to the host because `xxh` has seamless support of basic `ssh` command arguments. 
 
-🗝️ The best if you're using [ssh config with private keys](https://linuxize.com/post/using-the-ssh-config-file/#ssh-config-file-example) to authorization. In case of using password to avoid password typing many times use `+PP` or `+P` options.
+🗝️ The best if you're using [ssh config with private keys](https://linuxize.com/post/using-the-ssh-config-file/#ssh-config-file-example) to authorization. In case of using password to avoid password typing many times use `+PP` or `+P pwd` options.
 
 ## Usage
 ```
