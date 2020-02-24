@@ -1,18 +1,19 @@
-import os, sys, glob
+import sys
 
 $UPDATE_OS_ENVIRON=True
 
-$XXH_HOME = os.path.dirname(os.path.realpath(__file__))
-$PIP_TARGET = os.path.join($XXH_HOME, 'pip')
+$XXH_HOME = pf"{__file__}".absolute().parent
+$PIP_TARGET = $XXH_HOME / 'pip'
 $PYTHONPATH = $PIP_TARGET
-$PATH = [ os.path.join($PYTHONHOME, 'bin'), $XXH_HOME ] + $PATH
-sys.path.append($PIP_TARGET)
+$PATH = [ p"$PYTHONHOME" / 'bin', $XXH_HOME ] + $PATH
+sys.path.append(str($PIP_TARGET))
+sys.path.remove('') if '' in sys.path else None
 aliases['pip'] = ['python','-m','pip']
 aliases['xpip'] = aliases['pip']
 
-for plugin_path in sorted(glob.glob(os.path.join($XXH_HOME, 'plugins/**'))):
-    if os.path.exists(os.path.join(plugin_path, 'xonshrc.xsh')):
-        sys.path.append(plugin_path)
+for plugin_path in sorted(($XXH_HOME / 'plugins').glob('*')):
+    if (plugin_path / 'xonshrc.xsh').exists():
+        sys.path.append(str(plugin_path))
         __import__('xonshrc')
         del sys.modules['xonshrc']
-        sys.path.remove(plugin_path)
+        sys.path.remove(str(plugin_path))

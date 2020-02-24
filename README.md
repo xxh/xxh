@@ -20,17 +20,18 @@ python3 -m pip install --upgrade xonssh-xxh
 After install you can just using `xxh` command as replace `ssh` to connecting to the host because `xxh` has seamless support of basic `ssh` command arguments. 
 
 ## Usage
-🗝️ The best experience you'll get when you're using [public key or ssh config](https://linuxize.com/post/using-the-ssh-config-file/#ssh-config-file-example) to authorization. In case of using password you should type it many times. We're working on reduce password typing to one in [#27](https://github.com/xonssh/xxh/issues/27).
+🗝️ The best if you're using [ssh config with private keys](https://linuxize.com/post/using-the-ssh-config-file/#ssh-config-file-example) to authorization. In case of using password to avoid password typing many times use `+PP` or `+P` options.
 
 ```
-$ xxh --help                                                                                                                 
-usage: xxh [config name from ssh config]
+$ ./xxh -h                                                                                                        
+usage: xxh <host from ~/.ssh/config>
 
 usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]
 
 usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY] [-o SSH_OPTION -o ...] 
            [user@]host[:port]
-           [+i] [+if] [+lxh LOCAL_XXH_HOME] [+hxh HOST_XXH_HOME] [+he HOST_EXECUTE_FILE] 
+           [+i] [+if] [+P PASSWORD] [+PP] 
+           [+lxh LOCAL_XXH_HOME] [+hxh HOST_XXH_HOME] [+he HOST_EXECUTE_FILE] 
            [+m METHOD] [+v] [+vv]
 
 The xxh is for using the xonsh shell wherever you go through the ssh. 
@@ -41,12 +42,12 @@ The xxh is for using the xonsh shell wherever you go through the ssh.
  _____  /    / __   \  \ /   _/   https://github.com/xonssh/xxh   
    ___ (    / /  /   \  \   /          
         \   \___/    /  /  /                plugins            
-      ___\          /__/  /   https://github.com/search?q=xxh-plugin
-     /    \________/     /                           
-    /___________________/       
+     ____\          /__/  /   https://github.com/search?q=xxh-plugin
+    /     \________/     /                           
+   /____________________/       
 
 required arguments:
-  [user@]host[:port]    Destination may be specified as [user@]host[:port] or server name from ~/.ssh/config
+  [user@]host[:port]    Destination may be specified as [user@]host[:port] or host from ~/.ssh/config
 
 common arguments:
   -h, --help            show this help message and exit
@@ -61,12 +62,16 @@ ssh arguments:
 xxh arguments:
   +i, ++install         Install xxh to destination host.
   +if, ++install-force  Removing the host xxh home and install xxh again.
+  +P PASSWORD, ++password PASSWORD
+                        Password for ssh auth.
+  +PP, ++password-prompt
+                        Enter password manually using prompt.
   +lh LOCAL_XXH_HOME, ++local-xxh-home LOCAL_XXH_HOME
                         Local xxh home path. Default: ~/.xxh
   +hh HOST_XXH_HOME, ++host-xxh-home HOST_XXH_HOME
                         Host xxh home path. Default: ~/.xxh
   +he HOST_EXECUTE_FILE, ++host-execute-file HOST_EXECUTE_FILE
-                        Execute script file placed on host and exit
+                        Execute script file placed on host and exit.
   +m METHOD, ++method METHOD
                         Portable method: appimage
   +v, ++verbose         Verbose mode.
