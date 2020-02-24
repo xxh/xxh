@@ -1,6 +1,6 @@
 #!/usr/bin/env xonsh
 
-import os, sys, glob, argparse, datetime
+import os, sys, argparse, datetime, getpass
 from shutil import which
 from sys import exit
 from argparse import RawTextHelpFormatter
@@ -62,20 +62,26 @@ argp.add_argument('-p', dest='ssh_port', help="Port to connect to on the remote 
 argp.add_argument('-l', dest='ssh_login', help="Specifies the user to log in as on the remote machine.")
 argp.add_argument('-i', dest='ssh_private_key', help="File from which the identity (private key) for public key authentication is read.")
 argp.add_argument('-o', dest='ssh_options', metavar='SSH_OPTION -o ...', action='append', help="SSH options are described in ssh man page. Example: -o Port=22 -o User=snail")
-argp.add_argument('destination', metavar='[user@]host[:port]', help="Destination may be specified as [user@]host[:port] or server name from ~/.ssh/config")
+argp.add_argument('destination', metavar='[user@]host[:port]', help="Destination may be specified as [user@]host[:port] or host from ~/.ssh/config")
 argp.add_argument('+i','++install', default=False, action='store_true', help="Install xxh to destination host.")
 argp.add_argument('+if','++install-force', default=False, action='store_true', help="Removing the host xxh home and install xxh again.")
+argp.add_argument('+akh','++add-to-known-hosts', default=False, action='store_true', help="Add new host to known hosts without asking.")
+argp.add_argument('+P','++password', help="Password for ssh auth.")
+argp.add_argument('+PP','++password-prompt', default=False, action='store_true', help="Enter password manually using prompt.")
 argp.add_argument('+lh','++local-xxh-home', default=local_xxh_home_path, help=f"Local xxh home path. Default: {local_xxh_home_path}")
 argp.add_argument('+hh','++host-xxh-home', default=host_xxh_home_path, help=f"Host xxh home path. Default: {host_xxh_home_path}")
-argp.add_argument('+he','++host-execute-file', help=f"Execute script file placed on host and exit")
+argp.add_argument('+he','++host-execute-file', help=f"Execute script file placed on host and exit.")
 argp.add_argument('+m','++method', default='appimage', help=f"Portable method: {portable_methods_str}")
 argp.add_argument('+v','++verbose', default=False, action='store_true', help="Verbose mode.")
 argp.add_argument('+vv','++vverbose', default=False, action='store_true', help="Super verbose mode.")
-argp.usage = """xxh [ssh arguments] [user@]host[:port] [xxh arguments]
+argp.usage = """xxh <host from ~/.ssh/config>
+
+usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]
 
 usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY] [-o SSH_OPTION -o ...] 
            [user@]host[:port]
-           [+i] [+if] [+lxh LOCAL_XXH_HOME] [+hxh HOST_XXH_HOME] [+he HOST_EXECUTE_FILE] 
+           [+i] [+if] [+akh] [+P PASSWORD] [+PP] 
+           [+lxh LOCAL_XXH_HOME] [+hxh HOST_XXH_HOME] [+he HOST_EXECUTE_FILE] 
            [+m METHOD] [+v] [+vv]
 """
 help = argp.format_help().replace('\n  +','\n\nxxh arguments:\n  +',1).replace('optional ', 'common ')\
@@ -104,6 +110,10 @@ if url.port:
 if url.username:
     opt.ssh_login = url.username
 
+username = getpass.getuser()
+if opt.ssh_login:
+    username = opt.ssh_login
+
 ssh_arguments = []
 if not opt.verbose:
    ssh_arguments = ['-o', 'LogLevel=QUIET']
@@ -122,6 +132,22 @@ if opt.verbose:
 
 if not which('ssh'):
     eeprint('Install OpenSSH client before using xxh: https://duckduckgo.com/?q=how+to+install+openssh+client+in+linux')
+
+if not which('sshpass') and (opt.password is not None or opt.password_prompt):
+    eeprint('Install sshpass to using password: https://duckduckgo.com/?q=install+sshpass\n'
+            + 'Note! There are a lot of security reasons for stop using password auth.')
+
+sshpass = []
+if opt.password is not None:
+    sshpass = ['sshpass', '-p', opt.password]
+elif opt.password_prompt:
+    password = ''
+    while not password:
+        password = getpass.getpass(f"Enter {username}@{host}'s password: ")
+    sshpass = ['sshpass', '-p', password]
+
+if sshpass != [] and opt.vverbose:
+    sshpass += ['-v']
 
 opt.install = True if opt.install_force else opt.install
 
@@ -150,18 +176,36 @@ for lc in ['LC_TIME','LC_MONETARY','LC_ADDRESS','LC_IDENTIFICATION','LC_MEASUREM
 if pf'{opt.host_xxh_home}' == pf'/':
     eeprint("Host xxh home path {host_xxh_home} looks like /. Please check twice!")
 
+def is_host_known(hostname):
+    return $(ssh-keygen -F @(hostname)) != ''
+
 def get_host_info():
     host_info_sh = package_dir_path / 'host_info.sh'
-    r = $(cat @(host_info_sh) | sed @(f's|_xxh_home_|{opt.host_xxh_home}|') | ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s" ).strip()
+    r = $(cat @(host_info_sh) | sed @(f's|_xxh_home_|{opt.host_xxh_home}|') | @(sshpass) ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s" ).strip()
 
     if opt.verbose:
         eprint(f'Host info:\n{r}')
 
     if r == '':
-        eeprint(f'Unknown answer from host when getting host info. Check your connection parameters using ordinary ssh.')
+        eeprint('Empty answer from host when getting first info. Often this is a connection error.\n'
+                + 'Check your connection parameters using the same command but with ssh.')
 
     r = dict([l.split('=') for l in r.split('\n')])
     return r
+
+if opt.add_to_known_hosts:
+    ssh_arguments += ['-o', f'StrictHostKeyChecking=accept-new']
+elif not is_host_known(host):
+    choice = input(f"The host {host} is unknown. What's next?\n"
+           +" s - [default] Stop and try to connect using ssh to check that host is right\n"
+           +" a - Add the host to the known hosts and continue\n"
+           +"S/a?")
+
+    if choice == 's' or choice.strip() == '':
+        print('Stopped')
+        exit(0)
+    elif choice == 'a':
+        ssh_arguments += ['-o', f'StrictHostKeyChecking=accept-new']
 
 host_info = get_host_info()
 
@@ -197,11 +241,11 @@ if opt.install_force == False:
 
     if ask:
         choice = input(f"{ask} What's next? \n"
-                       + f"s - [default] Stop here. You'll try to connect using ordinary ssh for backup current xxh home.\n"
-                       + f"u - Safe update. Host xxh home will be renamed and local xxh version will be installed.\n"
-                       + f"f - Force install local xxh version on host. Host xxh installation will be lost.\n"
-                       + f"i - Ignore, cross fingers and continue the connection.\n"
-                       + f"S/u/f/i? ").lower()
+                       + " s - [default] Stop here. You'll try to connect using ordinary ssh for backup current xxh home.\n"
+                       + " u - Safe update. Host xxh home will be renamed and local xxh version will be installed.\n"
+                       + " f - Force install local xxh version on host. Host xxh installation will be lost.\n"
+                       + " i - Ignore, cross fingers and continue the connection.\n"
+                       + "S/u/f/i? ").lower()
 
         if choice == 's' or choice.strip() == '':
             print('Stopped')
@@ -209,7 +253,7 @@ if opt.install_force == False:
         elif choice == 'u':
             local_time = datetime.datetime.now().isoformat()[:19]
             eprint(f"Move {host}:{host_xxh_home} to {host}:{host_xxh_home}-{local_time}")
-            echo @(f"mv {host_xxh_home} {host_xxh_home}-{local_time}") | ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s"
+            echo @(f"mv {host_xxh_home} {host_xxh_home}-{local_time}") | @(sshpass) ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s"
             opt.install = True
         elif choice == 'f':
             opt.install = True
@@ -249,25 +293,25 @@ if opt.install:
 
     if opt.install_force:
         eprint(f'Remove host xxh home {host}:{host_xxh_home}')
-        echo @(f"rm -rf {host_xxh_home}/*") | ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s"
+        echo @(f"rm -rf {host_xxh_home}/*") | @(sshpass) ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s"
 
     eprint(f"Install xxh to {host}:{host_xxh_home}" )
 
     if host_xxh_version in ['dir_not_found']:
         eprint(f'Create xxh home {host_xxh_home}')
-        echo @(f"mkdir -p {host_xxh_home}") | ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s"
+        echo @(f"mkdir -p {host_xxh_home}") | @(sshpass) ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s"
 
     if which('rsync') and host_info['rsync']:
         eprint('Upload using rsync')
-        rsync @(ssh_v) -e @(f"ssh {'' if ssh_v == [] else '-v'} {' '.join(ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(local_xxh_home_path)/ @(host):@(host_xxh_home)/ 1>&2
-        rsync @(ssh_v) -e @(f"ssh {'' if ssh_v == [] else '-v'} {' '.join(ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(package_dir_path)/ @(host):@(host_xxh_home)/ 1>&2
+        rsync @(ssh_v) -e @(f"{''.join(sshpass)} ssh {'' if ssh_v == [] else '-v'} {' '.join(ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(local_xxh_home_path)/ @(host):@(host_xxh_home)/ 1>&2
+        rsync @(ssh_v) -e @(f"{''.join(sshpass)} ssh {'' if ssh_v == [] else '-v'} {' '.join(ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(package_dir_path)/ @(host):@(host_xxh_home)/ 1>&2
     elif which('scp') and host_info['scp']:
         eprint("Upload using scp. Note: install rsync on local and remote host to increase speed.")
         scp_host = f"{host}:{host_xxh_home}/"
-        scp @(ssh_v) @(ssh_arguments) -r -C @([] if opt.verbose else ['-q']) @(local_xxh_home_path)/* @(scp_host) 1>&2
-        scp @(ssh_v) @(ssh_arguments) -r -C @([] if opt.verbose else ['-q']) @(package_dir_path)/* @(scp_host) 1>&2
+        @(sshpass) scp @(ssh_v) @(ssh_arguments) -r -C @([] if opt.verbose else ['-q']) @(local_xxh_home_path)/* @(scp_host) 1>&2
+        @(sshpass) scp @(ssh_v) @(ssh_arguments) -r -C @([] if opt.verbose else ['-q']) @(package_dir_path)/* @(scp_host) 1>&2
     else:
-        eprint('scp or rsync not found!')
+        eprint('Please install rsync or scp!')
 
     plugins_fullpath = local_xxh_home_path / 'plugins'
     if plugins_fullpath.exists():
@@ -280,22 +324,22 @@ if opt.install:
                 eprint(f' * {script}')
 
             if scripts:
-                echo @(f"cd {host_xxh_home} {scripts}" ) | ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s" 1>&2
+                echo @(f"cd {host_xxh_home} {scripts}" ) | @(sshpass) ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s" 1>&2
 
     eprint(f'Check {opt.method}')
     host_settings_file = host_xxh_home / 'settings.py'
-    check = $(ssh @(ssh_v) @(ssh_arguments) @(host) -t @(host_xonsh_bin) --no-script-cache -i --rc @(host_xonshrc) -- @(host_settings_file) )
+    check = $(@(sshpass) ssh @(ssh_v) @(ssh_arguments) @(host) -t @(host_xonsh_bin) --no-script-cache -i --rc @(host_xonshrc) -- @(host_settings_file) )
 
     if opt.verbose:
         eprint(f'Check xonsh result:\n{check}')
 
     if check == '' or 'AppImages require FUSE to run' in check:
         eprint('AppImage is not supported by host. Trying to unpack and run...')
-        host_xonsh_bin_new = host_xxh_home / 'xonsh-squashfs/usr/python/bin/xonsh'
-        ssh @(ssh_v) @(ssh_arguments) @(host) -t @(f"cd {host_xxh_home} && ./{xonsh_bin_name} --appimage-extract | grep -E 'usr/python/bin/xonsh$' && mv squashfs-root xonsh-squashfs && mv {host_xonsh_bin} {host_xonsh_bin}-disabled && ln -s {host_xonsh_bin_new}") 1>&2
+        host_xonsh_bin_new = host_xxh_home / 'xonsh-squashfs/usr/bin/python3'
+        @(sshpass) ssh @(ssh_v) @(ssh_arguments) @(host) -t @(f"cd {host_xxh_home} && ./{xonsh_bin_name} --appimage-extract | grep -E 'usr/python/bin/xonsh$' && mv squashfs-root xonsh-squashfs && mv {host_xonsh_bin} {host_xonsh_bin}-disabled && ln -s {host_xonsh_bin_new} xonsh") 1>&2
         host_xonsh_bin = host_xonsh_bin_new
 
     eprint(f'First run xonsh on {host}\033[0m')
 
 host_execute_file = ['--', opt.host_execute_file] if opt.host_execute_file else []
-ssh @(ssh_v) @(ssh_arguments) @(host) -t @(host_xonsh_bin) --no-script-cache -i --rc @(host_xonshrc) @(host_execute_file)
+@(sshpass) ssh @(ssh_v) @(ssh_arguments) @(host) -t @(host_xonsh_bin) --no-script-cache -i --rc @(host_xonshrc) @(host_execute_file)
