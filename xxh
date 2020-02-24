@@ -65,7 +65,6 @@ argp.add_argument('-o', dest='ssh_options', metavar='SSH_OPTION -o ...', action=
 argp.add_argument('destination', metavar='[user@]host[:port]', help="Destination may be specified as [user@]host[:port] or host from ~/.ssh/config")
 argp.add_argument('+i','++install', default=False, action='store_true', help="Install xxh to destination host.")
 argp.add_argument('+if','++install-force', default=False, action='store_true', help="Removing the host xxh home and install xxh again.")
-argp.add_argument('+akh','++add-to-known-hosts', default=False, action='store_true', help="Add new host to known hosts without asking.")
 argp.add_argument('+P','++password', help="Password for ssh auth.")
 argp.add_argument('+PP','++password-prompt', default=False, action='store_true', help="Enter password manually using prompt.")
 argp.add_argument('+lh','++local-xxh-home', default=local_xxh_home_path, help=f"Local xxh home path. Default: {local_xxh_home_path}")
@@ -80,7 +79,7 @@ usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]
 
 usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY] [-o SSH_OPTION -o ...] 
            [user@]host[:port]
-           [+i] [+if] [+akh] [+P PASSWORD] [+PP] 
+           [+i] [+if] [+P PASSWORD] [+PP] 
            [+lxh LOCAL_XXH_HOME] [+hxh HOST_XXH_HOME] [+he HOST_EXECUTE_FILE] 
            [+m METHOD] [+v] [+vv]
 """
@@ -114,9 +113,9 @@ username = getpass.getuser()
 if opt.ssh_login:
     username = opt.ssh_login
 
-ssh_arguments = []
+ssh_arguments = ['-o', 'StrictHostKeyChecking=accept-new']
 if not opt.verbose:
-   ssh_arguments = ['-o', 'LogLevel=QUIET']
+   ssh_arguments += ['-o', 'LogLevel=QUIET']
 if opt.ssh_port:
     ssh_arguments += ['-o', f'Port={opt.ssh_port}']
 if opt.ssh_private_key:
@@ -176,9 +175,6 @@ for lc in ['LC_TIME','LC_MONETARY','LC_ADDRESS','LC_IDENTIFICATION','LC_MEASUREM
 if pf'{opt.host_xxh_home}' == pf'/':
     eeprint("Host xxh home path {host_xxh_home} looks like /. Please check twice!")
 
-def is_host_known(hostname):
-    return $(ssh-keygen -F @(hostname)) != ''
-
 def get_host_info():
     host_info_sh = package_dir_path / 'host_info.sh'
     r = $(cat @(host_info_sh) | sed @(f's|_xxh_home_|{opt.host_xxh_home}|') | @(sshpass) ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s" ).strip()
@@ -192,20 +188,6 @@ def get_host_info():
 
     r = dict([l.split('=') for l in r.split('\n')])
     return r
-
-if opt.add_to_known_hosts:
-    ssh_arguments += ['-o', f'StrictHostKeyChecking=accept-new']
-elif not is_host_known(host):
-    choice = input(f"The host {host} is unknown. What's next?\n"
-           +" s - [default] Stop and try to connect using ssh to check that host is right\n"
-           +" a - Add the host to the known hosts and continue\n"
-           +"S/a?")
-
-    if choice == 's' or choice.strip() == '':
-        print('Stopped')
-        exit(0)
-    elif choice == 'a':
-        ssh_arguments += ['-o', f'StrictHostKeyChecking=accept-new']
 
 host_info = get_host_info()
 

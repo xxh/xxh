@@ -30,7 +30,7 @@ usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]
 
 usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY] [-o SSH_OPTION -o ...] 
            [user@]host[:port]
-           [+i] [+if] [+akh] [+P PASSWORD] [+PP] 
+           [+i] [+if] [+P PASSWORD] [+PP] 
            [+lxh LOCAL_XXH_HOME] [+hxh HOST_XXH_HOME] [+he HOST_EXECUTE_FILE] 
            [+m METHOD] [+v] [+vv]
 
@@ -62,8 +62,6 @@ ssh arguments:
 xxh arguments:
   +i, ++install         Install xxh to destination host.
   +if, ++install-force  Removing the host xxh home and install xxh again.
-  +akh, ++add-to-known-hosts
-                        Add new host to known hosts without asking.
   +P PASSWORD, ++password PASSWORD
                         Password for ssh auth.
   +PP, ++password-prompt
