@@ -11,16 +11,6 @@ sys.path.append(str(pf"{__file__}".absolute().parent))
 import xonssh_xxh
 from xonssh_xxh.settings import global_settings
 
-url_xxh_github = 'https://github.com/xonssh/xxh'
-url_xxh_plugins_search = 'https://github.com/search?q=xxh-plugin'
-url_appimage = 'https://github.com/niess/linuxdeploy-plugin-python/releases/download/continuous/xonsh-x86_64.AppImage'
-local_xxh_version = global_settings['XXH_VERSION']
-local_xxh_home_path = '~/.xxh'
-host_xxh_home_path = '~/.xxh'
-portable_methods = ['appimage']
-portable_methods_str = ', '.join(portable_methods)
-xonsh_bin_name = 'xonsh'
-
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
@@ -28,387 +18,420 @@ def eeprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
     exit(1)
 
-if os.name == 'nt':
-    eeprint(f"Windows is not supported. WSL1 is not recommended also. WSL2 is not tested yet.\nContribution: {url_xxh_github}")
+class Xxh:
+    def __init__(self):
+        self.url_xxh_github = 'https://github.com/xonssh/xxh'
+        self.url_xxh_plugins_search = 'https://github.com/search?q=xxh-plugin'
+        self.url_appimage = 'https://github.com/niess/linuxdeploy-plugin-python/releases/download/continuous/xonsh-x86_64.AppImage'
+        self.local_xxh_version = global_settings['XXH_VERSION']
+        self.local_xxh_home_path = '~/.xxh'
+        self.host_xxh_home_path = '~/.xxh'
+        self.portable_methods = ['appimage']
+        self.portable_methods_str = ', '.join(self.portable_methods)
+        self.xonsh_bin_name = 'xonsh'
+        self.verbose = False
+        self.vverbose = False
+        self.sshpass = []
 
-def xonssh():
-    try:
-        terminal = os.get_terminal_size()
-        terminal_cols = terminal.columns
-    except:
-        terminal_cols=70
-
-    if terminal_cols < 70:
-        return f"\n\nContribution: {url_xxh_github}\n\nPlugins: {url_xxh_plugins_search}"
-
-    l,r,s,t = (['@','-','_'][randint(0,2)], ['@','-','_'][randint(0,2)], ['_',' '][randint(0,1)], ['_',''][randint(0,1)])
-    return f"""
-
-     {s}___  __________     {l}    {r}    
-  {s}_____  /          \\     \\__/     
-   {s}___  /    ______  \\   /   \\           contribution
- {s}____  /    / __   \\  \\ /   _/   {url_xxh_github}   
-   {s}__ (    / /  /   \\  \\   /          
-        \\   \\___/    /  /  /                plugins            
-{' ' if not t else ''}     _{t}__\\          /__/  /   {url_xxh_plugins_search}
-{' ' if not t else ''}    / {'' if not t else ' '}   \\________/     /                           
-{' ' if not t else ''}   /_{t}__________________/       
-
-""" # watch -n.2 xxh -h
-
-def ssh_pexpect(cmd, accept_host=None, host_password=None, key_password=None, verbose=False):
-    sess = pexpect.spawn(cmd)
-
-    user_host_accept = None
-    user_host_password = None
-    user_key_password = None
-    while True:
+    def snail(self):
         try:
-            i = sess.expect(['Are you sure you want to continue connecting.*', "Please type 'yes' or 'no':",
-                             'Enter passphrase for key.*', 'password:', pexpect.EOF], timeout=3)
+            terminal = os.get_terminal_size()
+            terminal_cols = terminal.columns
         except:
-            if verbose:
-                print('Unknown answer details:')
-                print(sess)
-            print('Unknown answer from host')
-            return {}
+            terminal_cols=70
 
-        if i in [0,1]:
-            # Expected:
-            #   The authenticity of host '<...>' can't be established.
-            #   ECDSA key fingerprint is <...>
-            #   Are you sure you want to continue connecting (yes/no)?
-            print((sess.before + sess.after).decode("utf-8"), end='')
-            if accept_host is None:
-                user_host_accept = input()
-                sess.sendline(user_host_accept)
-                if user_host_accept == 'yes':
-                    user_host_accept = True
-                elif user_host_accept == 'no':
-                    user_host_accept = False
+        if terminal_cols < 70:
+            return f"\n\nContribution: {self.url_xxh_github}\n\nPlugins: {self.url_xxh_plugins_search}"
+
+        l,r,s,t = (['@','-','_'][randint(0,2)], ['@','-','_'][randint(0,2)], ['_',' '][randint(0,1)], ['_',''][randint(0,1)])
+        return f"\n" \
+            +f"     {s}___  __________     {l}    {r}\n" \
+            +f"  {s}_____  /          \\     \\__/\n" \
+            +f"   {s}___  /    ______  \\   /   \\           contribution\n" \
+            +f" {s}____  /    / __   \\  \\ /   _/   {self.url_xxh_github}\n" \
+            +f"   {s}__ (    / /  /   \\  \\   /\n" \
+            +f"        \\   \\___/    /  /  /                plugins\n" \
+            +f"{' ' if not t else ''}     _{t}__\\          /__/  /   {self.url_xxh_plugins_search}\n" \
+            +f"{' ' if not t else ''}    / {'' if not t else ' '}   \\________/     /\n" \
+            +f"{' ' if not t else ''}   /_{t}__________________/\n" \
+            +f"" # d2F0Y2ggLW4uMiB4eGggLWg
+
+    def pssh(self, cmd, accept_host=None, host_password=None, key_password=None):
+        sess = pexpect.spawn(cmd)
+
+        user_host_accept = None
+        user_host_password = None
+        user_key_password = None
+        while True:
+            try:
+                i = sess.expect(['Are you sure you want to continue connecting.*', "Please type 'yes' or 'no':",
+                                 'Enter passphrase for key.*', 'password:', pexpect.EOF], timeout=3)
+            except:
+                if self.vverbose:
+                    print('Unknown answer details:')
+                    print(sess)
+                print('Unknown answer from host')
+                return {}
+
+            if i in [0,1]:
+                # Expected:
+                #   The authenticity of host '<...>' can't be established.
+                #   ECDSA key fingerprint is <...>
+                #   Are you sure you want to continue connecting (yes/no)?
+                print('* '+(sess.before + sess.after).decode("utf-8"), end='')
+                if accept_host is None:
+                    user_host_accept = input()
+                    sess.sendline(user_host_accept)
+                    if user_host_accept == 'yes':
+                        user_host_accept = True
+                    elif user_host_accept == 'no':
+                        user_host_accept = False
+                    else:
+                        user_host_accept = None
+                elif accept_host:
+                    sess.sendline('yes')
                 else:
-                    user_host_accept = None
-            elif accept_host:
-                sess.sendline('yes')
-            else:
-                sess.sendline('no')
+                    sess.sendline('no')
 
-        if i == 2:
-            # Expected:
-            #   Enter passphrase for key '<keyfile>':
-            if key_password is None:
-                user_key_password = getpass.getpass(prompt=' '+(sess.before + sess.after).decode("utf-8"))
-                sess.sendline(user_key_password)
-            else:
-                sess.sendline(key_password)
+            if i == 2:
+                # Expected:
+                #   Enter passphrase for key '<keyfile>':
+                if key_password is None:
+                    user_key_password = getpass.getpass(prompt='* '+(sess.before + sess.after).decode("utf-8")+' ')
+                    sess.sendline(user_key_password)
+                else:
+                    sess.sendline(key_password)
 
-        if i == 3:
-            # Expected:
-            #   <host>`s password:
-            if host_password is None:
-                user_host_password = getpass.getpass(prompt=' '+(sess.before + sess.after).decode("utf-8"))
-                sess.sendline(user_host_password)
-            else:
-                sess.sendline(host_password)
+            if i == 3:
+                # Expected:
+                #   <host>`s password:
+                if host_password is None:
+                    user_host_password = getpass.getpass(prompt='* '+(sess.before + sess.after).decode("utf-8")+' ')
+                    sess.sendline(user_host_password)
+                else:
+                    sess.sendline(host_password)
 
-        if i == 4:
-            # Getting result
-            output = sess.before.decode("utf-8")
-            output = re.sub('\r\nConnection to (.*) closed.\r\r\n', '', output)
-            output = output[:-3] if output.endswith('\r\r\n') else output
-            output = output[3:] if output.startswith(' \r\n') else output
-            result = {
-                'user_host_accept': user_host_accept,
-                'user_host_password':user_host_password,
-                'user_key_password':user_key_password,
-                'output':output
-            }
+            if i == 4:
+                # Getting result
+                output = sess.before.decode("utf-8")
+                output = re.sub('\r\nConnection to (.*) closed.\r\r\n', '', output)
+                output = output[:-3] if output.endswith('\r\r\n') else output
+                output = output[3:] if output.startswith(' \r\n') else output
+                result = {
+                    'user_host_accept': user_host_accept,
+                    'user_host_password':user_host_password,
+                    'user_key_password':user_key_password,
+                    'output':output
+                }
 
-            return result
+                return result
 
-    return {}
+        return {}
 
-argp = argparse.ArgumentParser(description=f"The xxh is for using the xonsh shell wherever you go through the ssh. {xonssh()}", formatter_class=RawTextHelpFormatter, prefix_chars='-+')
-argp.add_argument('--version', '-V', action='version', version=f"xonssh-xxh/{local_xxh_version}")
-argp.add_argument('-p', dest='ssh_port', help="Port to connect to on the remote host.")
-argp.add_argument('-l', dest='ssh_login', help="Specifies the user to log in as on the remote machine.")
-argp.add_argument('-i', dest='ssh_private_key', help="File from which the identity (private key) for public key authentication is read.")
-argp.add_argument('-o', dest='ssh_options', metavar='SSH_OPTION -o ...', action='append', help="SSH options are described in ssh man page. Example: -o Port=22 -o User=snail")
-argp.add_argument('destination', metavar='[user@]host[:port]', help="Destination may be specified as [user@]host[:port] or host from ~/.ssh/config")
-argp.add_argument('+i','++install', default=False, action='store_true', help="Install xxh to destination host.")
-argp.add_argument('+if','++install-force', default=False, action='store_true', help="Removing the host xxh home and install xxh again.")
-argp.add_argument('+P','++password', help="Password for ssh auth.")
-argp.add_argument('+PP','++password-prompt', default=False, action='store_true', help="Enter password manually using prompt.")
-argp.add_argument('+lh','++local-xxh-home', default=local_xxh_home_path, help=f"Local xxh home path. Default: {local_xxh_home_path}")
-argp.add_argument('+hh','++host-xxh-home', default=host_xxh_home_path, help=f"Host xxh home path. Default: {host_xxh_home_path}")
-argp.add_argument('+he','++host-execute-file', help=f"Execute script file placed on host and exit.")
-argp.add_argument('+m','++method', default='appimage', help=f"Portable method: {portable_methods_str}")
-argp.add_argument('+v','++verbose', default=False, action='store_true', help="Verbose mode.")
-argp.add_argument('+vv','++vverbose', default=False, action='store_true', help="Super verbose mode.")
-argp.usage = """xxh <host from ~/.ssh/config>
+    def set_sshpass_password(self, password):
+        if not which('sshpass'):
+            eeprint('Install sshpass to using password: https://duckduckgo.com/?q=install+sshpass\n'
+                    + 'Note! There are a lot of security reasons to stop using password auth.')
+        verbose = '-v' if '-v' in self.sshpass else []
+        self.sshpass = ['sshpass', '-p', password] + verbose
 
-usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]
-
-usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY] [-o SSH_OPTION -o ...] 
-           [user@]host[:port]
-           [+i] [+if] [+P PASSWORD] [+PP] 
-           [+lxh LOCAL_XXH_HOME] [+hxh HOST_XXH_HOME] [+he HOST_EXECUTE_FILE] 
-           [+m METHOD] [+v] [+vv]
-"""
-help = argp.format_help().replace('\n  +','\n\nxxh arguments:\n  +',1).replace('optional ', 'common ')\
-    .replace('number and exit', 'number and exit\n\nssh arguments:').replace('positional ', 'required ')
-argp.format_help = lambda: help
-opt = argp.parse_args()
-
-if opt.vverbose:
-    opt.verbose = True
-
-if opt.method not in portable_methods:
-    eeprint(f'Currently supported methods: {portable_methods_str}')
-
-if 'ssh://' not in opt.destination:
-    opt.destination = f'ssh://{opt.destination}'
-
-url = urlparse(opt.destination)
-host = url.hostname
-
-if not host:
-    eeprint(f"Wrong distination '{host}'")
-
-if url.port:
-    opt.ssh_port = url.port
-
-if url.username:
-    opt.ssh_login = url.username
-
-username = getpass.getuser()
-if opt.ssh_login:
-    username = opt.ssh_login
-
-ssh_arguments = ['-o', 'StrictHostKeyChecking=accept-new']
-if not opt.verbose:
-   ssh_arguments += ['-o', 'LogLevel=QUIET']
-if opt.ssh_port:
-    ssh_arguments += ['-o', f'Port={opt.ssh_port}']
-if opt.ssh_private_key:
-    ssh_arguments += ['-o', f'IdentityFile={opt.ssh_private_key}']
-if opt.ssh_login:
-    ssh_arguments += ['-o', f'User={opt.ssh_login}']
-if opt.ssh_options:
-    for ssh_option in opt.ssh_options:
-        ssh_arguments += ['-o', ssh_option]
-
-if opt.verbose:
-    eprint(f'ssh arguments: {ssh_arguments}')
-
-if not which('ssh'):
-    eeprint('Install OpenSSH client before using xxh: https://duckduckgo.com/?q=how+to+install+openssh+client+in+linux')
-
-if not which('sshpass') and (opt.password is not None or opt.password_prompt):
-    eeprint('Install sshpass to using password: https://duckduckgo.com/?q=install+sshpass\n'
-            + 'Note! There are a lot of security reasons for stop using password auth.')
-
-sshpass = []
-if opt.password is not None:
-    sshpass = ['sshpass', '-p', opt.password]
-elif opt.password_prompt:
-    password = ''
-    while not password:
-        password = getpass.getpass(f"Enter {username}@{host}'s password: ")
-    sshpass = ['sshpass', '-p', password]
-
-if sshpass != [] and opt.vverbose:
-    sshpass += ['-v']
-
-opt.install = True if opt.install_force else opt.install
-
-ssh_v = ['-v'] if opt.vverbose else []
-
-local_xxh_home_path = pf"{opt.local_xxh_home}"
-local_xxh_home_parent = local_xxh_home_path.parent
-package_dir_path = pf"{xonssh_xxh.__file__}".parent
-
-if local_xxh_home_path.exists():
-    if not os.access(local_xxh_home_path, os.W_OK):
-        eeprint(f"The local xxh home path isn't writable: {local_xxh_home_path}" )
-elif local_xxh_home_parent.exists():
-    if os.access(local_xxh_home_parent, os.W_OK):
-        eprint(f'Create local xxh home path: {local_xxh_home_path}')
-        mkdir @(ssh_v) -p @(local_xxh_home_path) @(local_xxh_home_path / 'plugins')
-    else:
-        eeprint(f"Parent for local xxh home path isn't writable: {local_xxh_home_parent}")
-else:
-    eeprint(f"Paths aren't writable:\n  {local_xxh_home_parent}\n  {local_xxh_home_path}")
-
-# Fix env to avoid ssh warnings
-for lc in ['LC_TIME','LC_MONETARY','LC_ADDRESS','LC_IDENTIFICATION','LC_MEASUREMENT','LC_NAME','LC_NUMERIC','LC_PAPER','LC_TELEPHONE']:
-    ${...}[lc] = "POSIX"
-
-if pf'{opt.host_xxh_home}' == pf'/':
-    eeprint("Host xxh home path {host_xxh_home} looks like /. Please check twice!")
-
-def get_host_info(use_pexpect=True):
-    host_info_sh = package_dir_path / 'host_info.sh'
-    if use_pexpect:
-        cmd = "bash -c 'cat {host_info_sh} | sed \"s|_xxh_home_|{host_xxh_home}|\" | ssh {ssh_v} {ssh_arguments} {host} -T \"bash -s\"'".format(
-            host_info_sh=host_info_sh, host_xxh_home=opt.host_xxh_home, ssh_v=' '.join(ssh_v), ssh_arguments=' '.join(ssh_arguments), host=host)
-        pr = ssh_pexpect(cmd, verbose=opt.verbose)
-
-        if pr == {}:
-            eeprint('Unexpected result. Try again with +v')
-
-        if opt.verbose:
-            eprint('Pexpect result:')
-            eprint(pr)
-
-        r = pr['output']
-    else:
-        r = $(cat @(host_info_sh) | sed @(f's|_xxh_home_|{opt.host_xxh_home}|') | @(sshpass) ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s" ).strip()
-
-    if opt.verbose:
-        eprint(f'Host info:\n{r}')
-
-    if r == '':
-        eeprint('Empty answer from host when getting first info. Often this is a connection error.\n'
-                + 'Check your connection parameters using the same command but with ssh.')
-
-    r = dict([l.split('=') for l in r.replace('\r','').split('\n') if l.strip() != ''])
-
-    return r
-
-host_info = get_host_info()
-
-host_xxh_home = host_info['xxh_home_realpath']
-host_xxh_version = host_info['xxh_version']
-
-if host_xxh_home == '':
-    eeprint(f'Unknown answer from host when getting realpath for directory {host_xxh_home}')
-
-if host_xxh_version == '':
-    eeprint(f'Unknown answer from host when getting version for directory {host_xxh_home}')
-
-host_xxh_home = pf"{host_xxh_home}"
-
-if host_info['xxh_home_writable'] == '0' and host_info['xxh_parent_home_writable'] == '0':
-    yn = input(f"{host}:{host_xxh_home} is not writable. Continue? [y/n] ").strip().lower()
-    if yn != 'y':
-        eeprint('Stopped')
-
-if host_info['scp'] == '' and host_info['rsync'] == '':
-    eeprint(f"There are no rsync or scp on target host. Sad but files can't be uploaded.")
-
-host_xonsh_bin = host_xxh_home / xonsh_bin_name
-host_xonshrc = host_xxh_home / 'xonshrc.xsh'
-
-if opt.install_force == False:
-    # Check version
-    ask = False
-    if host_xxh_version is 'version_not_found':
-        ask = f'Host xxh home is not empty but something went wrong while getting host xxh version.'
-    elif host_xxh_version not in ['dir_not_found','dir_empty'] and host_xxh_version != local_xxh_version:
-        ask = f"Local xxh version '{local_xxh_version}' is not equal host xxh version '{host_xxh_version}'."
-
-    if ask:
-        choice = input(f"{ask} What's next? \n"
-                       + " s - [default] Stop here. You'll try to connect using ordinary ssh for backup current xxh home.\n"
-                       + " u - Safe update. Host xxh home will be renamed and local xxh version will be installed.\n"
-                       + " f - Force install local xxh version on host. Host xxh installation will be lost.\n"
-                       + " i - Ignore, cross fingers and continue the connection.\n"
-                       + "S/u/f/i? ").lower()
-
-        if choice == 's' or choice.strip() == '':
-            print('Stopped')
-            exit(0)
-        elif choice == 'u':
-            local_time = datetime.datetime.now().isoformat()[:19]
-            eprint(f"Move {host}:{host_xxh_home} to {host}:{host_xxh_home}-{local_time}")
-            echo @(f"mv {host_xxh_home} {host_xxh_home}-{local_time}") | @(sshpass) ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s"
-            opt.install = True
-        elif choice == 'f':
-            opt.install = True
-            opt.install_force = True
-        elif choice == 'i':
-            pass
+    def set_vverbose(self, vverbose):
+        self.vverbose = vverbose
+        if vverbose:
+            self.verbose = True
+            if self.sshpass and ['-v'] not in self.sshpass:
+                self.sshpass += ['-v']
         else:
-            eeprint('Unknown answer')
+            if '-v' in self.sshpass:
+                self.sshpass.remove('-v')
 
-if host_xxh_version in ['dir_not_found','dir_empty'] and opt.install_force == False:
-    yn = input(f"{host}:{host_xxh_home} not found. Install xxh? [Y/n] ").strip().lower()
-    if yn == 'y' or yn == '':
-        opt.install = True
-    else:
-        eeprint('Unknown answer')
+    def parse_destination(self, destination):
+        destination = f'ssh://{destination}' if 'ssh://' not in destination else destination
+        url = urlparse(destination)
+        return url
 
-if opt.install:
-    eprint("\033[0;33m", end='')
-    if opt.method == 'appimage':
-        local_xonsh_appimage_fullpath = local_xxh_home_path / xonsh_bin_name
-        if not local_xonsh_appimage_fullpath.is_file():
-            eprint(f'First time download and save xonsh AppImage from {url_appimage}')
-            if which('wget'):
-                r=![wget -q --show-progress @(url_appimage) -O @(local_xonsh_appimage_fullpath)]
-                if r.returncode != 0:
-                    eeprint(f'Error while download appimage using wget: {r}')
-            elif which('curl'):
-                r=![curl @(url_appimage) -o @(local_xonsh_appimage_fullpath)]
-                if r.returncode != 0:
-                    eeprint(f'Error while download appimage using curl: {r}')
+    def main(self):
+        argp = argparse.ArgumentParser(description=f"The xxh is for using the xonsh shell wherever you go through the ssh. {self.snail()}", formatter_class=RawTextHelpFormatter, prefix_chars='-+')
+        argp.add_argument('--version', '-V', action='version', version=f"xonssh-xxh/{self.local_xxh_version}")
+        argp.add_argument('-p', dest='ssh_port', help="Port to connect to on the remote host.")
+        argp.add_argument('-l', dest='ssh_login', help="Specifies the user to log in as on the remote machine.")
+        argp.add_argument('-i', dest='ssh_private_key', help="File from which the identity (private key) for public key authentication is read.")
+        argp.add_argument('-o', dest='ssh_options', metavar='SSH_OPTION -o ...', action='append', help="SSH options are described in ssh man page. Example: -o Port=22 -o User=snail")
+        argp.add_argument('destination', metavar='[user@]host[:port]', help="Destination may be specified as [user@]host[:port] or host from ~/.ssh/config")
+        argp.add_argument('+i','++install', default=False, action='store_true', help="Install xxh to destination host.")
+        argp.add_argument('+if','++install-force', default=False, action='store_true', help="Removing the host xxh home and install xxh again.")
+        argp.add_argument('+P','++password', help="Password for ssh auth.")
+        argp.add_argument('+PP','++password-prompt', default=False, action='store_true', help="Enter password manually using prompt.")
+        argp.add_argument('+lh','++local-xxh-home', default=self.local_xxh_home_path, help=f"Local xxh home path. Default: {self.local_xxh_home_path}")
+        argp.add_argument('+hh','++host-xxh-home', default=self.host_xxh_home_path, help=f"Host xxh home path. Default: {self.host_xxh_home_path}")
+        argp.add_argument('+he','++host-execute-file', help=f"Execute script file placed on host and exit.")
+        argp.add_argument('+m','++method', default='appimage', help=f"Portable method: {self.portable_methods_str}")
+        argp.add_argument('+v','++verbose', default=False, action='store_true', help="Verbose mode.")
+        argp.add_argument('+vv','++vverbose', default=False, action='store_true', help="Super verbose mode.")
+        argp.usage = """xxh <host from ~/.ssh/config>
+        
+        usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]
+        
+        usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY] [-o SSH_OPTION -o ...] 
+                   [user@]host[:port]
+                   [+i] [+if] [+P PASSWORD] [+PP] 
+                   [+lxh LOCAL_XXH_HOME] [+hxh HOST_XXH_HOME] [+he HOST_EXECUTE_FILE] 
+                   [+m METHOD] [+v] [+vv]
+        """
+        help = argp.format_help().replace('\n  +','\n\nxxh arguments:\n  +',1).replace('optional ', 'common ')\
+            .replace('number and exit', 'number and exit\n\nssh arguments:').replace('positional ', 'required ')
+        argp.format_help = lambda: help
+        opt = argp.parse_args()
+
+        self.vverbose = self.verbose
+        self.set_vverbose(opt.vverbose)
+
+        if opt.method not in self.portable_methods:
+            eeprint(f'Currently supported methods: {self.portable_methods_str}')
+
+        url = self.parse_destination(opt.destination)
+
+        host = url.hostname
+        if not host:
+            eeprint(f"Wrong distination '{host}'")
+
+        if url.port:
+            opt.ssh_port = url.port
+
+        if url.username:
+            opt.ssh_login = url.username
+
+        username = getpass.getuser()
+        if opt.ssh_login:
+            username = opt.ssh_login
+
+        ssh_arguments = ['-o', 'StrictHostKeyChecking=accept-new']
+        if not self.verbose:
+           ssh_arguments += ['-o', 'LogLevel=QUIET']
+        if opt.ssh_port:
+            ssh_arguments += ['-o', f'Port={opt.ssh_port}']
+        if opt.ssh_private_key:
+            ssh_arguments += ['-o', f'IdentityFile={opt.ssh_private_key}']
+        if opt.ssh_login:
+            ssh_arguments += ['-o', f'User={opt.ssh_login}']
+        if opt.ssh_options:
+            for ssh_option in opt.ssh_options:
+                ssh_arguments += ['-o', ssh_option]
+
+        if self.verbose:
+            eprint(f'ssh arguments: {ssh_arguments}')
+
+        if not which('ssh'):
+            eeprint('Install OpenSSH client before using xxh: https://duckduckgo.com/?q=how+to+install+openssh+client+in+linux')
+
+        if opt.password is not None:
+            self.set_sshpass_password(opt.password)
+        elif opt.password_prompt:
+            password = ''
+            while not password:
+                password = getpass.getpass(f"Enter {username}@{host}'s password: ")
+            self.set_sshpass_password(password)
+
+        opt.install = True if opt.install_force else opt.install
+
+        ssh_v = ['-v'] if opt.vverbose else []
+
+        local_xxh_home_path = pf"{opt.local_xxh_home}"
+        local_xxh_home_parent = local_xxh_home_path.parent
+        package_dir_path = pf"{xonssh_xxh.__file__}".parent
+
+        if local_xxh_home_path.exists():
+            if not os.access(local_xxh_home_path, os.W_OK):
+                eeprint(f"The local xxh home path isn't writable: {local_xxh_home_path}" )
+        elif local_xxh_home_parent.exists():
+            if os.access(local_xxh_home_parent, os.W_OK):
+                eprint(f'Create local xxh home path: {local_xxh_home_path}')
+                mkdir @(ssh_v) -p @(local_xxh_home_path) @(local_xxh_home_path / 'plugins')
             else:
-                eeprint('Please install wget or curl and try again. Howto: https://duckduckgo.com/?q=how+to+install+wget+in+linux')
+                eeprint(f"Parent for local xxh home path isn't writable: {local_xxh_home_parent}")
+        else:
+            eeprint(f"Paths aren't writable:\n  {local_xxh_home_parent}\n  {local_xxh_home_path}")
 
-            chmod +x @(local_xonsh_appimage_fullpath)
-    else:
-        eprint(f'Method "{opt.method}" is not supported now')
+        # Fix env to avoid ssh warnings
+        for lc in ['LC_TIME','LC_MONETARY','LC_ADDRESS','LC_IDENTIFICATION','LC_MEASUREMENT','LC_NAME','LC_NUMERIC','LC_PAPER','LC_TELEPHONE']:
+            ${...}[lc] = "POSIX"
 
-    if opt.install_force:
-        eprint(f'Remove host xxh home {host}:{host_xxh_home}')
-        echo @(f"rm -rf {host_xxh_home}/*") | @(sshpass) ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s"
+        if pf'{opt.host_xxh_home}' == pf'/':
+            eeprint("Host xxh home path {host_xxh_home} looks like /. Please check twice!")
 
-    eprint(f"Install xxh to {host}:{host_xxh_home}" )
+        def get_host_info(use_pexpect=True):
+            host_info_sh = package_dir_path / 'host_info.sh'
+            if use_pexpect:
+                cmd = "bash -c 'cat {host_info_sh} | sed \"s|_xxh_home_|{host_xxh_home}|\" | ssh {ssh_v} {ssh_arguments} {host} -T \"bash -s\"'".format(
+                    host_info_sh=host_info_sh, host_xxh_home=opt.host_xxh_home, ssh_v=' '.join(ssh_v), ssh_arguments=' '.join(ssh_arguments), host=host)
+                pr = self.pssh(cmd)
 
-    if host_xxh_version in ['dir_not_found']:
-        eprint(f'Create xxh home {host_xxh_home}')
-        echo @(f"mkdir -p {host_xxh_home}") | @(sshpass) ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s"
+                if pr == {}:
+                    eeprint('Unexpected result. Try again with +v')
 
-    if which('rsync') and host_info['rsync']:
-        eprint('Upload using rsync')
-        rsync @(ssh_v) -e @(f"{''.join(sshpass)} ssh {'' if ssh_v == [] else '-v'} {' '.join(ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(local_xxh_home_path)/ @(host):@(host_xxh_home)/ 1>&2
-        rsync @(ssh_v) -e @(f"{''.join(sshpass)} ssh {'' if ssh_v == [] else '-v'} {' '.join(ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(package_dir_path)/ @(host):@(host_xxh_home)/ 1>&2
-    elif which('scp') and host_info['scp']:
-        eprint("Upload using scp. Note: install rsync on local and remote host to increase speed.")
-        scp_host = f"{host}:{host_xxh_home}/"
-        @(sshpass) scp @(ssh_v) @(ssh_arguments) -r -C @([] if opt.verbose else ['-q']) @(local_xxh_home_path)/* @(scp_host) 1>&2
-        @(sshpass) scp @(ssh_v) @(ssh_arguments) -r -C @([] if opt.verbose else ['-q']) @(package_dir_path)/* @(scp_host) 1>&2
-    else:
-        eprint('Please install rsync or scp!')
+                if self.verbose:
+                    eprint('Pexpect result:')
+                    eprint(pr)
 
-    plugins_fullpath = local_xxh_home_path / 'plugins'
-    if plugins_fullpath.exists():
-        plugin_post_installs = sorted(plugins_fullpath.glob('*/post_install.xsh'))
-        if len(plugin_post_installs) > 0:
-            eprint(f'Run plugins post install on {host}')
-            scripts=''
-            for script in plugin_post_installs:
-                scripts += " && %s -i --rc %s -- %s" % (host_xonsh_bin, host_xonshrc, str(script).replace(str(local_xxh_home_path)+'/', ''))
-                eprint(f' * {script}')
+                if pr['user_host_password'] is not None:
+                    self.set_sshpass_password(pr['user_host_password'])
 
-            if scripts:
-                echo @(f"cd {host_xxh_home} {scripts}" ) | @(sshpass) ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s" 1>&2
+                r = pr['output']
+            else:
+                r = $(cat @(host_info_sh) | sed @(f's|_xxh_home_|{opt.host_xxh_home}|') | @(self.sshpass) ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s" ).strip()
 
-    eprint(f'Check {opt.method}')
-    host_settings_file = host_xxh_home / 'settings.py'
-    check = $(@(sshpass) ssh @(ssh_v) @(ssh_arguments) @(host) -t @(host_xonsh_bin) --no-script-cache -i --rc @(host_xonshrc) -- @(host_settings_file) )
+            if self.verbose:
+                eprint(f'Host info:\n{r}')
 
-    if opt.verbose:
-        eprint(f'Check xonsh result:\n{check}')
+            if r == '':
+                eeprint('Empty answer from host when getting first info. Often this is a connection error.\n'
+                        + 'Check your connection parameters using the same command but with ssh.')
 
-    if check == '' or 'AppImages require FUSE to run' in check:
-        eprint('AppImage is not supported by host. Trying to unpack and run...')
-        host_xonsh_bin_new = host_xxh_home / 'xonsh-squashfs/usr/bin/python3'
-        @(sshpass) ssh @(ssh_v) @(ssh_arguments) @(host) -t @(f"cd {host_xxh_home} && ./{xonsh_bin_name} --appimage-extract | grep -E 'usr/python/bin/xonsh$' && mv squashfs-root xonsh-squashfs && mv {host_xonsh_bin} {host_xonsh_bin}-disabled && ln -s {host_xonsh_bin_new} xonsh") 1>&2
-        host_xonsh_bin = host_xonsh_bin_new
+            r = dict([l.split('=') for l in r.replace('\r','').split('\n') if l.strip() != ''])
 
-    eprint(f'First run xonsh on {host}\033[0m')
+            return r
 
-host_execute_file = ['--', opt.host_execute_file] if opt.host_execute_file else []
-@(sshpass) ssh @(ssh_v) @(ssh_arguments) @(host) -t @(host_xonsh_bin) --no-script-cache -i --rc @(host_xonshrc) @(host_execute_file)
+        use_pssh = self.sshpass == []
+        host_info = get_host_info(use_pexpect=use_pssh)
+
+        host_xxh_home = host_info['xxh_home_realpath']
+        host_xxh_version = host_info['xxh_version']
+
+        if host_xxh_home == '':
+            eeprint(f'Unknown answer from host when getting realpath for directory {host_xxh_home}')
+
+        if host_xxh_version == '':
+            eeprint(f'Unknown answer from host when getting version for directory {host_xxh_home}')
+
+        host_xxh_home = pf"{host_xxh_home}"
+
+        if host_info['xxh_home_writable'] == '0' and host_info['xxh_parent_home_writable'] == '0':
+            yn = input(f"{host}:{host_xxh_home} is not writable. Continue? [y/n] ").strip().lower()
+            if yn != 'y':
+                eeprint('Stopped')
+
+        if host_info['scp'] == '' and host_info['rsync'] == '':
+            eeprint(f"There are no rsync or scp on target host. Sad but files can't be uploaded.")
+
+        host_xonsh_bin = host_xxh_home / self.xonsh_bin_name
+        host_xonshrc = host_xxh_home / 'xonshrc.xsh'
+
+        if opt.install_force == False:
+            # Check version
+            ask = False
+            if host_xxh_version is 'version_not_found':
+                ask = f'Host xxh home is not empty but something went wrong while getting host xxh version.'
+            elif host_xxh_version not in ['dir_not_found','dir_empty'] and host_xxh_version != self.local_xxh_version:
+                ask = f"Local xxh version '{self.local_xxh_version}' is not equal host xxh version '{host_xxh_version}'."
+
+            if ask:
+                choice = input(f"{ask} What's next? \n"
+                               + " s - [default] Stop here. You'll try to connect using ordinary ssh for backup current xxh home.\n"
+                               + " u - Safe update. Host xxh home will be renamed and local xxh version will be installed.\n"
+                               + " f - Force install local xxh version on host. Host xxh installation will be lost.\n"
+                               + " i - Ignore, cross fingers and continue the connection.\n"
+                               + "S/u/f/i? ").lower()
+
+                if choice == 's' or choice.strip() == '':
+                    print('Stopped')
+                    exit(0)
+                elif choice == 'u':
+                    local_time = datetime.datetime.now().isoformat()[:19]
+                    eprint(f"Move {host}:{host_xxh_home} to {host}:{host_xxh_home}-{local_time}")
+                    echo @(f"mv {host_xxh_home} {host_xxh_home}-{local_time}") | @(self.sshpass) ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s"
+                    opt.install = True
+                elif choice == 'f':
+                    opt.install = True
+                    opt.install_force = True
+                elif choice == 'i':
+                    pass
+                else:
+                    eeprint('Unknown answer')
+
+        if host_xxh_version in ['dir_not_found','dir_empty'] and opt.install_force == False:
+            yn = input(f"{host}:{host_xxh_home} not found. Install xxh? [Y/n] ").strip().lower()
+            if yn == 'y' or yn == '':
+                opt.install = True
+            else:
+                eeprint('Unknown answer')
+
+        if opt.install:
+            eprint("\033[0;33m", end='')
+            if opt.method == 'appimage':
+                local_xonsh_appimage_fullpath = local_xxh_home_path / self.xonsh_bin_name
+                if not local_xonsh_appimage_fullpath.is_file():
+                    eprint(f'First time download and save xonsh AppImage from {self.url_appimage}')
+                    if which('wget'):
+                        r=![wget -q --show-progress @(self.url_appimage) -O @(local_xonsh_appimage_fullpath)]
+                        if r.returncode != 0:
+                            eeprint(f'Error while download appimage using wget: {r}')
+                    elif which('curl'):
+                        r=![curl @(self.url_appimage) -o @(local_xonsh_appimage_fullpath)]
+                        if r.returncode != 0:
+                            eeprint(f'Error while download appimage using curl: {r}')
+                    else:
+                        eeprint('Please install wget or curl and try again. Howto: https://duckduckgo.com/?q=how+to+install+wget+in+linux')
+
+                    chmod +x @(local_xonsh_appimage_fullpath)
+            else:
+                eprint(f'Method "{opt.method}" is not supported now')
+
+            if opt.install_force:
+                eprint(f'Remove host xxh home {host}:{host_xxh_home}')
+                echo @(f"rm -rf {host_xxh_home}/*") | @(self.sshpass) ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s"
+
+            eprint(f"Install xxh to {host}:{host_xxh_home}" )
+
+            if host_xxh_version in ['dir_not_found']:
+                eprint(f'Create xxh home {host_xxh_home}')
+                echo @(f"mkdir -p {host_xxh_home}") | @(self.sshpass) ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s"
+
+            if which('rsync') and host_info['rsync']:
+                eprint('Upload using rsync')
+                rsync @(ssh_v) -e @(f"{''.join(sshpass)} ssh {'' if ssh_v == [] else '-v'} {' '.join(ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(local_xxh_home_path)/ @(host):@(host_xxh_home)/ 1>&2
+                rsync @(ssh_v) -e @(f"{''.join(sshpass)} ssh {'' if ssh_v == [] else '-v'} {' '.join(ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(package_dir_path)/ @(host):@(host_xxh_home)/ 1>&2
+            elif which('scp') and host_info['scp']:
+                eprint("Upload using scp. Note: install rsync on local and remote host to increase speed.")
+                scp_host = f"{host}:{host_xxh_home}/"
+                @(self.sshpass) scp @(ssh_v) @(ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(local_xxh_home_path)/* @(scp_host) 1>&2
+                @(self.sshpass) scp @(ssh_v) @(ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(package_dir_path)/* @(scp_host) 1>&2
+            else:
+                eprint('Please install rsync or scp!')
+
+            plugins_fullpath = local_xxh_home_path / 'plugins'
+            if plugins_fullpath.exists():
+                plugin_post_installs = sorted(plugins_fullpath.glob('*/post_install.xsh'))
+                if len(plugin_post_installs) > 0:
+                    eprint(f'Run plugins post install on {host}')
+                    scripts=''
+                    for script in plugin_post_installs:
+                        scripts += " && %s -i --rc %s -- %s" % (host_xonsh_bin, host_xonshrc, str(script).replace(str(local_xxh_home_path)+'/', ''))
+                        eprint(f' * {script}')
+
+                    if scripts:
+                        echo @(f"cd {host_xxh_home} {scripts}" ) | @(self.sshpass) ssh @(ssh_v) @(ssh_arguments) @(host) -T "bash -s" 1>&2
+
+            eprint(f'Check {opt.method}')
+            host_settings_file = host_xxh_home / 'settings.py'
+            check = $(@(self.sshpass) ssh @(ssh_v) @(ssh_arguments) @(host) -t @(host_xonsh_bin) --no-script-cache -i --rc @(host_xonshrc) -- @(host_settings_file) )
+
+            if self.vverbose:
+                eprint(f'Check xonsh result:\n{check}')
+
+            if check == '' or 'AppImages require FUSE to run' in check:
+                eprint('AppImage is not supported by host. Trying to unpack and run...')
+                host_xonsh_bin_new = host_xxh_home / 'xonsh-squashfs/usr/bin/python3'
+                @(self.sshpass) ssh @(ssh_v) @(ssh_arguments) @(host) -t @(f"cd {host_xxh_home} && ./{self.xonsh_bin_name} --appimage-extract | grep -E 'usr/python/bin/xonsh$' && mv squashfs-root xonsh-squashfs && mv {host_xonsh_bin} {host_xonsh_bin}-disabled && ln -s {host_xonsh_bin_new} xonsh") 1>&2
+                host_xonsh_bin = host_xonsh_bin_new
+
+            eprint(f'First run xonsh on {host}\033[0m')
+
+        host_execute_file = ['--', opt.host_execute_file] if opt.host_execute_file else []
+        @(self.sshpass) ssh @(ssh_v) @(ssh_arguments) @(host) -t @(host_xonsh_bin) --no-script-cache -i --rc @(host_xonshrc) @(host_execute_file)
+
+if __name__ == '__main__':
+    if os.name == 'nt':
+        eeprint(f"Windows is not supported. WSL1 is not recommended also. WSL2 is not tested yet.\nContribution: {self.url_xxh_github}")
+
+    xxh = Xxh()
+    xxh.main()
