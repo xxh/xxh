@@ -1,6 +1,6 @@
 #!/bin/bash
 
-xxh_home_realpath=`realpath _xxh_home_`
+xxh_home_realpath=`realpath -m _xxh_home_`
 xxh_plugins_path=$xxh_home_realpath/plugins
 
 xxh_version='dir_not_found'
