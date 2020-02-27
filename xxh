@@ -68,7 +68,7 @@ class Xxh:
             host_password = self.password
 
         if self.vverbose:
-            eprint('Try pexpect...')
+            eprint('Try pexpect command: '+cmd)
 
         sess = pexpect.spawn(cmd)
         user_host_accept = None
@@ -87,7 +87,7 @@ class Xxh:
                 return {}
 
             if self.vverbose:
-                eprint(f'Pexpect pattern: {patterns[i]}')
+                eprint(f'Pexpect caught pattern: {patterns[i]}')
 
             if i in [0,1]:
                 # Expected:
@@ -448,8 +448,20 @@ class Xxh:
             elif which('scp') and host_info['scp']:
                 eprint("Upload using scp. Note: install rsync on local and remote host to increase speed.")
                 scp_host = f"{host}:{host_xxh_home}/"
-                @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(self.local_xxh_home)/* @(scp_host) 1>&2
-                @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(self.package_dir_path)/* @(scp_host) 1>&2
+
+                if self.use_pexpect:
+                    cmd = "bash -c 'scp {ssh_v} {ssh_arguments} -r -C {vverbose} {local_xxh_home}/* {scp_host}'".format(
+                        ssh_v=('' if not self.ssh_arg_v else '-v'), ssh_arguments=' '.join(self.ssh_arguments), vverbose=('' if self.vverbose else '-q'), local_xxh_home=self.local_xxh_home, scp_host=scp_host
+                    )
+                    self.pssh(cmd)
+
+                    cmd = "bash -c 'scp {ssh_v} {ssh_arguments} -r -C {vverbose} {package_dir_path}/* {scp_host}'".format(
+                        ssh_v=('' if not self.ssh_arg_v else '-v'), ssh_arguments=(' '.join(self.ssh_arguments)), vverbose=('' if self.vverbose else '-q'), package_dir_path=self.package_dir_path, scp_host=scp_host
+                    )
+                    self.pssh(cmd)
+                else:
+                    @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(self.local_xxh_home)/* @(scp_host) 1>&2
+                    @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(self.package_dir_path)/* @(scp_host) 1>&2
             else:
                 eprint('Please install rsync or scp!')
 
