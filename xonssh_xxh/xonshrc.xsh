@@ -1,7 +1,7 @@
 import sys
 
 $UPDATE_OS_ENVIRON=True
-
+del $LS_COLORS # https://github.com/xonsh/xonsh/issues/3055
 $XXH_HOME = pf"{__file__}".absolute().parent
 $PIP_TARGET = $XXH_HOME / 'pip'
 $PYTHONPATH = $PIP_TARGET
