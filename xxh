@@ -230,7 +230,7 @@ class Xxh:
                 eprint(pr)
 
             if pr['user_host_password'] is not None:
-                self.set_sshpass_password(pr['user_host_password'])
+                self.password = pr['user_host_password']
 
             r = pr['output']
         else:
@@ -443,25 +443,13 @@ class Xxh:
 
             if which('rsync') and host_info['rsync']:
                 eprint('Upload using rsync')
-                rsync @(self.ssh_arg_v) -e @(f"{''.join(sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(self.local_xxh_home)/ @(host):@(host_xxh_home)/ 1>&2
-                rsync @(self.ssh_arg_v) -e @(f"{''.join(sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(self.package_dir_path)/ @(host):@(host_xxh_home)/ 1>&2
+                rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(self.local_xxh_home)/ @(host):@(host_xxh_home)/ 1>&2
+                rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(self.package_dir_path)/ @(host):@(host_xxh_home)/ 1>&2
             elif which('scp') and host_info['scp']:
                 eprint("Upload using scp. Note: install rsync on local and remote host to increase speed.")
                 scp_host = f"{host}:{host_xxh_home}/"
-
-                if self.use_pexpect:
-                    cmd = "bash -c 'scp {ssh_v} {ssh_arguments} -r -C {vverbose} {local_xxh_home}/* {scp_host}'".format(
-                        ssh_v=('' if not self.ssh_arg_v else '-v'), ssh_arguments=' '.join(self.ssh_arguments), vverbose=('' if self.vverbose else '-q'), local_xxh_home=self.local_xxh_home, scp_host=scp_host
-                    )
-                    self.pssh(cmd)
-
-                    cmd = "bash -c 'scp {ssh_v} {ssh_arguments} -r -C {vverbose} {package_dir_path}/* {scp_host}'".format(
-                        ssh_v=('' if not self.ssh_arg_v else '-v'), ssh_arguments=(' '.join(self.ssh_arguments)), vverbose=('' if self.vverbose else '-q'), package_dir_path=self.package_dir_path, scp_host=scp_host
-                    )
-                    self.pssh(cmd)
-                else:
-                    @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(self.local_xxh_home)/* @(scp_host) 1>&2
-                    @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(self.package_dir_path)/* @(scp_host) 1>&2
+                @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(self.local_xxh_home)/* @(scp_host) 1>&2
+                @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(self.package_dir_path)/* @(scp_host) 1>&2
             else:
                 eprint('Please install rsync or scp!')
 
