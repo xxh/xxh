@@ -216,7 +216,7 @@ host_xonshrc = host_xxh_home / 'xonshrc.xsh'
 if opt.install_force == False:
     # Check version
     ask = False
-    if host_xxh_version is 'version_not_found':
+    if host_xxh_version == 'version_not_found':
         ask = f'Host xxh home is not empty but something went wrong while getting host xxh version.'
     elif host_xxh_version not in ['dir_not_found','dir_empty'] and host_xxh_version != local_xxh_version:
         ask = f"Local xxh version '{local_xxh_version}' is not equal host xxh version '{host_xxh_version}'."
