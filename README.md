@@ -120,16 +120,6 @@ When you run `xxh <host>` command:
 ## Development
 🛠️ Use [xxh-dev](https://github.com/xonssh/xxh-dev) environment for development, testing and contribution.
 
-### Known Issues
-
-##### Related issues
-
-What will make xxh more universal and stable in the future:
-* [AppImages run on Alpine](https://github.com/AppImage/AppImageKit/issues/1015) 
-* [Fix xonsh for WSL1](https://github.com/xonsh/xonsh/issues/3367)
-* [Captured subprocess attributes not queryable until result is evaluated](https://github.com/xonsh/xonsh/issues/3394)
-* [Fix xontrib installation using pip target](https://github.com/xonsh/xonsh/issues/3463)
-
 ## Thanks
 * @scopatz for https://github.com/xonsh/xonsh
 * @probonopd for https://github.com/AppImage
