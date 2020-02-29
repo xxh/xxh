@@ -18,7 +18,7 @@ python3 -m pip install --upgrade xonssh-xxh
 
 ## Usage
 ```
-$ ./xxh -h                                                                                                        
+$ ./xxh -h
 usage: xxh <host from ~/.ssh/config>
 
 usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]
