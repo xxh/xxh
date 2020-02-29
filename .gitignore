@@ -1,3 +1,4 @@
+squashfs-root
 *.pyc
 *.out
 *.xcf

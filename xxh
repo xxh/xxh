@@ -94,7 +94,7 @@ class Xxh:
                 #   The authenticity of host '<...>' can't be established.
                 #   ECDSA key fingerprint is <...>
                 #   Are you sure you want to continue connecting (yes/no)?
-                print('* '+(sess.before + sess.after).decode("utf-8"), end='')
+                print((sess.before + sess.after).decode("utf-8"), end='')
                 if accept_host is None:
                     user_host_accept = input()
                     sess.sendline(user_host_accept)
@@ -113,7 +113,7 @@ class Xxh:
                 # Expected:
                 #   Enter passphrase for key '<keyfile>':
                 if key_password is None:
-                    user_key_password = getpass.getpass(prompt='* '+(sess.before + sess.after).decode("utf-8")+' ')
+                    user_key_password = getpass.getpass(prompt=(sess.before + sess.after).decode("utf-8")+' ')
                     sess.sendline(user_key_password)
                 else:
                     sess.sendline(key_password)
@@ -122,7 +122,7 @@ class Xxh:
                 # Expected:
                 #   <host>`s password:
                 if host_password is None:
-                    user_host_password = getpass.getpass(prompt='* '+(sess.before + sess.after).decode("utf-8")+' ')
+                    user_host_password = getpass.getpass(prompt=(sess.before + sess.after).decode("utf-8")+' ')
                     sess.sendline(user_host_password)
                 else:
                     sess.sendline(host_password)
