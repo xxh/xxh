@@ -50,11 +50,11 @@ The xxh is for using the xonsh shell wherever you go through the ssh.
 
 💡 [Create xxh plugin](https://github.com/xonssh/xxh-plugin-sample)
 
-📌 Pinned plugins:
+📌 [xxh-plugin-pipe-liner](https://github.com/xonssh/xxh-plugin-pipe-liner) — processing the lines easy with python and classic shell pipes
 
-* [Pipe Liner](https://github.com/xonssh/xxh-plugin-pipe-liner) — processing the lines easy with python and classic shell pipes
-* [Bar Theme](https://github.com/xonssh/xxh-plugin-theme-bar) — theme to stay focused
-* [Autojump](https://github.com/xonssh/xxh-plugin-autojump) — save time on moving thru directories
+📌 [xxh-plugin-theme-bar](https://github.com/xonssh/xxh-plugin-theme-bar) — theme to stay focused
+
+📌 [xxh-plugin-autojump](https://github.com/xonssh/xxh-plugin-autojump) — save time on moving thru directories
 
 ## Notes
 
