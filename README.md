@@ -98,6 +98,14 @@ $ pip install --upgrade pandas
 ```
 The packages will appear in `~/.xxh/pip` by default.
 
+### Install xontribs
+
+To install xontribs in xxh session use `xontrib-install`:
+```
+xontrib-install xontrib-autojump
+```
+Don't use `pip` or `xpip` to install xontribs! ([details](https://github.com/xonsh/xonsh/issues/3463))
+
 ### How it works?
 
 When you run `xxh <host>` command:
@@ -112,10 +120,6 @@ When you run `xxh <host>` command:
 🛠️ Use [xxh-dev](https://github.com/xonssh/xxh-dev) environment for development, testing and contribution.
 
 ### Known Issues
-
-##### Sometimes xontribs or pip packages not found after install
-
-If an xontrib or pip package is not found immediately after install you can do reconnect. Xontribs could be reloaded manually without reconnect by executing `import importlib; importlib.reload(sys.modules['xontrib'])`.
 
 ##### Related issues
 
