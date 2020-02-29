@@ -98,9 +98,9 @@ $ pip install --upgrade pandas
 ```
 The packages will appear in `~/.xxh/pip` by default.
 
-### Install xontribs
+### Install [xontribs](https://xon.sh/xontribs.html)
 
-To install xontribs in xxh session use `xontrib-install`:
+To install [xontribs](https://xon.sh/xontribs.html) in xxh session use `xontrib-install`:
 ```
 xontrib-install xontrib-autojump
 ```
