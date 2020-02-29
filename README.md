@@ -14,7 +14,7 @@ Help spread the word about xxh! Click ⭐ on the repo and <a href="https://twitt
 ```
 python3 -m pip install --upgrade xonssh-xxh
 ```
-🔁 After install you can just using `xxh` command as replace `ssh` to connecting to the host because `xxh` has seamless support of basic `ssh` command arguments. 
+🧩 After install you can just using `xxh` command as replace `ssh` to connecting to the host because `xxh` has seamless support of basic `ssh` command arguments. 
 
 ## Usage
 ```
@@ -91,31 +91,15 @@ xxh arguments:
 
 ### Using pip and python
 
-The xxh xonsh will use pip and python from `xonsh.AppImage` by default. You can update pip and install packages ordinally: 
-```
-$ pip install --upgrade pip
-$ pip install --upgrade pandas
-```
-The packages will appear in `~/.xxh/pip` by default.
+The xxh is using pip and python from `xonsh.AppImage` by default. You can update pip (`pip install --upgrade pip`) and install packages ordinally: `pip install --upgrade pandas`. The packages will appear in host xxh home `~/.xxh/pip` by default.
 
 ### Install [xontribs](https://xon.sh/xontribs.html)
 
-To install [xontribs](https://xon.sh/xontribs.html) in xxh session use `xontrib-install`:
-```
-xontrib-install xontrib-autojump
-xontrib load autojump
-```
-Don't use `pip` or `xpip` to install xontribs! ([details](https://github.com/xonsh/xonsh/issues/3463))
+To install [xontribs](https://xon.sh/xontribs.html) in xxh session use `xontrib-install <package>`. Never use `pip` or `xpip` to install xontribs! ([details](https://github.com/xonsh/xonsh/issues/3463))
 
 ### How it works?
 
-When you run `xxh <host>` command:
-
-1. If it needed xxh will download portable xonsh shell and store locally to future use. 
-
-2. If it needed xxh will upload the portable xonsh, init scripts and plugins to the host.
-
-3. Finally xxh will make ssh connection to the server and run portable xonsh shell without any system installs and affection on the target host.
+When you run `xxh myhost` command xxh download portable xonsh and store locally to future use. Then if it needed xxh upload the portable xonsh, init scripts and plugins to the host. Finally xxh make ssh connection to the host and run portable xonsh shell without any system installs and affection on the target host.
 
 ## Development
 🛠️ In the [xxh-dev](https://github.com/xonssh/xxh-dev) repo there is full [docker](https://www.docker.com/)ised environment for development, testing and contribution. The process of testing and development is orchestrated by `xde` tool and as easy as possible.
