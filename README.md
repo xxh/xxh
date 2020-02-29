@@ -43,34 +43,6 @@ The xxh is for using the xonsh shell wherever you go through the ssh.
 
 required arguments:
   [user@]host[:port]    Destination may be specified as [user@]host[:port] or host from ~/.ssh/config
-
-common arguments:
-  -h, --help            show this help message and exit
-  --version, -V         show program's version number and exit
-
-ssh arguments:
-  -p SSH_PORT           Port to connect to on the remote host.
-  -l SSH_LOGIN          Specifies the user to log in as on the remote machine.
-  -i SSH_PRIVATE_KEY    File from which the identity (private key) for public key authentication is read.
-  -o SSH_OPTION -o ...  SSH options are described in ssh man page. Example: -o Port=22 -o User=snail
-
-xxh arguments:
-  +i, ++install         Install xxh to destination host.
-  +if, ++install-force  Removing the host xxh home and install xxh again.
-  +P PASSWORD, ++password PASSWORD
-                        Password for ssh auth.
-  +PP, ++password-prompt
-                        Enter password manually using prompt.
-  +lh LOCAL_XXH_HOME, ++local-xxh-home LOCAL_XXH_HOME
-                        Local xxh home path. Default: ~/.xxh
-  +hh HOST_XXH_HOME, ++host-xxh-home HOST_XXH_HOME
-                        Host xxh home path. Default: ~/.xxh
-  +he HOST_EXECUTE_FILE, ++host-execute-file HOST_EXECUTE_FILE
-                        Execute script file placed on host and exit.
-  +m METHOD, ++method METHOD
-                        Portable method: appimage
-  +v, ++verbose         Verbose mode.
-  +vv, ++vverbose       Super verbose mode.
 ```
 
 ## Plugins
