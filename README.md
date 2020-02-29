@@ -40,9 +40,6 @@ The xxh is for using the xonsh shell wherever you go through the ssh.
      ____\          /__/  /   https://github.com/search?q=xxh-plugin
     /     \________/     /                           
    /____________________/       
-
-required arguments:
-  [user@]host[:port]    Destination may be specified as [user@]host[:port] or host from ~/.ssh/config
 ```
 
 ## Plugins
