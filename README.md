@@ -103,6 +103,7 @@ The packages will appear in `~/.xxh/pip` by default.
 To install [xontribs](https://xon.sh/xontribs.html) in xxh session use `xontrib-install`:
 ```
 xontrib-install xontrib-autojump
+xontrib load autojump
 ```
 Don't use `pip` or `xpip` to install xontribs! ([details](https://github.com/xonsh/xonsh/issues/3463))
 
