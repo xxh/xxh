@@ -46,7 +46,7 @@ The xxh is for using the xonsh shell wherever you go through the ssh.
 
 **xxh plugin** is the set of xsh scripts which will be run when you'll use xxh. You can create xxh plugin with your lovely aliases, tools or color theme and xxh will bring them to your ssh sessions.
 
-🔎 Search xxh plugins [on Github](https://github.com/search?q=xxh-plugin&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-plugin)
+🔎 [Search xxh plugins on Github](https://github.com/search?q=xxh-plugin&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-plugin)
 
 💡 [Create xxh plugin](https://github.com/xonssh/xxh-plugin-sample)
 
