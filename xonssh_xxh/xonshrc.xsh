@@ -15,35 +15,22 @@ $PATH = [ p"$PYTHONHOME" / 'bin', $XXH_HOME ] + $PATH
 sys.path.append(str($PIP_TARGET))
 sys.path.remove('') if '' in sys.path else None
 aliases['pip'] = ['python','-m','pip']
-aliases['xpip'] = lambda args: ![echo "\n\033[0;33mTO INSTALL XONTRIBS USE: xontrib-install <package>\033[0m\n"] and ![pip @(args)]
 
-def _xxh_xontrib_install(args, stdin, stdout): # https://github.com/xonsh/xonsh/issues/3463
-    argp = argparse.ArgumentParser(description=f"xontrib-install")
-    argp.add_argument('xontrib',help="pip package with xontrib")
-    argp.add_argument('-f', '--force', default=False, action='store_true', help="Force install")
-    argp.usage = argp.format_usage().replace('usage: -c ', 'usage: xontrib-install ')
-    opt = argp.parse_args(args)
-
-    if !(pip search -q @(opt.xontrib)).returncode:
-       print(f'pip search {opt.xontrib}: not found')
-       return 1
-
-    if not opt.force and opt.xontrib in $(pip list).split():
-        print(f'pip list: {opt.xontrib} already installed, try -f option to force install')
-        return 1
-
-    if list($PIP_XONTRIB_TARGET.glob('*')):
-        pip_xontrib_tmp = str($PIP_XONTRIB_TARGET) + '_'
+def _xxh_pip(args): # https://github.com/xonsh/xonsh/issues/3463
+    if args and 'install' in args and '-h' not in args and '--help' not in args:
+        print('\033[0;33mRun xpip in xontrib safe mode\033[0m')
+        pip_xontrib_tmp = $PIP_XONTRIB_TARGET.parent / 'xontrib-safe'
         mv @($PIP_XONTRIB_TARGET) @(pip_xontrib_tmp)
-        xpip install --upgrade @(opt.xontrib)
+        pip @(args)
         mkdir -p @($PIP_XONTRIB_TARGET)
-        bash -c $(echo mv @(pip_xontrib_tmp + '/*') @($PIP_XONTRIB_TARGET))
+        if list(pip_xontrib_tmp.glob('*')):
+            bash -c $(echo mv @(pip_xontrib_tmp / '*') @($PIP_XONTRIB_TARGET))
         rm -r @(pip_xontrib_tmp)
     else:
-        xpip install --upgrade @(opt.xontrib)
+        pip @(args)
 
-aliases['xontrib-install'] = _xxh_xontrib_install
-del _xxh_xontrib_install
+aliases['xpip'] = _xxh_pip
+del _xxh_pip
 
 for plugin_path in sorted(($XXH_HOME / 'plugins').glob('*')):
     if (plugin_path / 'xonshrc.xsh').exists():
