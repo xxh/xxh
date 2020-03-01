@@ -14,11 +14,11 @@ Help spread the word about xxh! Click ⭐ on the repo and <a href="https://twitt
 ```
 python3 -m pip install --upgrade xonssh-xxh
 ```
-🔁 After install you can just using `xxh` command as replace `ssh` to connecting to the host because `xxh` has seamless support of basic `ssh` command arguments. 
+🧩 After install you can just using `xxh` command as replace `ssh` to connecting to the host because `xxh` has seamless support of basic `ssh` command arguments. 
 
 ## Usage
 ```
-$ ./xxh -h                                                                                                        
+$ ./xxh -h
 usage: xxh <host from ~/.ssh/config>
 
 usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]
@@ -40,94 +40,36 @@ The xxh is for using the xonsh shell wherever you go through the ssh.
      ____\          /__/  /   https://github.com/search?q=xxh-plugin
     /     \________/     /                           
    /____________________/       
-
-required arguments:
-  [user@]host[:port]    Destination may be specified as [user@]host[:port] or host from ~/.ssh/config
-
-common arguments:
-  -h, --help            show this help message and exit
-  --version, -V         show program's version number and exit
-
-ssh arguments:
-  -p SSH_PORT           Port to connect to on the remote host.
-  -l SSH_LOGIN          Specifies the user to log in as on the remote machine.
-  -i SSH_PRIVATE_KEY    File from which the identity (private key) for public key authentication is read.
-  -o SSH_OPTION -o ...  SSH options are described in ssh man page. Example: -o Port=22 -o User=snail
-
-xxh arguments:
-  +i, ++install         Install xxh to destination host.
-  +if, ++install-force  Removing the host xxh home and install xxh again.
-  +P PASSWORD, ++password PASSWORD
-                        Password for ssh auth.
-  +PP, ++password-prompt
-                        Enter password manually using prompt.
-  +lh LOCAL_XXH_HOME, ++local-xxh-home LOCAL_XXH_HOME
-                        Local xxh home path. Default: ~/.xxh
-  +hh HOST_XXH_HOME, ++host-xxh-home HOST_XXH_HOME
-                        Host xxh home path. Default: ~/.xxh
-  +he HOST_EXECUTE_FILE, ++host-execute-file HOST_EXECUTE_FILE
-                        Execute script file placed on host and exit.
-  +m METHOD, ++method METHOD
-                        Portable method: appimage
-  +v, ++verbose         Verbose mode.
-  +vv, ++vverbose       Super verbose mode.
 ```
 
 ## Plugins
 
 **xxh plugin** is the set of xsh scripts which will be run when you'll use xxh. You can create xxh plugin with your lovely aliases, tools or color theme and xxh will bring them to your ssh sessions.
 
-🔎 [Search xxh plugins on Github](https://github.com/search?q=xxh-plugin&type=Repositories)
+🔎 [Search xxh plugins on Github](https://github.com/search?q=xxh-plugin&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-plugin)
 
 💡 [Create xxh plugin](https://github.com/xonssh/xxh-plugin-sample)
 
-📌 Pinned plugins:
+📌 [xxh-plugin-pipe-liner](https://github.com/xonssh/xxh-plugin-pipe-liner) — processing the lines easy with python and classic shell pipes
 
-* [Pipe Liner](https://github.com/xonssh/xxh-plugin-pipe-liner) — processing the lines easy with python and classic shell pipes
-* [Bar Theme](https://github.com/xonssh/xxh-plugin-theme-bar) — theme to stay focused
-* [Autojump](https://github.com/xonssh/xxh-plugin-autojump) — save time on moving thru directories
+📌 [xxh-plugin-theme-bar](https://github.com/xonssh/xxh-plugin-theme-bar) — theme to stay focused
+
+📌 [xxh-plugin-autojump](https://github.com/xonssh/xxh-plugin-autojump) — save time on moving thru directories
 
 ## Notes
 
-### Using pip and python
+### Using python, pip and [xontribs](https://xon.sh/xontribs.html)
 
-The xxh xonsh will use pip and python from `xonsh.AppImage` by default. You can update pip and install packages ordinally: 
-```
-$ pip install --upgrade pip
-$ pip install --upgrade pandas
-```
-The packages will appear in `~/.xxh/pip` by default.
+The xxh is using pip and python from `xonsh.AppImage` by default. You can update pip (`pip install --upgrade pip`) and install packages ordinally: `pip install --upgrade pandas`. The packages will appear in host xxh home `~/.xxh/pip` by default.
 
-### Install [xontribs](https://xon.sh/xontribs.html)
-
-To install [xontribs](https://xon.sh/xontribs.html) in xxh session use `xontrib-install`:
-```
-xontrib-install xontrib-autojump
-xontrib load autojump
-```
-Don't use `pip` or `xpip` to install xontribs! ([details](https://github.com/xonsh/xonsh/issues/3463))
+To install [xontribs](https://xon.sh/xontribs.html) in xxh session use `xontrib-install <package>`. Never use `pip` or `xpip` to install xontribs! ([details](https://github.com/xonsh/xonsh/issues/3463))
 
 ### How it works?
 
-When you run `xxh <host>` command:
-
-1. If it needed xxh will download portable xonsh shell and store locally to future use. 
-
-2. If it needed xxh will upload the portable xonsh, init scripts and plugins to the host.
-
-3. Finally xxh will make ssh connection to the server and run portable xonsh shell without any system installs and affection on the target host.
+When you run `xxh myhost` command xxh download portable xonsh and store locally to future use. Then if it needed xxh upload the portable xonsh, init scripts and plugins to the host. Finally xxh make ssh connection to the host and run portable xonsh shell without any system installs and affection on the target host.
 
 ## Development
-🛠️ Use [xxh-dev](https://github.com/xonssh/xxh-dev) environment for development, testing and contribution.
-
-### Known Issues
-
-##### Related issues
-
-What will make xxh more universal and stable in the future:
-* [AppImages run on Alpine](https://github.com/AppImage/AppImageKit/issues/1015) 
-* [Fix xonsh for WSL1](https://github.com/xonsh/xonsh/issues/3367)
-* [Captured subprocess attributes not queryable until result is evaluated](https://github.com/xonsh/xonsh/issues/3394)
+🛠️ In the [xxh-dev](https://github.com/xonssh/xxh-dev) repo there is full [docker](https://www.docker.com/)ised environment for development, testing and contribution. The process of testing and development is orchestrated by `xde` tool and as easy as possible.
 
 ## Thanks
 * @scopatz for https://github.com/xonsh/xonsh

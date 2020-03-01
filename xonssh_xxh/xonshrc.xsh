@@ -36,7 +36,7 @@ def _xxh_xontrib_install(args, stdin, stdout): # https://github.com/xonsh/xonsh/
         pip_xontrib_tmp = str($PIP_XONTRIB_TARGET) + '_'
         mv @($PIP_XONTRIB_TARGET) @(pip_xontrib_tmp)
         xpip install --upgrade @(opt.xontrib)
-        mkdir - p @ ($PIP_XONTRIB_TARGET)
+        mkdir -p @($PIP_XONTRIB_TARGET)
         bash -c $(echo mv @(pip_xontrib_tmp + '/*') @($PIP_XONTRIB_TARGET))
         rm -r @(pip_xontrib_tmp)
     else:
