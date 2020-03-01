@@ -18,10 +18,10 @@ aliases['pip'] = ['python','-m','pip']
 aliases['xpip'] = lambda args: ![echo "\n\033[0;33mTO INSTALL XONTRIBS USE: xontrib-install <package>\033[0m\n"] and ![pip @(args)]
 
 def _xxh_xontrib_install(args, stdin, stdout): # https://github.com/xonsh/xonsh/issues/3463
-    argp = argparse.ArgumentParser(description=f"xontrib-install")
+    argp = argparse.ArgumentParser(description=f"Install xontribs", prog='xontrib-install')
     argp.add_argument('xontrib',help="pip package with xontrib")
     argp.add_argument('-f', '--force', default=False, action='store_true', help="Force install")
-    argp.usage = argp.format_usage().replace('usage: -c ', 'usage: xontrib-install ')
+    argp.usage = argp.format_usage().replace('usage: ', '')
     opt = argp.parse_args(args)
 
     if !(pip search -q @(opt.xontrib)).returncode:
