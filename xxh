@@ -23,14 +23,12 @@ class Xxh:
         self.package_dir_path = pf"{xonssh_xxh.__file__}".parent
         self.url_xxh_github = 'https://github.com/xonssh/xxh'
         self.url_xxh_plugins_search = 'https://github.com/search?q=xxh-plugin'
-        self.url_appimage = 'https://github.com/niess/linuxdeploy-plugin-python/releases/download/continuous/xonsh-x86_64.AppImage'
         self.local_xxh_version = global_settings['XXH_VERSION']
         self.local_xxh_home = '~/.xxh'
         self.host_xxh_home = '~/.xxh'
         self.url = None
-        self.portable_methods = ['appimage']
-        self.portable_methods_str = ', '.join(self.portable_methods)
-        self.xonsh_bin_name = 'xonsh'
+        self.shells = ['xonsh-appimage'] # TODO: list from path
+        self.shells_str = ', '.join(self.shells)
         self.ssh_arguments = []
         self.ssh_arg_v = []
         self.sshpass = []
@@ -38,7 +36,7 @@ class Xxh:
         self._password = None
         self._verbose = False
         self._vverbose = False
-        self._method = 'appimage'
+        self._shell = 'xonsh-appimage'
 
     def snail(self):
         try:
@@ -173,14 +171,14 @@ class Xxh:
             self.sshpass = []
 
     @property
-    def method(self):
-        return self._method
+    def shell(self):
+        return self._shell
 
-    @method.setter
-    def method(self, value):
-        if value not in self.portable_methods:
-            eeprint(f'Currently supported methods: {self.portable_methods_str}')
-        self._method = value
+    @shell.setter
+    def shell(self, value):
+        if value not in self.shells:
+            eeprint(f'Currently supported shells: {self.shells_str}')
+        self._shell = value
 
     @property
     def verbose(self):
@@ -262,7 +260,7 @@ class Xxh:
         argp.add_argument('+lh','++local-xxh-home', default=self.local_xxh_home, help=f"Local xxh home path. Default: {self.local_xxh_home}")
         argp.add_argument('+hh','++host-xxh-home', default=self.host_xxh_home, help=f"Host xxh home path. Default: {self.host_xxh_home}")
         argp.add_argument('+he','++host-execute-file', help=f"Execute script file placed on host and exit.")
-        argp.add_argument('+m','++method', default='appimage', help=f"Portable method: {self.portable_methods_str}")
+        argp.add_argument('+s','++shell', default='xonsh-appimage', help=f"xxh shell")
         argp.add_argument('+v','++verbose', default=False, action='store_true', help="Verbose mode.")
         argp.add_argument('+vv','++vverbose', default=False, action='store_true', help="Super verbose mode.")
         argp.usage = """xxh <host from ~/.ssh/config>
@@ -273,7 +271,7 @@ class Xxh:
                    [user@]host[:port]
                    [+i] [+if] [+P PASSWORD] [+PP] 
                    [+lxh LOCAL_XXH_HOME] [+hxh HOST_XXH_HOME] [+he HOST_EXECUTE_FILE] 
-                   [+m METHOD] [+v] [+vv]
+                   [+s SHELL] [+v] [+vv]
         """
         help = argp.format_help().replace('\n  +','\n\nxxh arguments:\n  +',1).replace('optional ', 'common ')\
             .replace('number and exit', 'number and exit\n\nssh arguments:').replace('positional ', 'required ')
@@ -282,7 +280,7 @@ class Xxh:
 
         self.verbose = opt.verbose
         self.vverbose = opt.vverbose
-        self.method = opt.method
+        self.shell = opt.shell
         self.url = url = self.parse_destination(opt.destination)
 
         username = getpass.getuser()
@@ -331,7 +329,7 @@ class Xxh:
         elif local_xxh_home_parent.exists():
             if os.access(local_xxh_home_parent, os.W_OK):
                 eprint(f'Create local xxh home path: {self.local_xxh_home}')
-                mkdir @(self.ssh_arg_v) -p @(self.local_xxh_home) @(self.local_xxh_home / 'plugins')
+                mkdir @(self.ssh_arg_v) -p @(self.local_xxh_home) @(self.local_xxh_home / 'plugins') @(self.local_xxh_home / 'shells')
             else:
                 eeprint(f"Parent for local xxh home path isn't writable: {local_xxh_home_parent}")
         else:
@@ -367,9 +365,6 @@ class Xxh:
 
         if host_info['scp'] == '' and host_info['rsync'] == '':
             eeprint(f"There are no rsync or scp on target host. Sad but files can't be uploaded.")
-
-        host_xonsh_bin = host_xxh_home / self.xonsh_bin_name
-        host_xonshrc = host_xxh_home / 'xonshrc.xsh'
 
         if opt.install_force == False:
             # Check version
@@ -412,24 +407,6 @@ class Xxh:
 
         if opt.install:
             eprint("\033[0;33m", end='')
-            if opt.method == 'appimage':
-                local_xonsh_appimage_fullpath = self.local_xxh_home / self.xonsh_bin_name
-                if not local_xonsh_appimage_fullpath.is_file():
-                    eprint(f'First time download and save xonsh AppImage from {self.url_appimage}')
-                    if which('wget'):
-                        r=![wget -q --show-progress @(self.url_appimage) -O @(local_xonsh_appimage_fullpath)]
-                        if r.returncode != 0:
-                            eeprint(f'Error while download appimage using wget: {r}')
-                    elif which('curl'):
-                        r=![curl @(self.url_appimage) -o @(local_xonsh_appimage_fullpath)]
-                        if r.returncode != 0:
-                            eeprint(f'Error while download appimage using curl: {r}')
-                    else:
-                        eeprint('Please install wget or curl and try again. Howto: https://duckduckgo.com/?q=how+to+install+wget+in+linux')
-
-                    chmod +x @(local_xonsh_appimage_fullpath)
-            else:
-                eprint(f'Method "{opt.method}" is not supported now')
 
             if opt.install_force:
                 eprint(f'Remove host xxh home {host}:{host_xxh_home}')
@@ -441,48 +418,26 @@ class Xxh:
                 eprint(f'Create xxh home {host_xxh_home}')
                 echo @(f"mkdir -p {host_xxh_home}") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
 
+            # TODO: check shells list, shell dir
+            shell_dir = self.local_xxh_home / 'shells/xxh-shell-xonsh-appimage'
             if which('rsync') and host_info['rsync']:
                 eprint('Upload using rsync')
                 rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(self.local_xxh_home)/ @(host):@(host_xxh_home)/ 1>&2
                 rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(self.package_dir_path)/ @(host):@(host_xxh_home)/ 1>&2
+                rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(self.shell_dir)/ @(host):@(host_xxh_home)/ 1>&2
             elif which('scp') and host_info['scp']:
                 eprint("Upload using scp. Note: install rsync on local and remote host to increase speed.")
                 scp_host = f"{host}:{host_xxh_home}/"
                 @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(self.local_xxh_home)/* @(scp_host) 1>&2
                 @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(self.package_dir_path)/* @(scp_host) 1>&2
+                @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(shell_dir)/* @(scp_host) 1>&2
             else:
                 eprint('Please install rsync or scp!')
 
-            plugins_fullpath = self.local_xxh_home / 'plugins'
-            if plugins_fullpath.exists():
-                plugin_post_installs = sorted(plugins_fullpath.glob('*/post_install.xsh'))
-                if len(plugin_post_installs) > 0:
-                    eprint(f'Run plugins post install on {host}')
-                    scripts=''
-                    for script in plugin_post_installs:
-                        scripts += " && %s -i --rc %s -- %s" % (host_xonsh_bin, host_xonshrc, str(script).replace(str(self.local_xxh_home)+'/', ''))
-                        eprint(f' * {script}')
-
-                    if scripts:
-                        echo @(f"cd {host_xxh_home} {scripts}" ) | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s" 1>&2
-
-            eprint(f'Check {opt.method}')
-            host_settings_file = host_xxh_home / 'settings.py'
-            check = $(@(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -t @(host_xonsh_bin) --no-script-cache -i --rc @(host_xonshrc) -- @(host_settings_file) )
-
-            if self.vverbose:
-                eprint(f'Check xonsh result:\n{check}')
-
-            if check == '' or 'AppImages require FUSE to run' in check:
-                eprint('AppImage is not supported by host. Trying to unpack and run...')
-                host_xonsh_bin_new = host_xxh_home / 'xonsh-squashfs/usr/bin/python3'
-                @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -t @(f"cd {host_xxh_home} && ./{self.xonsh_bin_name} --appimage-extract | grep -E 'usr/python/bin/xonsh$' && mv squashfs-root xonsh-squashfs && mv {host_xonsh_bin} {host_xonsh_bin}-disabled && ln -s {host_xonsh_bin_new} xonsh") 1>&2
-                host_xonsh_bin = host_xonsh_bin_new
-
             eprint(f'First run xonsh on {host}\033[0m')
 
-        host_execute_file = ['--', opt.host_execute_file] if opt.host_execute_file else []
-        @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -t @(host_xonsh_bin) --no-script-cache -i --rc @(host_xonshrc) @(host_execute_file)
+        #TODO: host_execute_file = ['--', opt.host_execute_file] if opt.host_execute_file else []
+        @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -t bash @(str(host_xxh_home)+'/entrypoint.sh')
 
 if __name__ == '__main__':
     if os.name == 'nt':
