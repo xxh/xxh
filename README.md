@@ -6,9 +6,6 @@
   <a href="https://gitter.im/xonssh-xxh/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge" target="_blank"><img alt="Chat on Gitter" src="https://badges.gitter.im/xonssh-xxh/community.svg"></a>
   <img alt="PyPI - License" src="https://img.shields.io/pypi/l/xonssh-xxh">
 </p>
-<p align="center">
-Help spread the word about xxh! Click ⭐ on the repo and <a href="https://twitter.com/intent/tweet?text=Python-powered%20shell%20wherever%20you%20go%20through%20the%20ssh&url=https%3A%2F%2Fgithub.com%2Fxonssh%2Fxxh&related=" target="_blank">tweet the link</a>! 
-</p>
 
 ## Install or update
 ```
@@ -70,6 +67,9 @@ When you run `xxh myhost` command xxh download portable xonsh and store locally 
 
 ## Development
 🛠️ In the [xxh-dev](https://github.com/xonssh/xxh-dev) repo there is full [docker](https://www.docker.com/)ised environment for development, testing and contribution. The process of testing and development is orchestrated by `xde` tool and as easy as possible.
+
+## Spread the word
+If you like the idea of xxh help spread the word about xxh! Click ⭐ on the repo and <a href="https://twitter.com/intent/tweet?text=Python-powered%20shell%20wherever%20you%20go%20through%20the%20ssh&url=https%3A%2F%2Fgithub.com%2Fxonssh%2Fxxh&related=" target="_blank">tweet the link</a>! 
 
 ## Thanks
 * @scopatz for https://github.com/xonsh/xonsh
