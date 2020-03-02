@@ -223,7 +223,7 @@ class Xxh:
             pr = self.pssh(cmd)
 
             if pr == {}:
-                eeprint('Unexpected result. Try again with +v')
+                eeprint('Unexpected result. Try again with +v or try ssh before xxh')
 
             if self.verbose:
                 eprint('Pexpect result:')
