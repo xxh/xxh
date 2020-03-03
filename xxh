@@ -419,7 +419,7 @@ class Xxh:
                 echo @(f"mkdir -p {host_xxh_home}") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
 
             # TODO: check shells list, shell dir
-            shell_dir = self.local_xxh_home / 'shells/xxh-shell-xonsh-appimage'
+            shell_dir = self.local_xxh_home / 'shells/xxh-shell-xonsh-appimage/build'
             if which('rsync') and host_info['rsync']:
                 eprint('Upload using rsync')
                 rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(self.local_xxh_home)/ @(host):@(host_xxh_home)/ 1>&2
@@ -436,8 +436,8 @@ class Xxh:
 
             eprint(f'First run xonsh on {host}\033[0m')
 
-        #TODO: host_execute_file = ['--', opt.host_execute_file] if opt.host_execute_file else []
-        @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -t bash @(str(host_xxh_home)+'/entrypoint.sh')
+        host_execute_file = ['-f', opt.host_execute_file] if opt.host_execute_file else []
+        @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -t bash @(str(host_xxh_home)+'/entrypoint.sh') @(host_execute_file)
 
 if __name__ == '__main__':
     if os.name == 'nt':
