@@ -41,7 +41,7 @@ Your favorite shell wherever you go through the ssh.
 
 ## Supported shells
 
-Currently supported Python-powered [xonsh shell](https://github.com/xxh/xxh-shell-xonsh-appimage).
+Currently supported Python-powered portable [xonsh shell](https://github.com/xxh/xxh-shell-xonsh-appimage).
 
 Experimental: to use another shell you can create your `xxh-shell` entrypoint like in [xxh-shell-xonsh-appimage](https://github.com/xxh/xxh-shell-xonsh-appimage) and add `+s` argument to your `xxh` command. 
 
