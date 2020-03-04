@@ -43,7 +43,7 @@ The xxh is for using the xonsh shell wherever you go through the ssh.
 
 Currently supported Python-powered [xonsh shell](https://xon.sh).
 
-To use another shell you can create your `xxh-shell` entrypoint like in [xxh-shell-xonsh-appimage](https://github.com/xxh/xxh-shell-xonsh-appimage). 
+Experimental: to use another shell you can create your `xxh-shell` entrypoint like in [xxh-shell-xonsh-appimage](https://github.com/xxh/xxh-shell-xonsh-appimage) and add `+s` argument to your `xxh` command. 
 
 ## Plugins
 

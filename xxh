@@ -261,7 +261,7 @@ class Xxh:
         argp.add_argument('+lh','++local-xxh-home', default=self.local_xxh_home, help=f"Local xxh home path. Default: {self.local_xxh_home}")
         argp.add_argument('+hh','++host-xxh-home', default=self.host_xxh_home, help=f"Host xxh home path. Default: {self.host_xxh_home}")
         argp.add_argument('+he','++host-execute-file', help=f"Execute script file placed on host and exit.")
-        argp.add_argument('+s','++shell', default=self.shell, help=f"xxh shell")
+        argp.add_argument('+s','++shell', default=self.shell, help=f"xxh shell: {self.shells_str}")
         argp.add_argument('+ss','++shell-source', default=self.shell_source, help=f"(future) Custom source of xxh-shell: git url or local path")
         argp.add_argument('+v','++verbose', default=False, action='store_true', help="Verbose mode.")
         argp.add_argument('+vv','++vverbose', default=False, action='store_true', help="Super verbose mode.")
