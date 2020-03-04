@@ -41,7 +41,7 @@ The xxh is for using the xonsh shell wherever you go through the ssh.
 
 ## Supported shells
 
-Currently supported Python-powered [xonsh shell](https://xon.sh).
+Currently supported Python-powered [xonsh shell](https://github.com/xxh/xxh-shell-xonsh-appimage).
 
 Experimental: to use another shell you can create your `xxh-shell` entrypoint like in [xxh-shell-xonsh-appimage](https://github.com/xxh/xxh-shell-xonsh-appimage) and add `+s` argument to your `xxh` command. 
 
@@ -51,20 +51,7 @@ Experimental: to use another shell you can create your `xxh-shell` entrypoint li
 
 🔎 [Search xxh plugins on Github](https://github.com/search?q=xxh-plugin&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-plugin) or 💡 [Create xxh plugin](https://github.com/xxh/xxh-plugin-xonsh-sample)
 
-### xonsh xxh plugins
-
-Pinned:
-* [xxh-plugin-xonsh-pipe-liner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner) — processing the lines easy with python and classic shell pipes
-* [xxh-plugin-xonsh-theme-bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar) — theme to stay focused
-* [xxh-plugin-xonsh-autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) — save time on moving thru directories
-
 ## Notes
-
-### Using python, pip and [xontribs](https://xon.sh/xontribs.html)
-
-The xxh is using pip and python from `xonsh.AppImage` by default. You can update pip (`pip install --upgrade pip`) and install packages ordinally: `pip install --upgrade pandas`. The packages will appear in host xxh home `~/.xxh/pip` by default.
-
-To install [xontribs](https://xon.sh/xontribs.html) in xxh session use `xpip install <package>`. Never use `pip` to install xontribs ([details](https://github.com/xonsh/xonsh/issues/3463)).
 
 ### How it works?
 
