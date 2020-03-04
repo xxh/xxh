@@ -26,7 +26,7 @@ usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY] [-o SSH_O
            [+lxh LOCAL_XXH_HOME] [+hxh HOST_XXH_HOME] [+he HOST_EXECUTE_FILE] 
            [+m METHOD] [+v] [+vv]
 
-The xxh is for using the xonsh shell wherever you go through the ssh. 
+Your favorite shell wherever you go through the ssh. 
 
      ____  __________     @    @    
   ______  /          \     \__/     
@@ -55,7 +55,7 @@ Experimental: to use another shell you can create your `xxh-shell` entrypoint li
 
 ### How it works?
 
-When you run `xxh myhost` command xxh download portable xonsh and store locally to future use. Then if it needed xxh upload the portable xonsh, init scripts and plugins to the host. Finally xxh make ssh connection to the host and run portable xonsh shell without any system installs and affection on the target host.
+When you run `xxh myhost` command xxh download portable shell and store locally to future use. Then if it needed xxh upload the portable shell, init scripts and plugins to the host. Finally xxh make ssh connection to the host and run portable shell without any system installs and affection on the target host.
 
 ## Development
 🛠️ In the [xxh-dev](https://github.com/xxh/xxh-dev) repo there is full [docker](https://www.docker.com/)ised environment for development, testing and contribution. The process of testing and development is orchestrated by `xde` tool and as easy as possible.
