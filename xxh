@@ -265,16 +265,14 @@ class Xxh:
         argp.add_argument('+ss','++shell-source', default=self.shell_source, help=f"(future) Custom source of xxh-shell: git url or local path")
         argp.add_argument('+v','++verbose', default=False, action='store_true', help="Verbose mode.")
         argp.add_argument('+vv','++vverbose', default=False, action='store_true', help="Super verbose mode.")
-        argp.usage = """xxh <host from ~/.ssh/config>
-        
-        usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]
-        
-        usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY] [-o SSH_OPTION -o ...] 
-                   [user@]host[:port]
-                   [+i] [+if] [+P PASSWORD] [+PP] 
-                   [+lxh LOCAL_XXH_HOME] [+hxh HOST_XXH_HOME] [+he HOST_EXECUTE_FILE] 
-                   [+s SHELL] [+v] [+vv]
-        """
+        argp.usage = "xxh <host from ~/.ssh/config>\n" \
+            + "usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]\n" \
+            + "usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY] [-o SSH_OPTION -o ...]\n" \
+            + "           [user@]host[:port]\n" \
+            + "           [+i] [+if] [+P PASSWORD] [+PP]\n" \
+            + "           [+lxh LOCAL_XXH_HOME] [+hxh HOST_XXH_HOME] [+he HOST_EXECUTE_FILE]\n" \
+            + "           [+s SHELL] [+v] [+vv]\n"
+
         help = argp.format_help().replace('\n  +','\n\nxxh arguments:\n  +',1).replace('optional ', 'common ')\
             .replace('number and exit', 'number and exit\n\nssh arguments:').replace('positional ', 'required ')
         argp.format_help = lambda: help
@@ -335,7 +333,8 @@ class Xxh:
         else:
             eeprint(f"Paths aren't writable:\n  {local_xxh_home_parent}\n  {self.local_xxh_home}")
 
-        mkdir @(self.ssh_arg_v) -p @(self.local_xxh_home) @(self.local_xxh_home / 'plugins') @(self.local_xxh_home / 'shells')
+        plugins_dir = self.local_xxh_home / 'plugins'
+        mkdir @(self.ssh_arg_v) -p @(self.local_xxh_home) @(plugins_dir) @(self.local_xxh_home / 'shells')
 
         # Fix env to avoid ssh warnings
         for lc in ['LC_TIME','LC_MONETARY','LC_ADDRESS','LC_IDENTIFICATION','LC_MEASUREMENT','LC_NAME','LC_NUMERIC','LC_PAPER','LC_TELEPHONE']:
@@ -441,13 +440,13 @@ class Xxh:
             # TODO: check shells list, shell dir
             if which('rsync') and host_info['rsync']:
                 eprint('Upload using rsync')
-                rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(self.local_xxh_home)/ @(host):@(host_xxh_home)/ 1>&2
+                rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(plugins_dir) @(host):@(host_xxh_home)/ 1>&2
                 rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(self.package_dir_path)/ @(host):@(host_xxh_home)/ 1>&2
                 rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(shell_build_dir)/ @(host):@(host_xxh_home)/ 1>&2
             elif which('scp') and host_info['scp']:
                 eprint("Upload using scp. Note: install rsync on local and remote host to increase speed.")
                 scp_host = f"{host}:{host_xxh_home}/"
-                @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(self.local_xxh_home)/* @(scp_host) 1>&2
+                @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(plugins_dir) @(scp_host) 1>&2
                 @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(self.package_dir_path)/* @(scp_host) 1>&2
                 @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(shell_build_dir)/* @(scp_host) 1>&2
             else:
