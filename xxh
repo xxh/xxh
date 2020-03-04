@@ -26,9 +26,11 @@ class Xxh:
         self.local_xxh_version = global_settings['XXH_VERSION']
         self.local_xxh_home = '~/.xxh'
         self.host_xxh_home = '~/.xxh'
-        self.url = None
-        self.shells = ['xonsh-appimage'] # TODO: list from path
+        self.shells = ['xxh-shell-xonsh-appimage']
         self.shells_str = ', '.join(self.shells)
+        self._shell = 'xxh-shell-xonsh-appimage'
+        self.shell_source = 'https://github.com/xxh/xxh-shell-xonsh-appimage.git'
+        self.url = None
         self.ssh_arguments = []
         self.ssh_arg_v = []
         self.sshpass = []
@@ -36,7 +38,6 @@ class Xxh:
         self._password = None
         self._verbose = False
         self._vverbose = False
-        self._shell = 'xonsh-appimage'
 
     def snail(self):
         try:
@@ -260,7 +261,8 @@ class Xxh:
         argp.add_argument('+lh','++local-xxh-home', default=self.local_xxh_home, help=f"Local xxh home path. Default: {self.local_xxh_home}")
         argp.add_argument('+hh','++host-xxh-home', default=self.host_xxh_home, help=f"Host xxh home path. Default: {self.host_xxh_home}")
         argp.add_argument('+he','++host-execute-file', help=f"Execute script file placed on host and exit.")
-        argp.add_argument('+s','++shell', default='xonsh-appimage', help=f"xxh shell")
+        argp.add_argument('+s','++shell', default=self.shell, help=f"xxh shell")
+        argp.add_argument('+ss','++shell-source', default=self.shell_source, help=f"(future) Custom source of xxh-shell: git url or local path")
         argp.add_argument('+v','++verbose', default=False, action='store_true', help="Verbose mode.")
         argp.add_argument('+vv','++vverbose', default=False, action='store_true', help="Super verbose mode.")
         argp.usage = """xxh <host from ~/.ssh/config>
@@ -281,6 +283,7 @@ class Xxh:
         self.verbose = opt.verbose
         self.vverbose = opt.vverbose
         self.shell = opt.shell
+        self.shell_source = opt.shell_source
         self.url = url = self.parse_destination(opt.destination)
 
         username = getpass.getuser()
@@ -327,13 +330,12 @@ class Xxh:
             if not os.access(self.local_xxh_home, os.W_OK):
                 eeprint(f"The local xxh home path isn't writable: {self.local_xxh_home}" )
         elif local_xxh_home_parent.exists():
-            if os.access(local_xxh_home_parent, os.W_OK):
-                eprint(f'Create local xxh home path: {self.local_xxh_home}')
-                mkdir @(self.ssh_arg_v) -p @(self.local_xxh_home) @(self.local_xxh_home / 'plugins') @(self.local_xxh_home / 'shells')
-            else:
+            if not os.access(local_xxh_home_parent, os.W_OK):
                 eeprint(f"Parent for local xxh home path isn't writable: {local_xxh_home_parent}")
         else:
             eeprint(f"Paths aren't writable:\n  {local_xxh_home_parent}\n  {self.local_xxh_home}")
+
+        mkdir @(self.ssh_arg_v) -p @(self.local_xxh_home) @(self.local_xxh_home / 'plugins') @(self.local_xxh_home / 'shells')
 
         # Fix env to avoid ssh warnings
         for lc in ['LC_TIME','LC_MONETARY','LC_ADDRESS','LC_IDENTIFICATION','LC_MEASUREMENT','LC_NAME','LC_NUMERIC','LC_PAPER','LC_TELEPHONE']:
@@ -408,29 +410,46 @@ class Xxh:
         if opt.install:
             eprint("\033[0;33m", end='')
 
+            eprint(f"Install xxh to {host}:{host_xxh_home}" )
+
+            shells_dir = self.local_xxh_home / 'shells'
+            shells = sorted(shells_dir.glob('*'))
+
+            shell_dir = shells_dir / f'{self.shell}'
+            if not shell_dir.exists():
+                eprint(f'First time download {self.shell} shell from {self.shell_source}')
+                if self.shell_source[:6] in ['http:/', 'https:'] and 'git' in self.shell_source:
+                    git clone -q --depth 1 @(self.shell_source) @(shells_dir / self.shell)
+                elif fp'{self.shell_source}'.exists():
+                    cp -r @(self.shell_source) @(shells_dir)
+                else:
+                    eeprint(f'Unknown shell source: {self.shell_source}')
+
+            shell_build_dir = shell_dir / 'build'
+            if not shell_build_dir.exists():
+                eprint(f"First time build {self.shell}")
+                xonsh @(shell_build_dir.parent / 'build.xsh')
+
             if opt.install_force:
                 eprint(f'Remove host xxh home {host}:{host_xxh_home}')
                 echo @(f"rm -rf {host_xxh_home}/*") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
-
-            eprint(f"Install xxh to {host}:{host_xxh_home}" )
 
             if host_xxh_version in ['dir_not_found']:
                 eprint(f'Create xxh home {host_xxh_home}')
                 echo @(f"mkdir -p {host_xxh_home}") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
 
             # TODO: check shells list, shell dir
-            shell_dir = self.local_xxh_home / 'shells/xxh-shell-xonsh-appimage/build'
             if which('rsync') and host_info['rsync']:
                 eprint('Upload using rsync')
                 rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(self.local_xxh_home)/ @(host):@(host_xxh_home)/ 1>&2
                 rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(self.package_dir_path)/ @(host):@(host_xxh_home)/ 1>&2
-                rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(self.shell_dir)/ @(host):@(host_xxh_home)/ 1>&2
+                rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(shell_build_dir)/ @(host):@(host_xxh_home)/ 1>&2
             elif which('scp') and host_info['scp']:
                 eprint("Upload using scp. Note: install rsync on local and remote host to increase speed.")
                 scp_host = f"{host}:{host_xxh_home}/"
                 @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(self.local_xxh_home)/* @(scp_host) 1>&2
                 @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(self.package_dir_path)/* @(scp_host) 1>&2
-                @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(shell_dir)/* @(scp_host) 1>&2
+                @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(shell_build_dir)/* @(scp_host) 1>&2
             else:
                 eprint('Please install rsync or scp!')
 

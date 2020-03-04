@@ -1,3 +1,4 @@
+xxh-shell-*
 squashfs-root
 *.pyc
 *.out
