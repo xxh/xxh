@@ -1,10 +1,10 @@
 <p align="center">You chosen a favorite command shell and spend hours to adjust it, to stuff it with aliases, shortcuts and colors. But when you move from local to remote host using ssh you lose it all. <b>The mission of xxh</b> is to allow you to use your favorite shell with your aliases, shortcuts and color theme wherever you go through the ssh.</p>
 <p align="center">  
-  <a href="https://pypi.org/project/xonssh-xxh/" target="_blank" alt="PyPI Latest Release"><img src="https://img.shields.io/pypi/v/xonssh-xxh.svg"></a>
- <a href="https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7" target="_blank"><img alt="asciinema demo" src="https://img.shields.io/badge/demo-asciinema-grass"></a>
-  <a href="#plugins" target="_blank"><img alt="asciinema demo" src="https://img.shields.io/badge/extensions-plugins-yellow"></a>
-  <a href="https://gitter.im/xonssh-xxh/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge" target="_blank"><img alt="Chat on Gitter" src="https://badges.gitter.im/xonssh-xxh/community.svg"></a>
-  <img alt="PyPI - License" src="https://img.shields.io/pypi/l/xonssh-xxh">
+  <a href="https://pypi.org/project/xonssh-xxh/" target="_blank"><img src="https://img.shields.io/pypi/v/xonssh-xxh.svg" alt="[release]"></a>
+  <a href="https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7" target="_blank"><img alt="[asciinema demo]" src="https://img.shields.io/badge/demo-asciinema-grass"></a>
+  <a href="#plugins" target="_blank"><img alt="[plugins]" src="https://img.shields.io/badge/extensions-plugins-yellow"></a>
+  <a href="https://gitter.im/xonssh-xxh/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge" target="_blank"><img alt="[gitter chat]" src="https://badges.gitter.im/xonssh-xxh/community.svg"></a>
+  <img alt="[BSD license]" src="https://img.shields.io/pypi/l/xonssh-xxh">
 </p>
 
 ## Install or update
