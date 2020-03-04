@@ -24,7 +24,7 @@ usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY] [-o SSH_O
            [user@]host[:port]
            [+i] [+if] [+P PASSWORD] [+PP] 
            [+lxh LOCAL_XXH_HOME] [+hxh HOST_XXH_HOME] [+he HOST_EXECUTE_FILE] 
-           [+m METHOD] [+v] [+vv]
+           [+s SHELL] [+v] [+vv]
 
 Your favorite shell wherever you go through the ssh. 
 
