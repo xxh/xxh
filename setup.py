@@ -5,11 +5,11 @@ setuptools.setup(
     name="xonssh-xxh",
     version=global_settings['XXH_VERSION'],
     description="xxh is for using portable xonsh shell wherever you go through the ssh",
-    url="https://github.com/xonssh/xxh",
+    url="https://github.com/xxh/xxh",
     project_urls={
-        "Documentation": "https://github.com/xonssh/xxh/blob/master/README.md",
-        "Code": "https://github.com/xonssh/xxh",
-        "Issue tracker": "https://github.com/xonssh/xxh/issues",
+        "Documentation": "https://github.com/xxh/xxh/blob/master/README.md",
+        "Code": "https://github.com/xxh/xxh",
+        "Issue tracker": "https://github.com/xxh/xxh/issues",
     },
     python_requires='>=3.6',
     install_requires=[
@@ -30,6 +30,6 @@ setuptools.setup(
         "License :: OSI Approved :: BSD License"
     ],
     license="BSD",
-    author="xonssh",
+    author="xxh",
     author_email="author@example.com"
 )
