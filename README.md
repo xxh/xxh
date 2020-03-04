@@ -1,4 +1,4 @@
-<p align="center">You chosen a favorite command shell and spend hours to adjust it, to stuff it with aliases, shortcuts and colors. But when you move from local to remote host using ssh you lose it all. <b>The mission of xxh</b> is to allow you to use your favorite shell with your aliases, shortcuts and color theme wherever you go through the ssh. We use Python-powered <a href="https://xon.sh">xonsh shell</a>.</p>
+<p align="center">You chosen a favorite command shell and spend hours to adjust it, to stuff it with aliases, shortcuts and colors. But when you move from local to remote host using ssh you lose it all. <b>The mission of xxh</b> is to allow you to use your favorite shell with your aliases, shortcuts and color theme wherever you go through the ssh.</p>
 <p align="center">  
   <a href="https://pypi.org/project/xonssh-xxh/" target="_blank" alt="PyPI Latest Release"><img src="https://img.shields.io/pypi/v/xonssh-xxh.svg"></a>
  <a href="https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7" target="_blank"><img alt="asciinema demo" src="https://img.shields.io/badge/demo-asciinema-grass"></a>
@@ -39,19 +39,24 @@ The xxh is for using the xonsh shell wherever you go through the ssh.
    /____________________/       
 ```
 
+## Supported shells
+
+Currently supported Python-powered [xonsh shell](https://xon.sh).
+
+To use another shell you can create your `xxh-shell` entrypoint like in [xxh-shell-xonsh-appimage](https://github.com/xxh/xxh-shell-xonsh-appimage). 
+
 ## Plugins
 
 **xxh plugin** is the set of xsh scripts which will be run when you'll use xxh. You can create xxh plugin with your lovely aliases, tools or color theme and xxh will bring them to your ssh sessions.
 
-🔎 [Search xxh plugins on Github](https://github.com/search?q=xxh-plugin&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-plugin)
+🔎 [Search xxh plugins on Github](https://github.com/search?q=xxh-plugin&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-plugin) or 💡 [Create xxh plugin](https://github.com/xxh/xxh-plugin-xonsh-sample)
 
-💡 [Create xxh plugin](https://github.com/xxh/xxh-plugin-xonsh-sample)
+### xonsh xxh plugins
 
-📌 [xxh-plugin-xonsh-pipe-liner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner) — processing the lines easy with python and classic shell pipes
-
-📌 [xxh-plugin-xonsh-theme-bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar) — theme to stay focused
-
-📌 [xxh-plugin-xonsh-autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) — save time on moving thru directories
+Pinned:
+* [xxh-plugin-xonsh-pipe-liner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner) — processing the lines easy with python and classic shell pipes
+* [xxh-plugin-xonsh-theme-bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar) — theme to stay focused
+* [xxh-plugin-xonsh-autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) — save time on moving thru directories
 
 ## Notes
 
