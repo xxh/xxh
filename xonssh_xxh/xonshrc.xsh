@@ -34,7 +34,10 @@ del _xxh_pip
 
 for plugin_path in sorted(($XXH_HOME / 'plugins').glob('*')):
     if (plugin_path / 'xonshrc.xsh').exists():
-        sys.path.append(str(plugin_path))
+        cd @(plugin_path)
+        sys_path = sys.path
+        sys.path = [str(plugin_path)]
         __import__('xonshrc')
         del sys.modules['xonshrc']
-        sys.path.remove(str(plugin_path))
+        sys.path = sys_path
+cd
