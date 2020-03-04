@@ -45,13 +45,13 @@ The xxh is for using the xonsh shell wherever you go through the ssh.
 
 🔎 [Search xxh plugins on Github](https://github.com/search?q=xxh-plugin&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-plugin)
 
-💡 [Create xxh plugin](https://github.com/xxh/xxh-plugin-sample)
+💡 [Create xxh plugin](https://github.com/xxh/xxh-plugin-xonsh-sample)
 
-📌 [xxh-plugin-pipe-liner](https://github.com/xxh/xxh-plugin-pipe-liner) — processing the lines easy with python and classic shell pipes
+📌 [xxh-plugin-xonsh-pipe-liner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner) — processing the lines easy with python and classic shell pipes
 
-📌 [xxh-plugin-theme-bar](https://github.com/xxh/xxh-plugin-theme-bar) — theme to stay focused
+📌 [xxh-plugin-xonsh-theme-bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar) — theme to stay focused
 
-📌 [xxh-plugin-autojump](https://github.com/xxh/xxh-plugin-autojump) — save time on moving thru directories
+📌 [xxh-plugin-xonsh-autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) — save time on moving thru directories
 
 ## Notes
 
