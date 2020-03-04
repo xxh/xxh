@@ -21,7 +21,7 @@ def eeprint(*args, **kwargs):
 class Xxh:
     def __init__(self):
         self.package_dir_path = pf"{xonssh_xxh.__file__}".parent
-        self.url_xxh_github = 'https://github.com/xonssh/xxh'
+        self.url_xxh_github = 'https://github.com/xxh/xxh'
         self.url_xxh_plugins_search = 'https://github.com/search?q=xxh-plugin'
         self.local_xxh_version = global_settings['XXH_VERSION']
         self.local_xxh_home = '~/.xxh'

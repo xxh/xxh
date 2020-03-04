@@ -31,7 +31,7 @@ The xxh is for using the xonsh shell wherever you go through the ssh.
      ____  __________     @    @    
   ______  /          \     \__/     
    ____  /    ______  \   /   \           contribution
- _____  /    / __   \  \ /   _/   https://github.com/xonssh/xxh   
+ _____  /    / __   \  \ /   _/   https://github.com/xxh/xxh   
    ___ (    / /  /   \  \   /          
         \   \___/    /  /  /                plugins            
      ____\          /__/  /   https://github.com/search?q=xxh-plugin
@@ -45,13 +45,13 @@ The xxh is for using the xonsh shell wherever you go through the ssh.
 
 🔎 [Search xxh plugins on Github](https://github.com/search?q=xxh-plugin&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-plugin)
 
-💡 [Create xxh plugin](https://github.com/xonssh/xxh-plugin-sample)
+💡 [Create xxh plugin](https://github.com/xxh/xxh-plugin-xonsh-sample)
 
-📌 [xxh-plugin-pipe-liner](https://github.com/xonssh/xxh-plugin-pipe-liner) — processing the lines easy with python and classic shell pipes
+📌 [xxh-plugin-xonsh-pipe-liner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner) — processing the lines easy with python and classic shell pipes
 
-📌 [xxh-plugin-theme-bar](https://github.com/xonssh/xxh-plugin-theme-bar) — theme to stay focused
+📌 [xxh-plugin-xonsh-theme-bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar) — theme to stay focused
 
-📌 [xxh-plugin-autojump](https://github.com/xonssh/xxh-plugin-autojump) — save time on moving thru directories
+📌 [xxh-plugin-xonsh-autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) — save time on moving thru directories
 
 ## Notes
 
@@ -66,10 +66,10 @@ To install [xontribs](https://xon.sh/xontribs.html) in xxh session use `xpip ins
 When you run `xxh myhost` command xxh download portable xonsh and store locally to future use. Then if it needed xxh upload the portable xonsh, init scripts and plugins to the host. Finally xxh make ssh connection to the host and run portable xonsh shell without any system installs and affection on the target host.
 
 ## Development
-🛠️ In the [xxh-dev](https://github.com/xonssh/xxh-dev) repo there is full [docker](https://www.docker.com/)ised environment for development, testing and contribution. The process of testing and development is orchestrated by `xde` tool and as easy as possible.
+🛠️ In the [xxh-dev](https://github.com/xxh/xxh-dev) repo there is full [docker](https://www.docker.com/)ised environment for development, testing and contribution. The process of testing and development is orchestrated by `xde` tool and as easy as possible.
 
 ## Spread the word
-If you like the idea of xxh help spread the word about xxh! Click ⭐ on the repo and <a href="https://twitter.com/intent/tweet?text=Python-powered%20shell%20wherever%20you%20go%20through%20the%20ssh&url=https%3A%2F%2Fgithub.com%2Fxonssh%2Fxxh&related=" target="_blank">tweet the link</a>! 
+If you like the idea of xxh help spread the word about xxh! Click ⭐ on the repo and <a href="https://twitter.com/intent/tweet?text=Python-powered%20shell%20wherever%20you%20go%20through%20the%20ssh&url=https%3A%2F%2Fgithub.com%2Fxxh%2Fxxh&related=" target="_blank">tweet the link</a>! 
 
 ## Thanks
 * @scopatz for https://github.com/xonsh/xonsh
