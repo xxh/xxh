@@ -26,8 +26,6 @@ class Xxh:
         self.local_xxh_version = global_settings['XXH_VERSION']
         self.local_xxh_home = '~/.xxh'
         self.host_xxh_home = '~/.xxh'
-        self.shells = ['xxh-shell-xonsh-appimage']
-        self.shells_str = ', '.join(self.shells)
         self._shell = 'xxh-shell-xonsh-appimage'
         self.shell_source = 'https://github.com/xxh/xxh-shell-xonsh-appimage.git'
         self.url = None
@@ -38,6 +36,7 @@ class Xxh:
         self._password = None
         self._verbose = False
         self._vverbose = False
+        self.shells = self.shells_list()
 
     def snail(self):
         try:
@@ -155,6 +154,9 @@ class Xxh:
 
         return {}
 
+    def shells_list(self):
+        return sorted(set(['xxh-shell-xonsh-appimage'] + [str(s.name) for s in pf'{self.local_xxh_home}/shells'.glob('*')]))
+
     @property
     def password(self):
         return self._password
@@ -178,7 +180,7 @@ class Xxh:
     @shell.setter
     def shell(self, value):
         if value not in self.shells:
-            eeprint(f'Currently supported shells: {self.shells_str}')
+            eeprint('Currently supported shells:'+ ', '.join(self.shells))
         self._shell = value
 
     @property
@@ -261,7 +263,7 @@ class Xxh:
         argp.add_argument('+lh','++local-xxh-home', default=self.local_xxh_home, help=f"Local xxh home path. Default: {self.local_xxh_home}")
         argp.add_argument('+hh','++host-xxh-home', default=self.host_xxh_home, help=f"Host xxh home path. Default: {self.host_xxh_home}")
         argp.add_argument('+he','++host-execute-file', help=f"Execute script file placed on host and exit.")
-        argp.add_argument('+s','++shell', default=self.shell, help=f"xxh shell: {self.shells_str}")
+        argp.add_argument('+s','++shell', default=self.shell, help="Xxh shell. Found: " + ', '.join(self.shells))
         argp.add_argument('+ss','++shell-source', default=self.shell_source, help=f"(future) Custom source of xxh-shell: git url or local path")
         argp.add_argument('+v','++verbose', default=False, action='store_true', help="Verbose mode.")
         argp.add_argument('+vv','++vverbose', default=False, action='store_true', help="Super verbose mode.")
