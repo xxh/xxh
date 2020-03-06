@@ -42,6 +42,8 @@ Your favorite shell wherever you go through the ssh.
 
 Currently supported Python-powered [portable xonsh shell](https://github.com/xxh/xxh-shell-xonsh-appimage).
 
+🔎 [Search xxh shell on Github](https://github.com/search?q=xxh-shell&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-shell)
+
  💡  [Create your shell entrypoint](https://github.com/xxh/xxh-shell-sample) to use another portable shell. You can also just create portable entrypoint 
 for bash shell with your lovely aliases, shortcuts and themes.
 
