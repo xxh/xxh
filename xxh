@@ -25,7 +25,7 @@ class Xxh:
         self.url_xxh_plugins_search = 'https://github.com/search?q=xxh-plugin'
         self.local_xxh_version = global_settings['XXH_VERSION']
         self.local_xxh_home = '~/.xxh'
-        self.config_file = '~/.xxhc'
+        self.config_file = '~/.xxh/.xxhc'
         self.host_xxh_home = '~/.xxh'
         self._shell = 'xxh-shell-xonsh-appimage'
         self.shell_source = 'https://github.com/xxh/xxh-shell-xonsh-appimage.git'
@@ -252,7 +252,19 @@ class Xxh:
 
         return r
 
+    def create_xxh_env(self):
+        home = fp'{self.local_xxh_home}'
+        if not home.exists():
+            mkdir -p @(home) @(home / 'shells') @(home / 'plugins')
+
+        config_file = fp'{self.config_file}'
+        sample_config_file = self.package_dir_path / 'config.xxhc'
+        if not config_file.exists() and sample_config_file.exists():
+            cp @(sample_config_file) @(config_file)
+
     def main(self):
+        self.create_xxh_env()
+
         argp = argparse.ArgumentParser(description=f"Your favorite shell wherever you go through the ssh. {self.snail()}", formatter_class=RawTextHelpFormatter, prefix_chars='-+')
         argp.add_argument('--version', '-V', action='version', version=f"xonssh-xxh/{self.local_xxh_version}")
         argp.add_argument('-p', dest='ssh_port', help="Port to connect to on the remote host.")
@@ -293,7 +305,7 @@ class Xxh:
 
         if xxh_config_file:
             if not xxh_config_file.exists():
-                if xxh_config_file != p'~/.xxhc':
+                if xxh_config_file != p'~/.xxh/.xxhc':
                     eeprint(f'Config does not exist: {xxh_config_file}')
             else:
                 if self.verbose:
