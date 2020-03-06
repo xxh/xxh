@@ -159,7 +159,7 @@ class Xxh:
         return {}
 
     def shells_list(self):
-        return sorted(set(['xxh-shell-xonsh-appimage'] + [str(s.name) for s in pf'{self.local_xxh_home}/shells'.glob('*')]))
+        return sorted(set(['xxh-shell-xonsh-appimage'] + [str(s.name) for s in pf'{self.local_xxh_home}/xxh/shells'.glob('*')]))
 
     @property
     def password(self):
@@ -258,7 +258,7 @@ class Xxh:
     def create_xxh_env(self):
         home = fp'{self.local_xxh_home}'
         if not home.exists():
-            mkdir -p @(home) @(home / 'shells') @(home / 'plugins')
+            mkdir -p @(home) @(home / 'xxh/shells') @(home / 'xxh/plugins')
 
         config_file = fp'{self.config_file}'
         sample_config_file = self.package_dir_path / 'config.xxhc'
@@ -276,7 +276,8 @@ class Xxh:
         argp.add_argument('-o', dest='ssh_options', metavar='SSH_OPTION -o ...', action='append', help="SSH options are described in ssh man page. Example: -o Port=22 -o User=snail")
         argp.add_argument('destination', metavar='[user@]host[:port]', help="Destination may be specified as [user@]host[:port] or host from ~/.ssh/config")
         argp.add_argument('+i','++install', default=False, action='store_true', help="Install xxh to destination host.")
-        argp.add_argument('+if','++install-force', default=False, action='store_true', help="Removing the host xxh home and install xxh again.")
+        argp.add_argument('+if','++install-force', default=False, action='store_true', help="Removing the host xxh package and install xxh again.")
+        argp.add_argument('+iff','++install-force-full', default=False, action='store_true', help="Removing the host xxh home and install xxh again. All installed packages on the host (e.g. pip packages) will be lost.")
         argp.add_argument('+xc','++xxh-config', default=self.config_file, help=f"Xxh config file in yaml. Default: " + self.config_file)
         argp.add_argument('+P','++password', help="Password for ssh auth.")
         argp.add_argument('+PP','++password-prompt', default=False, action='store_true', help="Enter password manually using prompt.")
@@ -377,7 +378,7 @@ class Xxh:
                 password = getpass.getpass(f"Enter {username}@{host}'s password: ")
             self.password = password
 
-        opt.install = True if opt.install_force else opt.install
+        opt.install = True if opt.install_force or opt.install_force_full else opt.install
 
         self.local_xxh_home = pf"{opt.local_xxh_home}"
         local_xxh_home_parent = self.local_xxh_home.parent
@@ -391,8 +392,8 @@ class Xxh:
         else:
             self.eeprint(f"Paths aren't writable:\n  {local_xxh_home_parent}\n  {self.local_xxh_home}")
 
-        plugins_dir = self.local_xxh_home / 'plugins'
-        mkdir @(self.ssh_arg_v) -p @(self.local_xxh_home) @(plugins_dir) @(self.local_xxh_home / 'shells')
+        plugins_dir = self.local_xxh_home / 'xxh/plugins'
+        mkdir @(self.ssh_arg_v) -p @(self.local_xxh_home) @(plugins_dir) @(self.local_xxh_home / 'xxh/shells')
 
         # Fix env to avoid ssh warnings
         for lc in ['LC_TIME','LC_MONETARY','LC_ADDRESS','LC_IDENTIFICATION','LC_MEASUREMENT','LC_NAME','LC_NUMERIC','LC_PAPER','LC_TELEPHONE']:
@@ -426,7 +427,7 @@ class Xxh:
         if host_info['scp'] == '' and host_info['rsync'] == '':
             self.eeprint(f"There are no rsync or scp on target host. Sad but files can't be uploaded.")
 
-        if opt.install_force == False:
+        if opt.install_force == False and opt.install_force_full == False:
             # Check version
             ask = False
             if host_xxh_version == 'version_not_found':
@@ -436,10 +437,11 @@ class Xxh:
 
             if ask:
                 choice = input(f"{ask} What's next? \n"
-                               + " s - [default] Stop here. You'll try to connect using ordinary ssh for backup current xxh home.\n"
-                               + " u - Safe update. Host xxh home will be renamed and local xxh version will be installed.\n"
-                               + " f - Force install local xxh version on host. Host xxh installation will be lost.\n"
-                               + " i - Ignore, cross fingers and continue the connection.\n"
+                               + " s  - [default] Stop here. You'll try to connect using ordinary ssh for backup current xxh home.\n"
+                               + " u  - Safe update. Host xxh home will be renamed and local xxh version will be installed.\n"
+                               + " f  - Force reinstall xxh. Installed packages (e.g. pip) will be saved.\n"
+                               + " ff - Force full reinstall on host. Installed packages (e.g. pip) will be lost.\n"
+                               + " i  - Ignore, cross fingers and continue the connection.\n"
                                + "S/u/f/i? ").lower()
 
                 if choice == 's' or choice.strip() == '':
@@ -453,12 +455,15 @@ class Xxh:
                 elif choice == 'f':
                     opt.install = True
                     opt.install_force = True
+                elif choice == 'ff':
+                    opt.install = True
+                    opt.install_force_full = True
                 elif choice == 'i':
                     pass
                 else:
                     self.eeprint('Unknown answer')
 
-        if host_xxh_version in ['dir_not_found','dir_empty'] and opt.install_force == False:
+        if host_xxh_version in ['dir_not_found','dir_empty'] and opt.install_force == False and opt.install_force_full == False:
             yn = input(f"{host}:{host_xxh_home} not found. Install xxh? [Y/n] ").strip().lower()
             if yn == 'y' or yn == '':
                 opt.install = True
@@ -470,7 +475,7 @@ class Xxh:
 
             self.eprint(f"Install xxh to {host}:{host_xxh_home}" )
 
-            shells_dir = self.local_xxh_home / 'shells'
+            shells_dir = self.local_xxh_home / 'xxh/shells'
             shells = sorted(shells_dir.glob('*'))
 
             shell_dir = shells_dir / f'{self.shell}'
@@ -489,32 +494,36 @@ class Xxh:
                 xonsh @(shell_build_dir.parent / 'build.xsh')
 
             if opt.install_force:
-                self.eprint(f'Remove host xxh home {host}:{host_xxh_home}')
-                echo @(f"rm -rf {host_xxh_home}/*") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
+                self.eprint(f'Remove {host}:{host_xxh_home}/xxh')
+                echo @(f"rm -rf {host_xxh_home}/xxh") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
 
-            if host_xxh_version in ['dir_not_found']:
-                self.eprint(f'Create xxh home {host_xxh_home}')
-                echo @(f"mkdir -p {host_xxh_home}/xxh/plugins {host_xxh_home}/xxh/shells") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
+            if opt.install_force_full:
+                self.eprint(f'Remove {host}:{host_xxh_home}')
+                echo @(f"rm -rf {host_xxh_home}") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
 
-            # TODO: check shells list, shell dir
+            host_xxh_package_dir = host_xxh_home  / 'xxh/package'
+            host_xxh_shell_build_dir = host_xxh_home / f'xxh/shells/{self.shell}/build'
+            host_xxh_plugins_dir = host_xxh_home / 'xxh/plugins'
+            echo @(f"mkdir -p {host_xxh_package_dir} {host_xxh_shell_build_dir} {host_xxh_plugins_dir}") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
+
             if which('rsync') and host_info['rsync']:
                 self.eprint('Upload using rsync')
-                rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(plugins_dir) @(host):@(host_xxh_home)/ 1>&2
-                rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(self.package_dir_path)/ @(host):@(host_xxh_home)/ 1>&2
-                rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(shell_build_dir)/ @(host):@(host_xxh_home)/ 1>&2
+                rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --cvs-exclude @(self.package_dir_path)/settings.py @(host):@(host_xxh_package_dir)/ 1>&2
+                rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --cvs-exclude @(shell_build_dir)/ @(host):@(host_xxh_shell_build_dir)/ 1>&2
+                rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --cvs-exclude @(plugins_dir)/ @(host):@(host_xxh_plugins_dir)/ 1>&2
             elif which('scp') and host_info['scp']:
                 self.eprint("Upload using scp. Note: install rsync on local and remote host to increase speed.")
-                scp_host = f"{host}:{host_xxh_home}/"
-                @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(plugins_dir) @(scp_host) 1>&2
-                @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(self.package_dir_path)/* @(scp_host) 1>&2
-                @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(shell_build_dir)/* @(scp_host) 1>&2
+
+                @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(self.package_dir_path)/settings.py @(f"{host}:{host_xxh_package_dir}/") 1>&2
+                @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(shell_build_dir)/* @(f"{host}:{host_xxh_shell_build_dir}/") 1>&2
+                @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(plugins_dir)/* @(f"{host}:{host_xxh_plugins_dir}/") 1>&2
             else:
                 self.eprint('Please install rsync or scp!')
 
             self.eprint(f'First run xonsh on {host}\033[0m')
 
         host_execute_file = ['-f', opt.host_execute_file] if opt.host_execute_file else []
-        @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -t bash @(str(host_xxh_home)+'/entrypoint.sh') @(host_execute_file)
+        @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -t bash @(str(host_xxh_home/'xxh/shells'/self.shell/'build/entrypoint.sh')) @(host_execute_file)
 
 if __name__ == '__main__':
     if os.name == 'nt':
