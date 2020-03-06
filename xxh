@@ -330,7 +330,7 @@ class Xxh:
         username = getpass.getuser()
         host = url.hostname
         if not host:
-            eeprint(f"Wrong distination '{host}'")
+            eeprint(f"Wrong destination '{host}'")
         if url.port:
             opt.ssh_port = url.port
         if url.username:
