@@ -274,7 +274,7 @@ class Xxh:
         argp.add_argument('destination', metavar='[user@]host[:port]', help="Destination may be specified as [user@]host[:port] or host from ~/.ssh/config")
         argp.add_argument('+i','++install', default=False, action='store_true', help="Install xxh to destination host.")
         argp.add_argument('+if','++install-force', default=False, action='store_true', help="Removing the host xxh home and install xxh again.")
-        argp.add_argument('+c','++config', default=self.config_file, help=f"Xxh config file in yaml. Default: " + self.config_file)
+        argp.add_argument('+xc','++xxh-config', default=self.config_file, help=f"Xxh config file in yaml. Default: " + self.config_file)
         argp.add_argument('+P','++password', help="Password for ssh auth.")
         argp.add_argument('+PP','++password-prompt', default=False, action='store_true', help="Enter password manually using prompt.")
         argp.add_argument('+lh','++local-xxh-home', default=self.local_xxh_home, help=f"Local xxh home path. Default: {self.local_xxh_home}")
@@ -301,7 +301,7 @@ class Xxh:
         self.vverbose = opt.vverbose
         self.url = url = self.parse_destination(opt.destination)
 
-        xxh_config_file = pf"{opt.config}"
+        xxh_config_file = pf"{opt.xxh_config}"
 
         if xxh_config_file:
             if not xxh_config_file.exists():
@@ -313,7 +313,7 @@ class Xxh:
                 with open(xxh_config_file) as f:
                     xxh_config = yaml.safe_load(f)
 
-                if 'hosts' in xxh_config:
+                if xxh_config and 'hosts' in xxh_config:
                     sys_args = sys.argv[1:]
                     conf_args = []
                     for h, hc in xxh_config['hosts'].items():

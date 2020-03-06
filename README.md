@@ -22,7 +22,7 @@ usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]
 
 usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY] [-o SSH_OPTION -o ...] 
            [user@]host[:port]
-           [+i] [+if] [+P PASSWORD] [+PP] [+lh LOCAL_XXH_HOME] [+hh HOST_XXH_HOME] 
+           [+i] [+if] [+xc XXH_CONFIG] [+P PASSWORD] [+PP] [+lh LOCAL_XXH_HOME] [+hh HOST_XXH_HOME] 
            [+he HOST_EXECUTE_FILE] [+s SHELL] [+v] [+vv]
 
 Your favorite shell wherever you go through the ssh. 
