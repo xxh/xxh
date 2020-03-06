@@ -11,13 +11,6 @@ sys.path.append(str(pf"{__file__}".absolute().parent))
 import xonssh_xxh
 from xonssh_xxh.settings import global_settings
 
-def eprint(*args, **kwargs):
-    print(*args, file=sys.stderr, **kwargs)
-
-def eeprint(*args, **kwargs):
-    print(*args, file=sys.stderr, **kwargs)
-    exit(1)
-
 class Xxh:
     def __init__(self):
         self.package_dir_path = pf"{xonssh_xxh.__file__}".parent
@@ -37,7 +30,17 @@ class Xxh:
         self._password = None
         self._verbose = False
         self._vverbose = False
+        self.quiet = False
         self.shells = self.shells_list()
+
+    def eprint(self, *args, **kwargs):
+        if not self.quiet:
+            print(*args, file=sys.stderr, **kwargs)
+
+    def eeprint(self, *args, **kwargs):
+        if not self.quiet:
+            print(*args, file=sys.stderr, **kwargs)
+        exit(1)
 
     def snail(self):
         try:
@@ -67,14 +70,14 @@ class Xxh:
             host_password = self.password
 
         if self.vverbose:
-            eprint('Try pexpect command: '+cmd)
+            self.eprint('Try pexpect command: '+cmd)
 
         sess = pexpect.spawn(cmd)
         user_host_accept = None
         user_host_password = None
         user_key_password = None
         patterns = ['Are you sure you want to continue connecting.*', "Please type 'yes' or 'no':",
-                                 'Enter passphrase for key.*', 'password:', pexpect.EOF, '[$#~]', 'Last login.*']
+                    'Enter passphrase for key.*', 'password:', pexpect.EOF, '[$#~]', 'Last login.*']
         while True:
             try:
                 i = sess.expect(patterns, timeout=3)
@@ -86,7 +89,7 @@ class Xxh:
                 return {}
 
             if self.vverbose:
-                eprint(f'Pexpect caught pattern: {patterns[i]}')
+                self.eprint(f'Pexpect caught pattern: {patterns[i]}')
 
             if i in [0,1]:
                 # Expected:
@@ -167,8 +170,8 @@ class Xxh:
         self._password = password
         if password:
             if not which('sshpass'):
-                eeprint('Install sshpass to using password: https://duckduckgo.com/?q=install+sshpass\n'
-                        + 'Note! There are a lot of security reasons to stop using password auth.')
+                self.eeprint('Install sshpass to using password: https://duckduckgo.com/?q=install+sshpass\n'
+                             + 'Note! There are a lot of security reasons to stop using password auth.')
             verbose = '-v' if '-v' in self.sshpass else []
             self.sshpass = ['sshpass', '-p', password] + verbose
         else:
@@ -181,7 +184,7 @@ class Xxh:
     @shell.setter
     def shell(self, value):
         if value not in self.shells:
-            eeprint('Currently supported shells:'+ ', '.join(self.shells))
+            self.eeprint('Currently supported shells:'+ ', '.join(self.shells))
         self._shell = value
 
     @property
@@ -218,7 +221,7 @@ class Xxh:
 
     def get_host_info(self):
         if '|' in self.host_xxh_home:
-            eeprint(f'Wrong host xxh home: {self.host_xxh_home}')
+            self.eeprint(f'Wrong host xxh home: {self.host_xxh_home}')
 
         host = self.url.hostname
         host_info_sh = self.package_dir_path / 'host_info.sh'
@@ -228,11 +231,11 @@ class Xxh:
             pr = self.pssh(cmd)
 
             if pr == {}:
-                eeprint('Unexpected result. Try again with +v or +vv or try ssh before xxh')
+                self.eeprint('Unexpected result. Try again with +v or +vv or try ssh before xxh')
 
             if self.verbose:
-                eprint('Pexpect result:')
-                eprint(pr)
+                self.eprint('Pexpect result:')
+                self.eprint(pr)
 
             if pr['user_host_password'] is not None:
                 self.password = pr['user_host_password']
@@ -242,10 +245,10 @@ class Xxh:
             r = $(cat @(host_info_sh) | sed @(f's|_xxh_home_|{self.host_xxh_home}|') | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s" ).strip()
 
         if self.verbose:
-            eprint(f'Host info:\n{r}')
+            self.eprint(f'Host info:\n{r}')
 
         if r == '':
-            eeprint('Empty answer from host when getting first info. Often this is a connection error.\n'
+            self.eeprint('Empty answer from host when getting first info. Often this is a connection error.\n'
                     + 'Check your connection parameters using the same command but with ssh.')
 
         r = dict([l.split('=') for l in r.replace('\r','').split('\n') if l.strip() != '' and '=' in l])
@@ -306,10 +309,10 @@ class Xxh:
         if xxh_config_file:
             if not xxh_config_file.exists():
                 if xxh_config_file != p'~/.xxh/.xxhc':
-                    eeprint(f'Config does not exist: {xxh_config_file}')
+                    self.eeprint(f'Config does not exist: {xxh_config_file}')
             else:
                 if self.verbose:
-                    eprint(f'Load xxh config from {xxh_config_file}')
+                    self.eprint(f'Load xxh config from {xxh_config_file}')
                 with open(xxh_config_file) as f:
                     xxh_config = yaml.safe_load(f)
 
@@ -319,7 +322,7 @@ class Xxh:
                     for h, hc in xxh_config['hosts'].items():
                         if re.match(h, url.hostname):
                             if self.verbose:
-                                eprint('Load xxh config for host ' + h)
+                                self.eprint('Load xxh config for host ' + h)
                             if hc and len(hc) > 0:
                                 for k, v in hc.items():
                                     conf_args += [k, v] if v is not None else [k]
@@ -327,7 +330,7 @@ class Xxh:
                                         current_user = getpass.getuser()
                                         current_mode = oct(xxh_config_file.stat().st_mode)[-4:]
                                         if xxh_config_file.owner() != current_user or current_mode != '0600':
-                                            eprint('\n\033[0;93mWARN! There is password in the config file but the file is too open!\n'
+                                            self.eprint('\n\033[0;93mWARN! There is password in the config file but the file is too open!\n'
                                                    + f'Run to restrict: chown {current_user}:{current_user} {xxh_config_file} && chmod 0600 {xxh_config_file}\033[0m\n')
                     args = conf_args + sys_args
                     if opt.verbose:
@@ -342,7 +345,7 @@ class Xxh:
         username = getpass.getuser()
         host = url.hostname
         if not host:
-            eeprint(f"Wrong destination '{host}'")
+            self.eeprint(f"Wrong destination '{host}'")
         if url.port:
             opt.ssh_port = url.port
         if url.username:
@@ -364,7 +367,7 @@ class Xxh:
                 self.ssh_arguments += ['-o', ssh_option]
 
         if self.verbose:
-            eprint(f'ssh arguments: {self.ssh_arguments}')
+            self.eprint(f'ssh arguments: {self.ssh_arguments}')
 
         if opt.password is not None:
             self.password = opt.password
@@ -381,12 +384,12 @@ class Xxh:
 
         if self.local_xxh_home.exists():
             if not os.access(self.local_xxh_home, os.W_OK):
-                eeprint(f"The local xxh home path isn't writable: {self.local_xxh_home}" )
+                self.eeprint(f"The local xxh home path isn't writable: {self.local_xxh_home}" )
         elif local_xxh_home_parent.exists():
             if not os.access(local_xxh_home_parent, os.W_OK):
-                eeprint(f"Parent for local xxh home path isn't writable: {local_xxh_home_parent}")
+                self.eeprint(f"Parent for local xxh home path isn't writable: {local_xxh_home_parent}")
         else:
-            eeprint(f"Paths aren't writable:\n  {local_xxh_home_parent}\n  {self.local_xxh_home}")
+            self.eeprint(f"Paths aren't writable:\n  {local_xxh_home_parent}\n  {self.local_xxh_home}")
 
         plugins_dir = self.local_xxh_home / 'plugins'
         mkdir @(self.ssh_arg_v) -p @(self.local_xxh_home) @(plugins_dir) @(self.local_xxh_home / 'shells')
@@ -396,20 +399,20 @@ class Xxh:
             ${...}[lc] = "POSIX"
 
         if pf'{opt.host_xxh_home}' == pf'/':
-            eeprint("Host xxh home path {host_xxh_home} looks like /. Please check twice!")
+            self.eeprint("Host xxh home path {host_xxh_home} looks like /. Please check twice!")
 
         self.host_xxh_home = opt.host_xxh_home
         host_info = self.get_host_info()
 
         if not host_info:
-            eeprint(f'Unknown answer from host when getting info')
+            self.eeprint(f'Unknown answer from host when getting info')
 
 
         if 'xxh_home_realpath' not in host_info or host_info['xxh_home_realpath'] == '':
-            eeprint(f'Unknown answer from host when getting realpath for directory {host_xxh_home}')
+            self.eeprint(f'Unknown answer from host when getting realpath for directory {host_xxh_home}')
 
         if 'xxh_version' not in host_info or host_info['xxh_version'] == '':
-            eeprint(f'Unknown answer from host when getting version for directory {host_xxh_home}')
+            self.eeprint(f'Unknown answer from host when getting version for directory {host_xxh_home}')
 
         host_xxh_home = host_info['xxh_home_realpath']
         host_xxh_home = pf"{host_xxh_home}"
@@ -418,10 +421,10 @@ class Xxh:
         if host_info['xxh_home_writable'] == '0' and host_info['xxh_parent_home_writable'] == '0':
             yn = input(f"{host}:{host_xxh_home} is not writable. Continue? [y/n] ").strip().lower()
             if yn != 'y':
-                eeprint('Stopped')
+                self.eeprint('Stopped')
 
         if host_info['scp'] == '' and host_info['rsync'] == '':
-            eeprint(f"There are no rsync or scp on target host. Sad but files can't be uploaded.")
+            self.eeprint(f"There are no rsync or scp on target host. Sad but files can't be uploaded.")
 
         if opt.install_force == False:
             # Check version
@@ -444,7 +447,7 @@ class Xxh:
                     exit(0)
                 elif choice == 'u':
                     local_time = datetime.datetime.now().isoformat()[:19]
-                    eprint(f"Move {host}:{host_xxh_home} to {host}:{host_xxh_home}-{local_time}")
+                    self.eprint(f"Move {host}:{host_xxh_home} to {host}:{host_xxh_home}-{local_time}")
                     echo @(f"mv {host_xxh_home} {host_xxh_home}-{local_time}") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
                     opt.install = True
                 elif choice == 'f':
@@ -453,71 +456,71 @@ class Xxh:
                 elif choice == 'i':
                     pass
                 else:
-                    eeprint('Unknown answer')
+                    self.eeprint('Unknown answer')
 
         if host_xxh_version in ['dir_not_found','dir_empty'] and opt.install_force == False:
             yn = input(f"{host}:{host_xxh_home} not found. Install xxh? [Y/n] ").strip().lower()
             if yn == 'y' or yn == '':
                 opt.install = True
             else:
-                eeprint('Unknown answer')
+                self.eeprint('Unknown answer')
 
         if opt.install:
-            eprint("\033[0;33m", end='')
+            self.eprint("\033[0;33m", end='')
 
-            eprint(f"Install xxh to {host}:{host_xxh_home}" )
+            self.eprint(f"Install xxh to {host}:{host_xxh_home}" )
 
             shells_dir = self.local_xxh_home / 'shells'
             shells = sorted(shells_dir.glob('*'))
 
             shell_dir = shells_dir / f'{self.shell}'
             if not shell_dir.exists():
-                eprint(f'First time download {self.shell} shell from {self.shell_source}')
+                self.eprint(f'First time download {self.shell} shell from {self.shell_source}')
                 if self.shell_source[:6] in ['http:/', 'https:'] and 'git' in self.shell_source:
                     git clone -q --depth 1 @(self.shell_source) @(shells_dir / self.shell)
                 elif fp'{self.shell_source}'.exists():
                     cp -r @(self.shell_source) @(shells_dir)
                 else:
-                    eeprint(f'Unknown shell source: {self.shell_source}')
+                    self.eeprint(f'Unknown shell source: {self.shell_source}')
 
             shell_build_dir = shell_dir / 'build'
             if not shell_build_dir.exists():
-                eprint(f"First time build {self.shell}")
+                self.eprint(f"First time build {self.shell}")
                 xonsh @(shell_build_dir.parent / 'build.xsh')
 
             if opt.install_force:
-                eprint(f'Remove host xxh home {host}:{host_xxh_home}')
+                self.eprint(f'Remove host xxh home {host}:{host_xxh_home}')
                 echo @(f"rm -rf {host_xxh_home}/*") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
 
             if host_xxh_version in ['dir_not_found']:
-                eprint(f'Create xxh home {host_xxh_home}')
-                echo @(f"mkdir -p {host_xxh_home}") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
+                self.eprint(f'Create xxh home {host_xxh_home}')
+                echo @(f"mkdir -p {host_xxh_home}/xxh/plugins {host_xxh_home}/xxh/shells") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
 
             # TODO: check shells list, shell dir
             if which('rsync') and host_info['rsync']:
-                eprint('Upload using rsync')
+                self.eprint('Upload using rsync')
                 rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(plugins_dir) @(host):@(host_xxh_home)/ 1>&2
                 rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(self.package_dir_path)/ @(host):@(host_xxh_home)/ 1>&2
                 rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --include ".*" --exclude='*.pyc' @(shell_build_dir)/ @(host):@(host_xxh_home)/ 1>&2
             elif which('scp') and host_info['scp']:
-                eprint("Upload using scp. Note: install rsync on local and remote host to increase speed.")
+                self.eprint("Upload using scp. Note: install rsync on local and remote host to increase speed.")
                 scp_host = f"{host}:{host_xxh_home}/"
                 @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(plugins_dir) @(scp_host) 1>&2
                 @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(self.package_dir_path)/* @(scp_host) 1>&2
                 @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(shell_build_dir)/* @(scp_host) 1>&2
             else:
-                eprint('Please install rsync or scp!')
+                self.eprint('Please install rsync or scp!')
 
-            eprint(f'First run xonsh on {host}\033[0m')
+            self.eprint(f'First run xonsh on {host}\033[0m')
 
         host_execute_file = ['-f', opt.host_execute_file] if opt.host_execute_file else []
         @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -t bash @(str(host_xxh_home)+'/entrypoint.sh') @(host_execute_file)
 
 if __name__ == '__main__':
     if os.name == 'nt':
-        eeprint(f"Windows is not supported. WSL1 is not recommended also. WSL2 is not tested yet.\nContribution: {self.url_xxh_github}")
+        self.eeprint(f"Windows is not supported. WSL1 is not recommended also. WSL2 is not tested yet.\nContribution: {self.url_xxh_github}")
     if not which('ssh'):
-        eeprint('Install OpenSSH client before using xxh: https://duckduckgo.com/?q=how+to+install+openssh+client+in+linux')
+        self.eeprint('Install OpenSSH client before using xxh: https://duckduckgo.com/?q=how+to+install+openssh+client+in+linux')
 
     xxh = Xxh()
     xxh.main()
