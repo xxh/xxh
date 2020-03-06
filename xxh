@@ -1,6 +1,6 @@
 #!/usr/bin/env xonsh
 
-import os, sys, argparse, datetime, re, getpass, pexpect
+import os, sys, argparse, yaml, datetime, re, getpass, pexpect
 from shutil import which
 from sys import exit
 from argparse import RawTextHelpFormatter
@@ -25,6 +25,7 @@ class Xxh:
         self.url_xxh_plugins_search = 'https://github.com/search?q=xxh-plugin'
         self.local_xxh_version = global_settings['XXH_VERSION']
         self.local_xxh_home = '~/.xxh'
+        self.config_file = '~/.xxhc'
         self.host_xxh_home = '~/.xxh'
         self._shell = 'xxh-shell-xonsh-appimage'
         self.shell_source = 'https://github.com/xxh/xxh-shell-xonsh-appimage.git'
@@ -216,6 +217,9 @@ class Xxh:
         return url
 
     def get_host_info(self):
+        if '|' in self.host_xxh_home:
+            eeprint(f'Wrong host xxh home: {self.host_xxh_home}')
+
         host = self.url.hostname
         host_info_sh = self.package_dir_path / 'host_info.sh'
         if self.use_pexpect:
@@ -258,6 +262,7 @@ class Xxh:
         argp.add_argument('destination', metavar='[user@]host[:port]', help="Destination may be specified as [user@]host[:port] or host from ~/.ssh/config")
         argp.add_argument('+i','++install', default=False, action='store_true', help="Install xxh to destination host.")
         argp.add_argument('+if','++install-force', default=False, action='store_true', help="Removing the host xxh home and install xxh again.")
+        argp.add_argument('+c','++config', default=self.config_file, help=f"Xxh config file in yaml. Default: " + self.config_file)
         argp.add_argument('+P','++password', help="Password for ssh auth.")
         argp.add_argument('+PP','++password-prompt', default=False, action='store_true', help="Enter password manually using prompt.")
         argp.add_argument('+lh','++local-xxh-home', default=self.local_xxh_home, help=f"Local xxh home path. Default: {self.local_xxh_home}")
@@ -271,7 +276,7 @@ class Xxh:
             + "usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]\n" \
             + "usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY] [-o SSH_OPTION -o ...]\n" \
             + "           [user@]host[:port]\n" \
-            + "           [+i] [+if] [+P PASSWORD] [+PP]\n" \
+            + "           [+i] [+if] [+P PASSWORD] [+PP] [+c CONFIG_FILE]\n" \
             + "           [+lxh LOCAL_XXH_HOME] [+hxh HOST_XXH_HOME] [+he HOST_EXECUTE_FILE]\n" \
             + "           [+s SHELL] [+v] [+vv]\n"
 
@@ -282,9 +287,45 @@ class Xxh:
 
         self.verbose = opt.verbose
         self.vverbose = opt.vverbose
+        self.url = url = self.parse_destination(opt.destination)
+
+        xxh_config_file = pf"{opt.config}"
+
+        if xxh_config_file:
+            if not xxh_config_file.exists():
+                if xxh_config_file != p'~/.xxhc':
+                    eeprint(f'Config does not exist: {xxh_config_file}')
+            else:
+                if self.verbose:
+                    eprint(f'Load xxh config from {xxh_config_file}')
+                with open(xxh_config_file) as f:
+                    xxh_config = yaml.safe_load(f)
+
+                if 'hosts' in xxh_config:
+                    sys_args = sys.argv[1:]
+                    conf_args = []
+                    for h, hc in xxh_config['hosts'].items():
+                        if re.match(h, url.hostname):
+                            if self.verbose:
+                                eprint('Load xxh config for host ' + h)
+                            if hc and len(hc) > 0:
+                                for k, v in hc.items():
+                                    conf_args += [k, v] if v is not None else [k]
+                                    if k in ['+P', '++password']:
+                                        current_user = getpass.getuser()
+                                        current_mode = oct(xxh_config_file.stat().st_mode)[-4:]
+                                        if xxh_config_file.owner() != current_user or current_mode != '0600':
+                                            eprint('\n\033[0;93mWARN! There is password in the config file but the file is too open!\n'
+                                                   + f'Run to restrict: chown {current_user}:{current_user} {xxh_config_file} && chmod 0600 {xxh_config_file}\033[0m\n')
+                    args = conf_args + sys_args
+                    if opt.verbose:
+                        print('Final arguments list: ' + str(args))
+                    opt = argp.parse_args(args)
+
+        self.verbose = opt.verbose
+        self.vverbose = opt.vverbose
         self.shell = opt.shell
         self.shell_source = opt.shell_source
-        self.url = url = self.parse_destination(opt.destination)
 
         username = getpass.getuser()
         host = url.hostname
@@ -345,6 +386,7 @@ class Xxh:
         if pf'{opt.host_xxh_home}' == pf'/':
             eeprint("Host xxh home path {host_xxh_home} looks like /. Please check twice!")
 
+        self.host_xxh_home = opt.host_xxh_home
         host_info = self.get_host_info()
 
         if not host_info:

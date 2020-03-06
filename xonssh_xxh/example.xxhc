@@ -1,0 +1,19 @@
+#
+# Example of xxh config file ~/.xxhc
+#
+# The `hosts` section contains host names or regular expression patterns to match hostname.
+#
+# If hostname in xxh command is matched with many sections the options will be added from all
+# sections and the options with same name will be overwritten by the last matched section.
+#
+# Options without argument should be added in appropriate yaml format but empty.
+# Example of `+v` or `+if` mode below.
+#
+hosts:
+  myhost:
+    -p: 2222
+    +v:
+
+  "myhosts-.*":
+    +if:
+    +hh: /tmp/.xxh
