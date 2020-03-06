@@ -292,7 +292,7 @@ class Xxh:
             + "usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]\n" \
             + "usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY] [-o SSH_OPTION -o ...]\n" \
             + "           [user@]host[:port]\n" \
-            + "           [+i] [+if] [+P PASSWORD] [+PP] [+c CONFIG_FILE]\n" \
+            + "           [+i] [+if] [+iff] [+P PASSWORD] [+PP] [+c CONFIG_FILE]\n" \
             + "           [+lxh LOCAL_XXH_HOME] [+hxh HOST_XXH_HOME] [+he HOST_EXECUTE_FILE]\n" \
             + "           [+s SHELL] [+v] [+vv]\n"
 
