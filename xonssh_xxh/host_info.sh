@@ -1,12 +1,11 @@
 #!/bin/bash
 
 xxh_home_realpath=`realpath -m _xxh_home_`
-xxh_plugins_path=$xxh_home_realpath/plugins
 
 xxh_version='dir_not_found'
 if [[ -d $xxh_home_realpath ]]; then
     xxh_version=`[ "$(ls -A $xxh_home_realpath)" ] && echo "version_not_found" || echo "dir_empty"`
-    settings_path=$xxh_home_realpath/settings.py
+    settings_path=$xxh_home_realpath/xxh/package/settings.py
     if [[ -f $settings_path ]]; then
         xxh_version=`cat $settings_path | grep XXH_VERSION | sed -e "s/.*: '\(.*\)'/\\1/g"`
     fi

@@ -22,7 +22,7 @@ usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]
 
 usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY] [-o SSH_OPTION -o ...] 
            [user@]host[:port]
-           [+i] [+if] [+P PASSWORD] [+PP] [+lh LOCAL_XXH_HOME] [+hh HOST_XXH_HOME] 
+           [+i] [+if] [+xc XXH_CONFIG] [+P PASSWORD] [+PP] [+lh LOCAL_XXH_HOME] [+hh HOST_XXH_HOME] 
            [+he HOST_EXECUTE_FILE] [+s SHELL] [+v] [+vv]
 
 Your favorite shell wherever you go through the ssh. 
@@ -42,7 +42,10 @@ Your favorite shell wherever you go through the ssh.
 
 Currently supported Python-powered [portable xonsh shell](https://github.com/xxh/xxh-shell-xonsh-appimage).
 
-Experimental: to use another shell you can create your `xxh-shell` entrypoint like in [xxh-shell-xonsh-appimage](https://github.com/xxh/xxh-shell-xonsh-appimage) and add `+s` argument to your `xxh` command. 
+🔎 [Search xxh shell on Github](https://github.com/search?q=xxh-shell&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-shell)
+
+ 💡  [Create your shell entrypoint](https://github.com/xxh/xxh-shell-sample) to use another portable shell. You can also just create portable entrypoint 
+for bash shell with your lovely aliases, shortcuts and themes.
 
 ## Plugins
 
