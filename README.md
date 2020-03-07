@@ -59,6 +59,10 @@ Your favorite shell wherever you go through the ssh.
 
 ## Notes
 
+### What about speed?
+
+The first connection takes time for downloading and uploading portable shell. It depends on portable shell size and channel speed. But when xxh is installed on the host and you do just `xxh myhost` then it works as ordinary ssh connection speed.
+
 ### How it works?
 
 When you run `xxh myhost` command xxh download portable shell and store locally to future use. Then if it needed xxh upload the portable shell, init scripts and plugins to the host. Finally xxh make ssh connection to the host and run portable shell without any system installs and affection on the target host.
