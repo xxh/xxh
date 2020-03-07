@@ -41,9 +41,9 @@ Your favorite shell wherever you go through the ssh.
 ## Supported shells
 🐚 [Xonsh shell](https://github.com/xxh/xxh-shell-xonsh-appimage) — used by default.
 
-🐟 [Fish shell](https://github.com/xxh/xxh-shell-fish-appimage) — in testing, help wanted.
+🐟 [Fish shell](https://github.com/xxh/xxh-shell-fish-appimage) — first version of entrypoint, help wanted.
 
-💤 Zsh shell — waiting portable build, help wanted.
+💤 [Zsh shell](https://github.com/xxh/xxh-shell-zsh) — first version of entrypoint, help wanted.
 
 🌐 Bash shell — this shell is almost everywhere. Probably the portable version is not needed. You can just create your entrypoint with your lovely functions.
 
