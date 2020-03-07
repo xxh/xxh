@@ -37,11 +37,11 @@ Your favorite shell wherever you go through the ssh.
 ```
 
 ## Supported shells
-🐚 [Xonsh shell](https://github.com/xxh/xxh-shell-xonsh-appimage) — used by default.
+🐚 [Xonsh shell](https://github.com/xxh/xxh-shell-xonsh-appimage) — used by default. Has xxh-plugins.
 
-🐟 [Fish shell](https://github.com/xxh/xxh-shell-fish-appimage) — first version of entrypoint, help wanted.
+💤 [Zsh shell](https://github.com/xxh/xxh-shell-zsh) — alpha version, help wanted. Has [oh-my-zsh xxh-plugin](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh).
 
-💤 [Zsh shell](https://github.com/xxh/xxh-shell-zsh) — first version of entrypoint, help wanted.
+🐟 [Fish shell](https://github.com/xxh/xxh-shell-fish-appimage) — alpha version, help wanted.
 
 🌐 Bash shell — this shell is almost everywhere. Probably the portable version is not needed. You can just create your entrypoint with your lovely functions.
 
