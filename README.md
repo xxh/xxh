@@ -70,6 +70,4 @@ If you like the idea of xxh help spread the word about xxh! Click ⭐ on the rep
 
 ## Thanks
 * @scopatz for https://github.com/xonsh/xonsh
-* @probonopd for https://github.com/AppImage
-* @niess for https://github.com/niess/linuxdeploy-plugin-python/
 * @gforsyth for https://github.com/xonsh/xonsh/issues/3374
