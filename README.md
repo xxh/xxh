@@ -39,13 +39,13 @@ Your favorite shell wherever you go through the ssh.
 ```
 
 ## Supported shells
-🐚 [Xonsh shell](https://github.com/xxh/xxh-shell-xonsh-appimage) (default)
+🐚 [Xonsh shell](https://github.com/xxh/xxh-shell-xonsh-appimage) — used by default.
 
-🐟 [Fish shell](https://github.com/xxh/xxh-shell-fish-appimage) (in testing, help wanted)
+🐟 [Fish shell](https://github.com/xxh/xxh-shell-fish-appimage) — in testing, help wanted.
 
-💤 Zsh shell (waiting portable build, help wanted)
+💤 Zsh shell — waiting portable build, help wanted.
 
-🔎 [Search xxh shell on Github](https://github.com/search?q=xxh-shell&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-shell)
+🔎 [Search xxh shell on Github](https://github.com/search?q=xxh-shell&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-shell).
 
  💡  [Create your shell entrypoint](https://github.com/xxh/xxh-shell-sample) to use another portable shell. You can also just create portable entrypoint 
 for bash shell with your lovely aliases, shortcuts and themes.
