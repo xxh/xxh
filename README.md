@@ -45,10 +45,11 @@ Your favorite shell wherever you go through the ssh.
 
 💤 Zsh shell — waiting portable build, help wanted.
 
+👴 Bash shell — this shell is almost everywhere. Probably the portable version is not needed. You can just create your entrypoint with your lovely functions.
+
 🔎 [Search xxh shell on Github](https://github.com/search?q=xxh-shell&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-shell).
 
- 💡  [Create your shell entrypoint](https://github.com/xxh/xxh-shell-sample) to use another portable shell. You can also just create portable entrypoint 
-for bash shell with your lovely aliases, shortcuts and themes.
+ 💡  [Create your shell entrypoint](https://github.com/xxh/xxh-shell-sample) to use another portable shell. 
 
 ## Plugins
 
