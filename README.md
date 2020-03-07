@@ -37,7 +37,7 @@ Your favorite shell wherever you go through the ssh.
 ```
 
 ## Supported shells
-🐚 [Xonsh shell](https://github.com/xxh/xxh-shell-xonsh-appimage) — used by default. Has xxh-plugins.
+🐚 [Xonsh shell](https://github.com/xxh/xxh-shell-xonsh-appimage) — used by default. Has [xxh-plugins](https://github.com/search?q=xxh%2Fxxh-plugin-xonsh).
 
 💤 [Zsh shell](https://github.com/xxh/xxh-shell-zsh) — alpha version, help wanted. Has [oh-my-zsh xxh-plugin](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh).
 
