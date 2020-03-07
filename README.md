@@ -51,9 +51,7 @@ Your favorite shell wherever you go through the ssh.
 
 ## Plugins
 
-**xxh plugin** is the set of scripts which will be run when in your shell on host when xxh makes the ssh connection. You can create xxh plugin with your lovely aliases, tools or color theme and xxh will bring them to your ssh sessions.
-
-🔎 [Search xxh plugins on Github](https://github.com/search?q=xxh-plugin&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-plugin) or 💡 [Create xxh plugin](https://github.com/xxh/xxh-plugin-xonsh-sample)
+**xxh plugin** is the set of scripts which will be run on the host when you go using xxh. It could be shell settings, environment variables, plugins, color themes and everything you need. You can find the links to plugins on [xxh-shells repos](https://github.com/search?q=xxh%2Fxxh-shell&type=Repositories). Feel free to fork it.
 
 ## Notes
 
