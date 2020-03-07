@@ -39,7 +39,7 @@ Your favorite shell wherever you go through the ssh.
 ## Supported shells
 🐚 [Xonsh shell](https://github.com/xxh/xxh-shell-xonsh-appimage) — used by default. Has [xxh-plugins](https://github.com/search?q=xxh%2Fxxh-plugin-xonsh).
 
-💤 [Zsh shell](https://github.com/xxh/xxh-shell-zsh) — alpha version, help wanted. Has [oh-my-zsh xxh-plugin](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh).
+💤 [Zsh shell](https://github.com/xxh/xxh-shell-zsh) — alpha version, help wanted. Has [oh-my-zsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh) and [powerlevel10k](https://github.com/xxh/xxh-plugin-zsh-powerlevel10k) xxh-plugins.
 
 🐟 [Fish shell](https://github.com/xxh/xxh-shell-fish-appimage) — alpha version, help wanted.
 
