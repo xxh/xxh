@@ -39,8 +39,11 @@ Your favorite shell wherever you go through the ssh.
 ```
 
 ## Supported shells
+🐚 [Xonsh shell](https://github.com/xxh/xxh-shell-xonsh-appimage) (default)
 
-Currently supported Python-powered [portable xonsh shell](https://github.com/xxh/xxh-shell-xonsh-appimage).
+🐟 [Fish shell](https://github.com/xxh/xxh-shell-fish-appimage) (in testing, help wanted)
+
+💤 Zsh shell (waiting portable build, help wanted)
 
 🔎 [Search xxh shell on Github](https://github.com/search?q=xxh-shell&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-shell)
 
