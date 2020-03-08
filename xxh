@@ -392,8 +392,8 @@ class Xxh:
         else:
             self.eeprint(f"Paths aren't writable:\n  {local_xxh_home_parent}\n  {self.local_xxh_home}")
 
-        plugins_dir = self.local_xxh_home / 'xxh/plugins'
-        mkdir @(self.ssh_arg_v) -p @(self.local_xxh_home) @(plugins_dir) @(self.local_xxh_home / 'xxh/shells')
+        local_plugins_dir = self.local_xxh_home / 'xxh/plugins'
+        mkdir @(self.ssh_arg_v) -p @(self.local_xxh_home) @(local_plugins_dir) @(self.local_xxh_home / 'xxh/shells')
 
         # Fix env to avoid ssh warnings
         for lc in ['LC_TIME','LC_MONETARY','LC_ADDRESS','LC_IDENTIFICATION','LC_MEASUREMENT','LC_NAME','LC_NUMERIC','LC_PAPER','LC_TELEPHONE']:
@@ -501,22 +501,42 @@ class Xxh:
                 self.eprint(f'Remove {host}:{host_xxh_home}')
                 echo @(f"rm -rf {host_xxh_home}") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
 
+            host_xxh_plugins_dir = host_xxh_home / 'xxh/plugins'
+            host_xxh_plugins_dirs_str = ''
+            for local_plugin_dir in local_plugins_dir.glob('*'):
+                local_plugin_build_file = local_plugin_dir / 'build.xsh'
+                local_plugin_build_dir = local_plugin_dir / 'build'
+                if not local_plugin_build_dir.exists():
+                    if not local_plugin_build_file.exists():
+                        self.eeprint(f'Please update {local_plugin_dir.name} and {self.shell}. Build file not found: {local_plugin_build_file}')
+
+                    self.eprint(f'First time build {local_plugin_dir}')
+                    @(local_plugin_build_file) 1>&2
+                host_xxh_plugins_dirs_str += ' ' + str(fp'{str(local_plugin_build_dir).replace(str(self.local_xxh_home), str(host_xxh_home))}')
+
             host_xxh_package_dir = host_xxh_home  / 'xxh/package'
             host_xxh_shell_build_dir = host_xxh_home / f'xxh/shells/{self.shell}/build'
-            host_xxh_plugins_dir = host_xxh_home / 'xxh/plugins'
-            echo @(f"mkdir -p {host_xxh_package_dir} {host_xxh_shell_build_dir} {host_xxh_plugins_dir}") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
+            echo @(f"mkdir -p {host_xxh_package_dir} {host_xxh_shell_build_dir} {host_xxh_plugins_dirs_str}") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
 
             if which('rsync') and host_info['rsync']:
                 self.eprint('Upload using rsync')
                 rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --cvs-exclude @(self.package_dir_path)/settings.py @(host):@(host_xxh_package_dir)/ 1>&2
                 rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --cvs-exclude @(shell_build_dir)/ @(host):@(host_xxh_shell_build_dir)/ 1>&2
-                rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --cvs-exclude @(plugins_dir)/ @(host):@(host_xxh_plugins_dir)/ 1>&2
+
+                for local_plugin_dir in local_plugins_dir.glob('*'):
+                    local_plugin_build_dir = local_plugin_dir/'build'
+                    local_plugin_name = local_plugin_dir.name
+                    rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --cvs-exclude @(local_plugin_build_dir)/* @(host):@(host_xxh_plugins_dir)/@(local_plugin_name)/build/ 1>&2
             elif which('scp') and host_info['scp']:
                 self.eprint("Upload using scp. Note: install rsync on local and remote host to increase speed.")
 
                 @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(self.package_dir_path)/settings.py @(f"{host}:{host_xxh_package_dir}/") 1>&2
                 @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(shell_build_dir)/* @(f"{host}:{host_xxh_shell_build_dir}/") 1>&2
-                @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(plugins_dir)/* @(f"{host}:{host_xxh_plugins_dir}/") 1>&2
+
+                for local_plugin_dir in local_plugins_dir.glob('*'):
+                    local_plugin_build_dir = local_plugin_dir/'build'
+                    local_plugin_name = local_plugin_dir.name
+                    @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(local_plugin_build_dir)/* @(f"{host}:{host_xxh_plugins_dir}/{local_plugin_name}/build/") 1>&2
             else:
                 self.eprint('Please install rsync or scp!')
 
