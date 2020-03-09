@@ -15,16 +15,15 @@ After install you can just using `xxh` command as replace `ssh` to connecting to
 
 ## Usage
 ```
-$ ./xxh -h
-usage: xxh <host from ~/.ssh/config>                                                       ____  __________     @    @    
-usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]                           ______  /          \     \__/
-usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY]                   ____  /    ______  \   /   \     
-           [-o SSH_OPTION -o ...] [+P PASSWORD] [+PP]                                  _____  /    / __   \  \ /   _/
-           [user@]host[:port]                                                            ___ (    / /  /   \  \   /
-           [+i] [+if] [+iff] [+v] [+vv] [+s SHELL]                                            \   \___/    /  /  /  
-           [+hh HOST_XXH_HOME] [+hf HOST_EXECUTE_FILE] [+hc HOST_EXECUTE_COMMAND]          ____\          /__/  /   
-           [+xc XXH_CONFIG] [+lh LOCAL_XXH_HOME]                                          /     \________/     /
-                                                                                         /____________________/       
+$ ./xxh -h                                                                                 ____  __________     @    @ 
+usage: xxh <host from ~/.ssh/config>                                                    ______  /          \     \__/
+usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]                            ____  /    ______  \   /   \
+usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY]                 _____  /    / __   \  \ /   _/
+           [-o SSH_OPTION -o ...] [+P PASSWORD] [+PP]                                    ___ (    / /  /   \  \   /
+           [user@]host[:port]                                                                 \   \___/    /  /  /
+           [+i] [+if] [+iff] [+v] [+vv] [+s SHELL]                                         ____\          /__/  /
+           [+hh HOST_XXH_HOME] [+hf HOST_EXECUTE_FILE] [+hc HOST_EXECUTE_COMMAND]         /     \________/     /
+           [+xc XXH_CONFIG] [+lh LOCAL_XXH_HOME]                                         /____________________/
 ```
 
 ## Supported shells
