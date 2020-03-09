@@ -18,10 +18,12 @@ After install you can just using `xxh` command as replace `ssh` to connecting to
 $ ./xxh -h
 usage: xxh <host from ~/.ssh/config>
 usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]
-usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY] [-o SSH_OPTION -o ...] 
+usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY]
+           [-o SSH_OPTION -o ...] [+P PASSWORD] [+PP]
            [user@]host[:port]
-           [+i] [+if] [+iff] [+xc XXH_CONFIG] [+P PASSWORD] [+PP] [+lh LOCAL_XXH_HOME] 
-           [+hh HOST_XXH_HOME] [+he HOST_EXECUTE_FILE] [+s SHELL] [+v] [+vv]
+           [+i] [+if] [+iff] [+v] [+vv] [+s SHELL]
+           [+hh HOST_XXH_HOME] [+hf HOST_EXECUTE_FILE] [+hc HOST_EXECUTE_COMMAND] 
+           [+xc XXH_CONFIG] [+lh LOCAL_XXH_HOME]
 
 Your favorite shell wherever you go through the ssh. 
 
@@ -37,11 +39,11 @@ Your favorite shell wherever you go through the ssh.
 ```
 
 ## Supported shells
-🐚 [Xonsh shell](https://github.com/xxh/xxh-shell-xonsh-appimage) — used by default. Has [xxh-plugins](https://github.com/search?q=xxh%2Fxxh-plugin-xonsh).
+🐚 [Xonsh shell](https://github.com/xxh/xxh-shell-xonsh-appimage) — used by default.
 
-💤 [Zsh shell](https://github.com/xxh/xxh-shell-zsh) — alpha version, help wanted. Has [oh-my-zsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh) and [powerlevel10k](https://github.com/xxh/xxh-plugin-zsh-powerlevel10k) xxh-plugins.
+💤 [Zsh shell](https://github.com/xxh/xxh-shell-zsh) — beta version with [oh-my-zsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh) and [powerlevel10k](https://github.com/xxh/xxh-plugin-zsh-powerlevel10k) xxh-plugins. Help wanted for testing and improving entrypoint.
 
-🐟 [Fish shell](https://github.com/xxh/xxh-shell-fish-appimage) — alpha version, help wanted.
+🐟 [Fish shell](https://github.com/xxh/xxh-shell-fish-appimage) — alpha version. Help wanted for testing and improving entrypoint.
 
 🌐 Bash shell — this shell is almost everywhere. Probably the portable version is not needed. You can just create your entrypoint with your lovely functions.
 
