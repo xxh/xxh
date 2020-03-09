@@ -7,16 +7,12 @@ from argparse import RawTextHelpFormatter
 from urllib.parse import urlparse
 from random import randint
 
-sys.path.append(str(pf"{__file__}".absolute().parent))
-import xonssh_xxh
-from xonssh_xxh.settings import global_settings
-
 class Xxh:
-    def __init__(self):
-        self.package_dir_path = pf"{xonssh_xxh.__file__}".parent
+    def __init__(self, package_dir_path, version='0.0.0'):
+        self.package_dir_path = package_dir_path
         self.url_xxh_github = 'https://github.com/xxh/xxh'
         self.url_xxh_plugins_search = 'https://github.com/search?q=xxh-plugin'
-        self.local_xxh_version = global_settings['XXH_VERSION']
+        self.local_xxh_version = version
         self.local_xxh_home = '~/.xxh'
         self.config_file = '~/.xxh/.xxhc'
         self.host_xxh_home = '~/.xxh'
@@ -561,5 +557,14 @@ if __name__ == '__main__':
     if not which('ssh'):
         self.eeprint('Install OpenSSH client before using xxh: https://duckduckgo.com/?q=how+to+install+openssh+client+in+linux')
 
-    xxh = Xxh()
+    try:
+        this_file = os.readlink(__file__)
+    except:
+        this_file = __file__
+    sys.path.append(str(pf"{this_file}".absolute().parent))
+
+    import xonssh_xxh
+    from xonssh_xxh.settings import global_settings
+
+    xxh = Xxh(package_dir_path=pf"{xonssh_xxh.__file__}".parent, version=global_settings['XXH_VERSION'])
     xxh.main()
