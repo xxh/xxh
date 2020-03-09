@@ -283,7 +283,8 @@ class Xxh:
         argp.add_argument('+PP','++password-prompt', default=False, action='store_true', help="Enter password manually using prompt.")
         argp.add_argument('+lh','++local-xxh-home', default=self.local_xxh_home, help=f"Local xxh home path. Default: {self.local_xxh_home}")
         argp.add_argument('+hh','++host-xxh-home', default=self.host_xxh_home, help=f"Host xxh home path. Default: {self.host_xxh_home}")
-        argp.add_argument('+he','++host-execute-file', help=f"Execute script file placed on host and exit.")
+        argp.add_argument('+hf','++host-execute-file', help=f"Execute script file placed on host and exit.")
+        argp.add_argument('+hc','++host-execute-command', help=f"Execute command on host and exit.")
         argp.add_argument('+s','++shell', default=self.shell, help="Xxh shell. Found: " + ', '.join(self.shells))
         argp.add_argument('+ss','++shell-source', default=self.shell_source, help=f"(future) Custom source of xxh-shell: git url or local path")
         argp.add_argument('+v','++verbose', default=False, action='store_true', help="Verbose mode.")
@@ -292,8 +293,8 @@ class Xxh:
             + "usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]\n" \
             + "usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY] [-o SSH_OPTION -o ...]\n" \
             + "           [user@]host[:port]\n" \
-            + "           [+i] [+if] [+iff] [+P PASSWORD] [+PP] [+xc CONFIG_FILE]\n" \
-            + "           [+lxh LOCAL_XXH_HOME] [+hxh HOST_XXH_HOME] [+he HOST_EXECUTE_FILE]\n" \
+            + "           [+i] [+if] [+iff] [+P PASSWORD] [+PP] [+xc CONFIG_FILE] [+lxh LOCAL_XXH_HOME]\n" \
+            + "           [+hxh HOST_XXH_HOME] [+hf HOST_EXECUTE_FILE] [+hc HOST_EXECUTE_COMMAND]\n" \
             + "           [+s SHELL] [+v] [+vv]\n"
 
         help = argp.format_help().replace('\n  +','\n\nxxh arguments:\n  +',1).replace('optional ', 'common ')\
@@ -540,8 +541,19 @@ class Xxh:
 
             self.eprint(f'First run xonsh on {host}\033[0m')
 
-        host_execute_file = ['-f', opt.host_execute_file] if opt.host_execute_file else []
-        @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -t bash @(str(host_xxh_home/'xxh/shells'/self.shell/'build/entrypoint.sh')) @(host_execute_file)
+        host_execute_file = host_execute_command = []
+        if opt.host_execute_file:
+            host_execute_file = ['-f', opt.host_execute_file]
+        elif opt.host_execute_command:
+            host_execute_command = ['-c', '"%s"' % opt.host_execute_command.replace('"', '\\"')]
+
+        host_entrypoint_verbose = []
+        if self.vverbose:
+            host_entrypoint_verbose = ['-v', '2']
+        elif self.verbose:
+            host_entrypoint_verbose = ['-v', '1']
+
+        @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -t bash @(str(host_xxh_home/'xxh/shells'/self.shell/'build/entrypoint.sh')) @(host_execute_file) @(host_execute_command) @(host_entrypoint_verbose)
 
 if __name__ == '__main__':
     if os.name == 'nt':
