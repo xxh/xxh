@@ -287,11 +287,12 @@ class Xxh:
         argp.add_argument('+vv','++vverbose', default=False, action='store_true', help="Super verbose mode.")
         argp.usage = "xxh <host from ~/.ssh/config>\n" \
             + "usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]\n" \
-            + "usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY] [-o SSH_OPTION -o ...]\n" \
+            + "usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY]\n" \
+            + "           [-o SSH_OPTION -o ...] [+P PASSWORD] [+PP]\n" \
             + "           [user@]host[:port]\n" \
-            + "           [+i] [+if] [+iff] [+P PASSWORD] [+PP] [+xc CONFIG_FILE] [+lxh LOCAL_XXH_HOME]\n" \
+            + "           [+i] [+if] [+iff] [+v] [+vv] [+s SHELL]\n" \
             + "           [+hxh HOST_XXH_HOME] [+hf HOST_EXECUTE_FILE] [+hc HOST_EXECUTE_COMMAND]\n" \
-            + "           [+s SHELL] [+v] [+vv]\n"
+            + "           [+xc CONFIG_FILE] [+lxh LOCAL_XXH_HOME] \n"
 
         help = argp.format_help().replace('\n  +','\n\nxxh arguments:\n  +',1).replace('optional ', 'common ')\
             .replace('number and exit', 'number and exit\n\nssh arguments:').replace('positional ', 'required ')
