@@ -1,4 +1,4 @@
-<p align="center">You chosen a favorite command shell and spent hours to adjust it, to stuffed it with aliases, shortcuts and colors. But when you move from local to remote host using ssh you lose it all. The mission of xxh is to allow you bring your favorite shell with your aliases, shortcuts and color theme wherever you go through the ssh.</p>
+<p align="center">You chosen a favorite command shell and spent hours to adjust it, to stuffed it with shortcuts and colors. But when you move from local to remote host using ssh you lose it all. The mission of xxh is to allow you bring your favorite shell wherever you go through the ssh.</p>
 <p align="center">  
   <a href="https://pypi.org/project/xonssh-xxh/" target="_blank"><img src="https://img.shields.io/pypi/v/xonssh-xxh.svg" alt="[release]"></a>
   <a href="https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7" target="_blank"><img alt="[asciinema demo]" src="https://img.shields.io/badge/demo-asciinema-grass"></a>
@@ -36,7 +36,7 @@ usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY]          
 
 **Bash shell** — this shell is almost everywhere. Probably the portable version is not needed. You can just create your entrypoint with your lovely functions.
 
-🔎 [Search xxh shell on Github](https://github.com/search?q=xxh-shell&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-shell) or  💡[Create your shell entrypoint](https://github.com/xxh/xxh-shell-sample) to use another portable shell. 
+[Search xxh shell on Github](https://github.com/search?q=xxh-shell&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-shell) or [create your shell entrypoint](https://github.com/xxh/xxh-shell-sample) to use another portable shell. 
 
 ## Plugins
 
