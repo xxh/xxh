@@ -33,7 +33,7 @@ usage: xxh [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY]              _____ 
 
 **[Fish shell](https://github.com/xxh/xxh-shell-fish-appimage)** — alpha version. Help wanted for testing and improving entrypoint.
 
-**Bash shell** — this shell is almost everywhere. Probably the portable version is not needed. You can just create your entrypoint with your lovely functions.
+**[Bash shell](https://github.com/xxh/xxh-shell-bash-zero)** — zero version that just runs bash installed on the host with plugins.
 
 [Search xxh shell on Github](https://github.com/search?q=xxh-shell&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-shell) or [create your shell entrypoint](https://github.com/xxh/xxh-shell-sample) to use another portable shell. 
 
