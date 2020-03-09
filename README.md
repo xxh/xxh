@@ -52,13 +52,13 @@ The first connection takes time for downloading and uploading portable shell. It
 When you run `xxh myhost` command xxh download portable shell and store locally to future use. Then if it needed xxh upload the portable shell, init scripts and plugins to the host. Finally xxh make ssh connection to the host and run portable shell without any system installs and affection on the target host.
 
 ## Development
-🛠️ In the [xxh-dev](https://github.com/xxh/xxh-dev) repo there is full [docker](https://www.docker.com/)ised environment for development, testing and contribution. The process of testing and development is orchestrated by `xde` tool and as easy as possible.
+In the [xxh-dev](https://github.com/xxh/xxh-dev) repo there is full [docker](https://www.docker.com/)ised environment for development, testing and contribution. The process of testing and development is orchestrated by `xde` tool and as easy as possible.
 
 ## Spread the word
 If you like the idea of xxh help spread the word about xxh! Click ⭐ on the repo and <a href="https://twitter.com/intent/tweet?text=Python-powered%20shell%20wherever%20you%20go%20through%20the%20ssh&url=https%3A%2F%2Fgithub.com%2Fxxh%2Fxxh&related=" target="_blank">tweet the link</a>! 
 
 ## Thanks
-* @scopatz for https://github.com/xonsh/xonsh
-* @gforsyth for https://github.com/xonsh/xonsh/issues/3374
-* @probonopd for https://github.com/AppImage
-* @niess for https://github.com/niess/linuxdeploy-plugin-python/ 
+* **niess** for https://github.com/niess/linuxdeploy-plugin-python/ 
+* **probonopd** for https://github.com/AppImage
+* **scopatz** for https://github.com/xonsh/xonsh
+* **gforsyth** for https://github.com/xonsh/xonsh/issues/3374
