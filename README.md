@@ -18,7 +18,7 @@ After install you can just using `xxh` command as replace `ssh` to connecting to
 $ ./xxh -h                                                                                 ____  __________     @    @ 
 usage: xxh <host from ~/.ssh/config>                                                    ______  /          \     \__/
 usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]                            ____  /    ______  \   /   \
-usage: xxh [-h] [-V] [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY]                 _____  /    / __   \  \ /   _/
+usage: xxh [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY]                           _____  /    / __   \  \ /   _/
            [-o SSH_OPTION -o ...] [+P PASSWORD] [+PP]                                    ___ (    / /  /   \  \   /
            [user@]host[:port]                                                                 \   \___/    /  /  /
            [+i] [+if] [+iff] [+v] [+vv] [+s SHELL]                                         ____\          /__/  /
