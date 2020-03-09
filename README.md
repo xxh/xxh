@@ -39,13 +39,13 @@ Your favorite shell wherever you go through the ssh.
 ```
 
 ## Supported shells
-🐚 [Xonsh shell](https://github.com/xxh/xxh-shell-xonsh-appimage) — used by default.
+**[Xonsh shell](https://github.com/xxh/xxh-shell-xonsh-appimage)** — used by default.
 
-💤 [Zsh shell](https://github.com/xxh/xxh-shell-zsh) — beta version with [oh-my-zsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh) and [powerlevel10k](https://github.com/xxh/xxh-plugin-zsh-powerlevel10k) xxh-plugins. Help wanted for testing and improving entrypoint.
+**[Zsh shell](https://github.com/xxh/xxh-shell-zsh)** — beta version with [oh-my-zsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh) and [powerlevel10k](https://github.com/xxh/xxh-plugin-zsh-powerlevel10k) xxh-plugins. Help wanted for testing and improving entrypoint.
 
-🐟 [Fish shell](https://github.com/xxh/xxh-shell-fish-appimage) — alpha version. Help wanted for testing and improving entrypoint.
+**[Fish shell](https://github.com/xxh/xxh-shell-fish-appimage)** — alpha version. Help wanted for testing and improving entrypoint.
 
-🌐 Bash shell — this shell is almost everywhere. Probably the portable version is not needed. You can just create your entrypoint with your lovely functions.
+**Bash shell** — this shell is almost everywhere. Probably the portable version is not needed. You can just create your entrypoint with your lovely functions.
 
 🔎 [Search xxh shell on Github](https://github.com/search?q=xxh-shell&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-shell).
 
