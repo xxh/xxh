@@ -29,7 +29,7 @@ usage: xxh [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY]              _____ 
 ## Supported shells
 **[Xonsh shell](https://github.com/xxh/xxh-shell-xonsh-appimage)** — stable version with [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner), [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar), [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) plugins. 
 
-**[Zsh shell](https://github.com/xxh/xxh-shell-zsh)** — beta version with [oh-my-zsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh) and [powerlevel10k](https://github.com/xxh/xxh-plugin-zsh-powerlevel10k) xxh-plugins. Help wanted for testing and improving entrypoint.
+**[Zsh shell](https://github.com/xxh/xxh-shell-zsh)** — beta version with [omz](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh) and [p10k](https://github.com/xxh/xxh-plugin-zsh-powerlevel10k) plugins. Help wanted for testing and improving entrypoint.
 
 **[Fish shell](https://github.com/xxh/xxh-shell-fish-appimage)** — alpha version. Help wanted for testing and improving entrypoint.
 
