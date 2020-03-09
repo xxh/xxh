@@ -15,15 +15,15 @@ After install you can just using `xxh` command as replace `ssh` to connecting to
 
 ## Usage
 ```
-$ ./xxh -h                                                                           ____  __________     @    @ 
-usage: xxh <host from ~/.ssh/config>                                              ______  /          \     \__/
-usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]                      ____  /    ______  \   /   \
-usage: xxh [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY]                     _____  /    / __   \  \ /   _/
-           [-o SSH_OPTION -o ...] [+P PASSWORD] [+PP]                              ___ (    / /  /   \  \   /
-           [user@]host[:port]                                                           \   \___/    /  /  /
-           [+i] [+if] [+iff] [+v] [+vv] [+s SHELL]                                   ____\          /__/  /
-           [+hh HOST_XXH_HOME] [+hf HOST_EXEC_FILE] [+hc HOST_EXEC_COMMAND]         /     \________/     /
-           [+xc XXH_CONFIG] [+lh LOCAL_XXH_HOME]                                   /____________________/
+$ ./xxh -h                                                                    ____  __________     @    @ 
+usage: xxh <host from ~/.ssh/config>                                       ______  /          \     \__/
+usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]               ____  /    ______  \   /   \
+usage: xxh [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY]              _____  /    / __   \  \ /   _/
+           [-o SSH_OPTION -o ...] [+P PASSWORD] [+PP]                       ___ (    / /  /   \  \   /
+           [user@]host[:port]                                                    \   \___/    /  /  /
+           [+i] [+if] [+iff] [+v] [+vv] [+s SHELL]                            ____\          /__/  /
+           [+hh HOST_XXH_HOME] [+hf HOST_EXEC_FILE] [+hc HOST_EXEC_COMMAND]  /     \________/     /
+           [+xc XXH_CONFIG] [+lh LOCAL_XXH_HOME]                            /____________________/
 ```
 
 ## Supported shells
