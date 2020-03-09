@@ -515,24 +515,22 @@ class Xxh:
                 host_xxh_plugins_dirs_str += ' ' + str(fp'{str(local_plugin_build_dir).replace(str(self.local_xxh_home), str(host_xxh_home))}')
 
             host_xxh_package_dir = host_xxh_home  / 'xxh/package'
-            host_xxh_shell_build_dir = host_xxh_home / f'xxh/shells/{self.shell}/build'
+            host_xxh_shell_dir = host_xxh_home / f'xxh/shells/{self.shell}'
+            host_xxh_shell_build_dir = host_xxh_shell_dir  / 'build'
             echo @(f"mkdir -p {host_xxh_package_dir} {host_xxh_shell_build_dir} {host_xxh_plugins_dirs_str}") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
 
             if which('rsync') and host_info['rsync']:
                 self.eprint('Upload using rsync')
                 rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --cvs-exclude @(self.package_dir_path)/settings.py @(host):@(host_xxh_package_dir)/ 1>&2
                 rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --cvs-exclude @(shell_build_dir)/ @(host):@(host_xxh_shell_build_dir)/ 1>&2
-
                 for local_plugin_dir in local_plugins_dir.glob('*'):
                     local_plugin_build_dir = local_plugin_dir/'build'
                     local_plugin_name = local_plugin_dir.name
                     rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --cvs-exclude @(local_plugin_build_dir)/* @(host):@(host_xxh_plugins_dir)/@(local_plugin_name)/build/ 1>&2
             elif which('scp') and host_info['scp']:
                 self.eprint("Upload using scp. Note: install rsync on local and remote host to increase speed.")
-
                 @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(self.package_dir_path)/settings.py @(f"{host}:{host_xxh_package_dir}/") 1>&2
-                @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(shell_build_dir)/* @(f"{host}:{host_xxh_shell_build_dir}/") 1>&2
-
+                @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(shell_build_dir) @(f"{host}:{host_xxh_shell_dir}/") 1>&2
                 for local_plugin_dir in local_plugins_dir.glob('*'):
                     local_plugin_build_dir = local_plugin_dir/'build'
                     local_plugin_name = local_plugin_dir.name
