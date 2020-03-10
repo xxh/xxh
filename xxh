@@ -292,7 +292,7 @@ class Xxh:
             + "           [user@]host[:port]\n" \
             + "           [+i] [+if] [+iff] [+v] [+vv] [+s SHELL]\n" \
             + "           [+hh HOST_XXH_HOME] [+hf HOST_EXEC_FILE] [+hc HOST_EXEC_CMD]\n" \
-            + "           [+xc CONFIG_FILE] [+lxh LOCAL_XXH_HOME] [-h] [-V]\n"
+            + "           [+xc CONFIG_FILE] [+lh LOCAL_XXH_HOME] [-h] [-V]\n"
 
         help = argp.format_help().replace('\n  +','\n\nxxh arguments:\n  +',1).replace('optional ', 'common ')\
             .replace('number and exit', 'number and exit\n\nssh arguments:').replace('positional ', 'required ')
