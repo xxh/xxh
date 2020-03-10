@@ -270,7 +270,7 @@ class Xxh:
         argp.add_argument('-l', dest='ssh_login', help="Specifies the user to log in as on the remote machine.")
         argp.add_argument('-i', dest='ssh_private_key', help="File from which the identity (private key) for public key authentication is read.")
         argp.add_argument('-o', dest='ssh_options', metavar='SSH_OPTION -o ...', action='append', help="SSH options are described in ssh man page. Example: -o Port=22 -o User=snail")
-        argp.add_argument('destination', metavar='[user@]host[:port]', help="Destination may be specified as [user@]host[:port] or host from ~/.ssh/config")
+        argp.add_argument('destination', metavar='[user@]host[:port]', help="Destination may be specified as [ssh://][user@]host[:port] or host from ~/.ssh/config")
         argp.add_argument('+i','++install', default=False, action='store_true', help="Install xxh to destination host.")
         argp.add_argument('+if','++install-force', default=False, action='store_true', help="Removing the host xxh package and install xxh again.")
         argp.add_argument('+iff','++install-force-full', default=False, action='store_true', help="Removing the host xxh home and install xxh again. All installed packages on the host (e.g. pip packages) will be lost.")
