@@ -55,6 +55,6 @@ In the [xxh-dev](https://github.com/xxh/xxh-dev) repo there is full [docker](htt
 
 ## Thanks
 * **niess** for https://github.com/niess/linuxdeploy-plugin-python/ 
-* **probonopd** for https://github.com/AppImage
+* **probonopd** and **TheAssassin** for https://github.com/AppImage
 * **scopatz** for https://github.com/xonsh/xonsh
 * **gforsyth** for https://github.com/xonsh/xonsh/issues/3374
