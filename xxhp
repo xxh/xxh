@@ -1,0 +1,87 @@
+#!/usr/bin/env xonsh
+import os, sys, argparse
+from sys import exit
+
+class XxhPackage(object):
+    def __init__(self):
+        self.local_xxh_home_dir = p'~/.xxh'
+        self.quiet = False
+
+        parser = argparse.ArgumentParser(
+            usage='xxhp <command>\n\n'
+                    + '   install   i   Install xxh plugin or shell\n'
+                    + '   remove    r   Remove xxh plugin or shell\n\n'
+                    + 'Try `./xde <command> --help` to get more info.\n')
+        parser.add_argument('command', help='Command to run')
+
+        args = parser.parse_args(sys.argv[1:2])
+        if not hasattr(self, args.command):
+            print('Unrecognized command\n')
+            parser.print_help()
+            sys.exit(1)
+
+        getattr(self, args.command)()
+
+    def eprint(self, *args, **kwargs):
+        if not self.quiet:
+            print(*args, file=sys.stderr, **kwargs)
+
+    def eeprint(self, *args, **kwargs):
+        if not self.quiet:
+            print(*args, file=sys.stderr, **kwargs)
+        exit(1)
+
+    def i(self):
+        return self.install()
+
+    def install(self):
+        parser = argparse.ArgumentParser(description='')
+        parser.add_argument('package', help=f"xxh-package")
+        parser.add_argument('-v', '--verbose', action='store_true', help=f"Verbose mode")
+        parser.usage = parser.format_usage().replace('usage: xxhp ', 'xxhp install ')
+        opt = parser.parse_args(sys.argv[2:])
+
+        mkdir -p @(self.local_xxh_home_dir / 'xxh/shells') @(self.local_xxh_home_dir / 'xxh/plugins')
+        subdir = self.package_subdir(opt.package) or self.eeprint(f"Unknown package: {opt.package}")
+
+        package_git_url = f'https://github.com/xxh/{opt.package}'
+
+        self.eprint(f"Git clone {package_git_url}")
+        package_dir = self.local_xxh_home_dir/'xxh'/subdir/opt.package
+        r = ![git clone -q @(package_git_url) @(package_dir) 1>&2]
+        if r.returncode != 0:
+            self.eeprint(f'Git clone error')
+
+        self.eprint(f"Build {opt.package}")
+        @(package_dir/'build.xsh') 1>&2
+        self.eprint(f"Installed {opt.package}")
+
+    def r(self):
+        return self.remove()
+
+    def remove(self):
+        parser = argparse.ArgumentParser(description='')
+        parser.add_argument('package', help=f"xxh-package")
+        parser.add_argument('-v', '--verbose', action='store_true', help=f"Verbose mode")
+        parser.usage = parser.format_usage().replace('usage: xxhp ', 'xxhp remove ')
+        opt = parser.parse_args(sys.argv[2:])
+
+        mkdir -p @(self.local_xxh_home_dir / 'xxh/shells') @(self.local_xxh_home_dir / 'xxh/plugins')
+        subdir = self.package_subdir(opt.package) or self.eeprint(f"Unknown package: {opt.package}")
+        package_dir = self.local_xxh_home_dir / 'xxh' / subdir / opt.package
+        if package_dir.exists():
+            rm -rf @(package_dir)
+            self.eprint(f"Removed {package_dir}")
+        else:
+            self.eeprint(f"Package not found: {package_dir}")
+
+    def package_subdir(self, name):
+        if 'xxh-shell' in name:
+            return 'shells'
+        elif 'xxh-plugin' in name:
+            return 'plugins'
+        return None
+
+
+if __name__ == '__main__':
+    XxhPackage()
