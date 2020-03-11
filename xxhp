@@ -1,5 +1,5 @@
 #!/usr/bin/env xonsh
-import os, sys, argparse
+import os, sys, argparse, re
 from sys import exit
 
 class XxhPackage(object):
@@ -7,12 +7,12 @@ class XxhPackage(object):
         self.local_xxh_home_dir = p'~/.xxh'
         self.quiet = False
 
-        parser = argparse.ArgumentParser(
+        parser = argparse.ArgumentParser(description='xxhp is xxh package manager.',
             usage='xxhp <command>\n\n'
-                    + '   install   i   Install xxh plugin or shell\n'
+                    + '   install   i   Install xxh plugin or shell from https://github.com/xxh\n'
                     + '   list      l   List of installed packages\n'
                     + '   remove    r   Remove xxh plugin or shell\n\n'
-                    + 'Try `./xde <command> --help` to get more info.\n')
+                    + 'Try `./xxhp <command> --help` to get more info.\n')
         parser.add_argument('command', help='Command to run')
 
         args = parser.parse_args(sys.argv[1:2])
@@ -42,6 +42,9 @@ class XxhPackage(object):
         parser.add_argument('-v', '--verbose', action='store_true', help=f"Verbose mode")
         parser.usage = parser.format_usage().replace('usage: xxhp ', 'xxhp install ')
         opt = parser.parse_args(sys.argv[2:])
+
+        if not re.match('^[a-zA-Z-]+$', opt.package):
+            self.eeprint(f'Invalid package name: {opt.package}')
 
         subdir = self.package_subdir(opt.package) or self.eeprint(f"Unknown package: {opt.package}")
 
