@@ -21,10 +21,23 @@ usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]             ____  
 usage: xxh [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY]            _____  /    / __   \  \ /   _/
            [-o SSH_OPTION -o ...] [+P PASSWORD] [+PP]                     ___ (    / /  /   \  \   /
            [user@]host[:port]                                                  \   \___/    /  /  /
-           [+i] [+if] [+iff] [+v] [+vv] [+s SHELL]                          ____\          /__/  /
+           [+i] [+if] [+iff] [+hhr] [+v] [+vv] [+s SHELL]                   ____\          /__/  /
            [+hh HOST_XXH_HOME] [+hf HOST_EXEC_FILE] [+hc HOST_EXEC_CMD]    /     \________/     /
            [+xc XXH_CONFIG] [+lh LOCAL_XXH_HOME]                          /____________________/
 ```
+
+There is `~/.xxh/.xxhc` config to save arguments and reuse it:
+```
+hosts:
+  myhost:              # settings for myhost
+    -p: 2222             # set special port
+
+  "company-.*":        # for all hosts by regex pattern
+    +if:                 # don't asking about install (++install-force)
+    +hhr:                # remove after disconnect (++host-xxh-home-remove)
+    +hh: /tmp/.xxh       # use special xxh home directory (++host-xxh-home)
+```
+The arguments will be automatically added when you run `xxh myhost` or `xxh company-server1`.
 
 ## Supported shells
 **[Xonsh shell](https://github.com/xxh/xxh-shell-xonsh-appimage)** — stable version with [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner), [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar), [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) plugins. 
