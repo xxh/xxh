@@ -18,7 +18,7 @@ setuptools.setup(
         'pyyaml'
     ],
     platforms='Unix-like',
-    scripts=['xxh'],
+    scripts=['xxh','xxhp'],
     package_data={'xonssh_xxh':['*.xsh', '*.sh']},
     packages=setuptools.find_packages(),
     classifiers=[
