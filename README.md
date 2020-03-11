@@ -29,13 +29,13 @@ usage: xxh [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY]            _____  /
 There is `~/.xxh/.xxhc` config to save arguments and reuse it:
 ```
 hosts:
-  myhost:            # settings for myhost
-    -p: 2222         # set special port
+  myhost:              # settings for myhost
+    -p: 2222             # set special port
 
-  "company-.*":      # for all hosts by regex pattern
-    +if:             # don't asking about install (++install-force)
-    +hhr:            # remove after disconnect (++host-xxh-home-remove)
-    +hh: /tmp/.xxh   # use special xxh home directory (++host-xxh-home)
+  "company-.*":        # for all hosts by regex pattern
+    +if:                 # don't asking about install (++install-force)
+    +hhr:                # remove after disconnect (++host-xxh-home-remove)
+    +hh: /tmp/.xxh       # use special xxh home directory (++host-xxh-home)
 ```
 The arguments will be automatically added when you run `xxh myhost` or `xxh company-server1`.
 
