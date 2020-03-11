@@ -26,7 +26,7 @@ usage: xxh [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY]            _____  /
            [+xc XXH_CONFIG] [+lh LOCAL_XXH_HOME]                          /____________________/
 ```
 
-There is `~/.xxh/.xxhc` config to save arguments and reuse it:
+There is `~/.xxh/.xxhc` [yaml](https://en.wikipedia.org/wiki/YAML) config to save arguments and reuse it:
 ```
 hosts:
   myhost:              # settings for myhost
