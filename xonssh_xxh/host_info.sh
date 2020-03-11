@@ -13,6 +13,7 @@ fi
 
 echo xxh_home_realpath=$xxh_home_realpath
 echo xxh_version=$xxh_version
+echo xxh_shell_exists=`[ -d $xxh_home_realpath/xxh/shells/_xxh_shell_ ] && echo "1" ||echo "0"`
 echo xxh_home_writable=`[ -w $xxh_home_realpath ] && echo "1" ||echo "0"`
 echo xxh_parent_home_writable=`[ -w $(dirname $xxh_home_realpath) ] && echo "1" ||echo "0"`
 echo rsync=`command -v rsync`

@@ -16,8 +16,28 @@ class Xxh:
         self.local_xxh_home = '~/.xxh'
         self.config_file = '~/.xxh/.xxhc'
         self.host_xxh_home = '~/.xxh'
-        self._shell = 'xxh-shell-xonsh-appimage'
-        self.shell_source = 'https://github.com/xxh/xxh-shell-xonsh-appimage.git'
+
+        self.default_shells = {
+            'xonsh':{
+                'xxh-shell': 'xxh-shell-xonsh-appimage',
+                'xxh-shell-source': 'https://github.com/xxh/xxh-shell-xonsh-appimage.git'
+            },
+            'zsh': {
+                'xxh-shell': 'xxh-shell-zsh',
+                'xxh-shell-source': 'https://github.com/xxh/xxh-shell-zsh.git'
+            },
+            'fish': {
+                'xxh-shell': 'xxh-shell-fish-appimage',
+                'xxh-shell-source': 'https://github.com/xxh/xxh-shell-fish-appimage.git'
+            },
+            'bash-zero': {
+                'xxh-shell': 'xxh-shell-bash-zero',
+                'xxh-shell-source': 'https://github.com/xxh/xxh-shell-bash-zero.git'
+            }
+        }
+        self._shell = self.default_shells[self.get_current_shell()]['xxh-shell']
+        self.shell_source = self.default_shells[self.get_current_shell()]['xxh-shell-source']
+
         self.url = None
         self.ssh_arguments = []
         self.ssh_arg_v = []
@@ -27,7 +47,6 @@ class Xxh:
         self._verbose = False
         self._vverbose = False
         self.quiet = False
-        self.shells = self.shells_list()
 
     def eprint(self, *args, **kwargs):
         if not self.quiet:
@@ -37,6 +56,14 @@ class Xxh:
         if not self.quiet:
             print(*args, file=sys.stderr, **kwargs)
         exit(1)
+
+    def get_current_shell(self):
+        if 'SHELL' in ${...}:
+            if $SHELL.endswith('zsh'):
+                return 'zsh'
+            if $SHELL.endswith('fish'):
+                return 'fish'
+        return 'xonsh'
 
     def d2F0Y2ggLW4uMiB4eGggLWg(self):
         try:
@@ -152,8 +179,19 @@ class Xxh:
 
         return {}
 
-    def shells_list(self):
-        return sorted(set(['xxh-shell-xonsh-appimage'] + [str(s.name) for s in pf'{self.local_xxh_home}/xxh/shells'.glob('*')]))
+    def shells(self):
+        default_shells = [v['xxh-shell'] for k,v in self.default_shells.items()]
+        installed_shells = [str(s.name) for s in pf'{self.local_xxh_home}/xxh/shells'.glob('*')]
+        available_shells = list(set(default_shells + installed_shells))
+        defaults = [k+' (%s)'%v['xxh-shell']  for k,v in self.default_shells.items()]
+        list_str = ', '.join(defaults + [s for s in available_shells if s not in default_shells])
+
+        return {
+            'default': default_shells,
+            'installed': installed_shells,
+            'available': available_shells,
+            'available_help': list_str
+        }
 
     @property
     def password(self):
@@ -177,8 +215,10 @@ class Xxh:
 
     @shell.setter
     def shell(self, value):
-        if value not in self.shells:
-            self.eeprint('Currently supported shells:'+ ', '.join(self.shells))
+        default_shells = [v['xxh-shell'] for k,v in self.default_shells.items()]
+        shells = self.shells()
+        if value not in shells['available']:
+            self.eeprint('Currently supported shells: ' + shells['available_help'])
         self._shell = value
 
     @property
@@ -220,8 +260,8 @@ class Xxh:
         host = self.url.hostname
         host_info_sh = self.package_dir_path / 'host_info.sh'
         if self.use_pexpect:
-            cmd = "bash -c 'cat {host_info_sh} | sed \"s|_xxh_home_|{host_xxh_home}|\" | ssh {ssh_v} {ssh_arguments} {host} -T \"bash -s\"'".format(
-                host_info_sh=host_info_sh, host_xxh_home=self.host_xxh_home, ssh_v=('' if not self.ssh_arg_v else '-v'), ssh_arguments=' '.join(self.ssh_arguments), host=host)
+            cmd = "bash -c 'cat {host_info_sh} | sed \"s|_xxh_home_|{host_xxh_home}|\" | sed \"s|_xxh_shell_|{shell}|\" | ssh {ssh_v} {ssh_arguments} {host} -T \"bash -s\"'".format(
+                host_info_sh=host_info_sh, host_xxh_home=self.host_xxh_home, shell=self.shell, ssh_v=('' if not self.ssh_arg_v else '-v'), ssh_arguments=' '.join(self.ssh_arguments), host=host)
             pr = self.pssh(cmd)
 
             if pr == {}:
@@ -280,7 +320,7 @@ class Xxh:
         argp.add_argument('+hhr','++host-xxh-home-remove', action='store_true', help=f"Remove xxh home on host after disconnect")
         argp.add_argument('+hf','++host-execute-file', help=f"Execute script file placed on host and exit.")
         argp.add_argument('+hc','++host-execute-command', help=f"Execute command on host and exit.")
-        argp.add_argument('+s','++shell', default=self.shell, help="Xxh shell. Found: " + ', '.join(self.shells))
+        argp.add_argument('+s','++shell', default=self.shell, help="Xxh shell: " + self.shells()['available_help'])
         argp.add_argument('+ss','++shell-source', default=self.shell_source, help=f"(future) Custom source of xxh-shell: git url or local path")
         argp.add_argument('+v','++verbose', default=False, action='store_true', help="Verbose mode.")
         argp.add_argument('+vv','++vverbose', default=False, action='store_true', help="Super verbose mode.")
@@ -337,8 +377,15 @@ class Xxh:
 
         self.verbose = opt.verbose
         self.vverbose = opt.vverbose
-        self.shell = opt.shell
-        self.shell_source = opt.shell_source
+
+        if opt.shell in self.default_shells:
+            self.shell = self.default_shells[opt.shell]['xxh-shell']
+            self.shell_source = self.default_shells[opt.shell]['xxh-shell-source']
+        else:
+            self.shell = opt.shell
+            self.shell_source = opt.shell_source
+
+        short_shell_name = self.shell.split('-')[2]
 
         username = getpass.getuser()
         host = url.hostname
@@ -405,7 +452,6 @@ class Xxh:
         if not host_info:
             self.eeprint(f'Unknown answer from host when getting info')
 
-
         if 'xxh_home_realpath' not in host_info or host_info['xxh_home_realpath'] == '':
             self.eeprint(f'Unknown answer from host when getting realpath for directory {host_xxh_home}')
 
@@ -434,14 +480,14 @@ class Xxh:
 
             if ask:
                 choice = input(f"{ask} What's next? \n"
-                               + " s  - [default] Stop here. You'll try to connect using ordinary ssh for backup current xxh home.\n"
+                               + " s  - Stop here. You'll try to connect using ordinary ssh for backup current xxh home.\n"
                                + " u  - Safe update. Host xxh home will be renamed and local xxh version will be installed.\n"
-                               + " f  - Force reinstall xxh. Installed packages (e.g. pip) will be saved.\n"
+                               + " f  - [default] Force reinstall xxh. Installed packages (e.g. pip) will be saved.\n"
                                + " ff - Force full reinstall on host. Installed packages (e.g. pip) will be lost.\n"
                                + " i  - Ignore, cross fingers and continue the connection.\n"
-                               + "S/u/f/i? ").lower()
+                               + "s/u/F/i? ").lower()
 
-                if choice == 's' or choice.strip() == '':
+                if choice == 's':
                     print('Stopped')
                     exit(0)
                 elif choice == 'u':
@@ -449,7 +495,7 @@ class Xxh:
                     self.eprint(f"Move {host}:{host_xxh_home} to {host}:{host_xxh_home}-{local_time}")
                     echo @(f"mv {host_xxh_home} {host_xxh_home}-{local_time}") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
                     opt.install = True
-                elif choice == 'f':
+                elif choice == 'f' or choice.strip() == '':
                     opt.install = True
                     opt.install_force = True
                 elif choice == 'ff':
@@ -460,8 +506,8 @@ class Xxh:
                 else:
                     self.eeprint('Unknown answer')
 
-        if host_xxh_version in ['dir_not_found','dir_empty'] and opt.install_force == False and opt.install_force_full == False:
-            yn = input(f"{host}:{host_xxh_home} not found. Install xxh? [Y/n] ").strip().lower()
+        if (host_xxh_version in ['dir_not_found','dir_empty'] or host_info['xxh_shell_exists'] == '0') and opt.install_force == False and opt.install_force_full == False:
+            yn = input(f"{host}:{host_xxh_home}/xxh/shells/{self.shell} not found. Install {self.shell}? [Y/n] ").strip().lower()
             if yn == 'y' or yn == '':
                 opt.install = True
             else:
@@ -499,8 +545,8 @@ class Xxh:
                 echo @(f"rm -rf {host_xxh_home}") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
 
             host_xxh_plugins_dir = host_xxh_home / 'xxh/plugins'
-            host_xxh_plugins_dirs_str = ''
-            for local_plugin_dir in local_plugins_dir.glob('*'):
+            host_xxh_dirs_str = ''
+            for local_plugin_dir in local_plugins_dir.glob(f'*-{short_shell_name}-*'):
                 local_plugin_build_file = local_plugin_dir / 'build.xsh'
                 local_plugin_build_dir = local_plugin_dir / 'build'
                 if not local_plugin_build_dir.exists():
@@ -509,18 +555,18 @@ class Xxh:
 
                     self.eprint(f'First time build {local_plugin_dir}')
                     @(local_plugin_build_file) 1>&2
-                host_xxh_plugins_dirs_str += ' ' + str(fp'{str(local_plugin_build_dir).replace(str(self.local_xxh_home), str(host_xxh_home))}')
+                host_xxh_dirs_str += ' ' + str(fp'{str(local_plugin_build_dir).replace(str(self.local_xxh_home), str(host_xxh_home))}')
 
             host_xxh_package_dir = host_xxh_home  / 'xxh/package'
             host_xxh_shell_dir = host_xxh_home / f'xxh/shells/{self.shell}'
             host_xxh_shell_build_dir = host_xxh_shell_dir  / 'build'
-            echo @(f"mkdir -p {host_xxh_package_dir} {host_xxh_shell_build_dir} {host_xxh_plugins_dirs_str}") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
+            echo @(f"mkdir -p {host_xxh_package_dir} {host_xxh_shell_build_dir} {host_xxh_dirs_str}") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
 
             if which('rsync') and host_info['rsync']:
                 self.eprint('Upload using rsync')
                 rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --cvs-exclude @(self.package_dir_path)/settings.py @(host):@(host_xxh_package_dir)/ 1>&2
                 rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --cvs-exclude @(shell_build_dir)/ @(host):@(host_xxh_shell_build_dir)/ 1>&2
-                for local_plugin_dir in local_plugins_dir.glob('*'):
+                for local_plugin_dir in local_plugins_dir.glob(f'*-{short_shell_name}-*'):
                     local_plugin_build_dir = local_plugin_dir/'build'
                     local_plugin_name = local_plugin_dir.name
                     rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --cvs-exclude @(local_plugin_build_dir)/* @(host):@(host_xxh_plugins_dir)/@(local_plugin_name)/build/ 1>&2
@@ -528,7 +574,7 @@ class Xxh:
                 self.eprint("Upload using scp. Note: install rsync on local and remote host to increase speed.")
                 @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(self.package_dir_path)/settings.py @(f"{host}:{host_xxh_package_dir}/") 1>&2
                 @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(shell_build_dir) @(f"{host}:{host_xxh_shell_dir}/") 1>&2
-                for local_plugin_dir in local_plugins_dir.glob('*'):
+                for local_plugin_dir in local_plugins_dir.glob(f'*-{short_shell_name}-*'):
                     local_plugin_build_dir = local_plugin_dir/'build'
                     local_plugin_name = local_plugin_dir.name
                     @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(local_plugin_build_dir)/* @(f"{host}:{host_xxh_plugins_dir}/{local_plugin_name}/build/") 1>&2
