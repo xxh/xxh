@@ -34,7 +34,7 @@ hosts:
 
   "company-.*":        # for all hosts by regex pattern
     +if:                 # don't asking about install (++install-force)
-    +hhr:                # remove after disconnect (++host-xxh-home-remove)
+    +hhr:                # remove host xxh home after disconnect (++host-xxh-home-remove)
     +hh: /tmp/.xxh       # use special xxh home directory (++host-xxh-home)
 ```
 The arguments will be automatically added when you run `xxh myhost` or `xxh company-server1`.
