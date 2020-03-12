@@ -40,13 +40,13 @@ hosts:
 The arguments will be automatically added when you run `xxh myhost` or `xxh company-server1`.
 
 ## Supported shells
-**[Xonsh shell](https://github.com/xxh/xxh-shell-xonsh-appimage)** — stable version with [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner), [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar), [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) plugins. 
+**[Xonsh](https://github.com/xxh/xxh-shell-xonsh-appimage)** — stable version with [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner), [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar), [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) plugins. 
 
-**[Zsh shell](https://github.com/xxh/xxh-shell-zsh)** — beta version with [omz](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh) and [p10k](https://github.com/xxh/xxh-plugin-zsh-powerlevel10k) plugins. Help wanted for testing and improving entrypoint.
+**[Zsh](https://github.com/xxh/xxh-shell-zsh)** — beta version with [omz](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh) and [p10k](https://github.com/xxh/xxh-plugin-zsh-powerlevel10k) plugins. Help wanted for testing and improving entrypoint.
 
-**[Fish shell](https://github.com/xxh/xxh-shell-fish-appimage)** — alpha version. Help wanted for testing and improving entrypoint.
+**[Fish](https://github.com/xxh/xxh-shell-fish-appimage)** — alpha version. Help wanted for testing and improving entrypoint.
 
-**[Bash shell](https://github.com/xxh/xxh-shell-bash-zero)** — zero version that just runs bash installed on the host with plugins like [vim](https://github.com/xxh/xxh-plugin-bash-vim). 
+**[Bash](https://github.com/xxh/xxh-shell-bash-zero)** — zero version that just runs bash installed on the host with plugins like [vim](https://github.com/xxh/xxh-plugin-bash-vim). 
 
 [Search xxh shell on Github](https://github.com/search?q=xxh-shell&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-shell) or [create your shell entrypoint](https://github.com/xxh/xxh-shell-sample) to use another portable shell. 
 
