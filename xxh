@@ -34,6 +34,10 @@ class Xxh:
             'bash-zero': {
                 'xxh-shell': 'xxh-shell-bash-zero',
                 'xxh-shell-source': 'https://github.com/xxh/xxh-shell-bash-zero.git'
+            },
+            'osquery':{
+                'xxh-shell': 'xxh-shell-osquery',
+                'xxh-shell-source': 'https://github.com/xxh/xxh-shell-osquery.git'
             }
         }
         self._shell = self.default_shells[self.get_current_shell()]['xxh-shell']
