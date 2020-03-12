@@ -46,7 +46,7 @@ The arguments will be automatically added when you run `xxh myhost` or `xxh comp
 
 **[Fish shell](https://github.com/xxh/xxh-shell-fish-appimage)** — alpha version. Help wanted for testing and improving entrypoint.
 
-**[Bash shell](https://github.com/xxh/xxh-shell-bash-zero)** — zero version that just runs bash installed on the host with plugins.
+**[Bash shell](https://github.com/xxh/xxh-shell-bash-zero)** — zero version that just runs bash installed on the host with plugins like [vim](https://github.com/xxh/xxh-plugin-bash-vim). 
 
 [Search xxh shell on Github](https://github.com/search?q=xxh-shell&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-shell) or [create your shell entrypoint](https://github.com/xxh/xxh-shell-sample) to use another portable shell. 
 
