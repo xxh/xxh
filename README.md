@@ -21,9 +21,9 @@ usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]             ____  
 usage: xxh [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY]            _____  /    / __   \  \ /   _/
            [-o SSH_OPTION -o ...] [+P PASSWORD] [+PP]                     ___ (    / /  /   \  \   /
            [user@]host[:port]                                                  \   \___/    /  /  /
-           [+i] [+if] [+s SHELL] [+iff] [+hhr] [+v] [+vv] [+q]              ____\          /__/  /
+           [+i] [+if] [+s SHELL] [+e NAME=VAL +e ...] [+iff] [+hhr]         ____\          /__/  /
            [+hh HOST_XXH_HOME] [+hf HOST_EXEC_FILE] [+hc HOST_EXEC_CMD]    /     \________/     /
-           [+xc XXH_CONFIG] [+lh LOCAL_XXH_HOME]                          /____________________/
+           [+xc XXH_CONFIG] [+lh LOCAL_XXH_HOME] [+v] [+vv] [+q]          /____________________/
 ```
 
 There is `~/.xxh/.xxhc` [yaml](https://en.wikipedia.org/wiki/YAML) config to save arguments and reuse it:
@@ -31,6 +31,10 @@ There is `~/.xxh/.xxhc` [yaml](https://en.wikipedia.org/wiki/YAML) config to sav
 hosts:
   myhost:              # settings for myhost
     -p: 2222             # set special port
+    +s: xxh-shell-zsh    # set zsh shell
+                         # set Oh My Zsh plugin environment:
+    +e: XXH_ZSH_PLUGIN_OHMYZSH_ZSH_THEME="clean"
+    +e: XXH_ZSH_PLUGIN_OHMYZSH_PLUGINS="(git docker)"
 
   "company-.*":        # for all hosts by regex pattern
     +if:                 # don't asking about install (++install-force)

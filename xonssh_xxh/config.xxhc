@@ -15,9 +15,12 @@
 #hosts:
 #  myhost:              # settings for myhost
 #    -p: 2222             # set special port
+#    +s: xxh-shell-zsh    # set zsh shell
+#                         # set Oh My Zsh plugin environment:
+#    +e: XXH_ZSH_PLUGIN_OHMYZSH_ZSH_THEME="clean"
+#    +e: XXH_ZSH_PLUGIN_OHMYZSH_PLUGINS="(git docker)"
 #
 #  "company-.*":        # for all hosts by regex pattern
 #    +if:                 # don't asking about install (++install-force)
 #    +hhr:                # remove host xxh home after disconnect (++host-xxh-home-remove)
 #    +hh: /tmp/.xxh       # use special xxh home directory (++host-xxh-home)
-#--------------------------------------------------------------------------------------------------
