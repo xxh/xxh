@@ -324,12 +324,13 @@ class Xxh:
         argp.add_argument('+ss','++shell-source', default=self.shell_source, help=f"(future) Custom source of xxh-shell: git url or local path")
         argp.add_argument('+v','++verbose', default=False, action='store_true', help="Verbose mode.")
         argp.add_argument('+vv','++vverbose', default=False, action='store_true', help="Super verbose mode.")
+        argp.add_argument('+q','++quiet', default=False, action='store_true', help="Quiet mode.")
         argp.usage = "xxh <host from ~/.ssh/config>\n" \
             + "usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]\n" \
             + "usage: xxh [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY]\n" \
             + "           [-o SSH_OPTION -o ...] [+P PASSWORD] [+PP]\n" \
             + "           [user@]host[:port]\n" \
-            + "           [+i] [+if] [+iff] [+hhr] [+v] [+vv] [+s SHELL]\n" \
+            + "           [+i] [+if] [+iff] [+hhr] [+s SHELL] [+v] [+vv] [+q]\n" \
             + "           [+hh HOST_XXH_HOME] [+hf HOST_EXEC_FILE] [+hc HOST_EXEC_CMD]\n" \
             + "           [+xc CONFIG_FILE] [+lh LOCAL_XXH_HOME] [-h] [-V]\n"
 
@@ -338,8 +339,11 @@ class Xxh:
         argp.format_help = lambda: help
         opt = argp.parse_args()
 
-        self.verbose = opt.verbose
-        self.vverbose = opt.vverbose
+        self.quiet = opt.quiet
+        if not self.quiet:
+            self.verbose = opt.verbose
+            self.vverbose = opt.vverbose
+
         self.url = url = self.parse_destination(opt.destination)
 
         xxh_config_file = pf"{opt.xxh_config}"
@@ -516,7 +520,7 @@ class Xxh:
         if opt.install:
             self.eprint("\033[0;33m", end='')
 
-            self.eprint(f"Install xxh to {host}:{host_xxh_home}" )
+            self.eprint(f"Install {self.shell} to {host}:{host_xxh_home}" )
 
             shells_dir = self.local_xxh_home / 'xxh/shells'
             shells = sorted(shells_dir.glob('*'))
@@ -562,18 +566,19 @@ class Xxh:
             host_xxh_shell_build_dir = host_xxh_shell_dir  / 'build'
             echo @(f"mkdir -p {host_xxh_package_dir} {host_xxh_shell_build_dir} {host_xxh_dirs_str}") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
 
+            arg_q = [] if self.vverbose else ['-q']
             if which('rsync') and host_info['rsync']:
                 self.eprint('Upload using rsync')
-                rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --cvs-exclude @(self.package_dir_path)/settings.py @(host):@(host_xxh_package_dir)/ 1>&2
-                rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --cvs-exclude @(shell_build_dir)/ @(host):@(host_xxh_shell_build_dir)/ 1>&2
+                rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") @(arg_q) -az --info=progress2 --cvs-exclude @(self.package_dir_path)/settings.py @(host):@(host_xxh_package_dir)/ 1>&2
+                rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") @(arg_q) -az --info=progress2 --cvs-exclude @(shell_build_dir)/ @(host):@(host_xxh_shell_build_dir)/ 1>&2
                 for local_plugin_dir in local_plugins_dir.glob(f'*-{short_shell_name}-*'):
                     local_plugin_build_dir = local_plugin_dir/'build'
                     local_plugin_name = local_plugin_dir.name
-                    rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") -az --info=progress2 --cvs-exclude @(local_plugin_build_dir)/* @(host):@(host_xxh_plugins_dir)/@(local_plugin_name)/build/ 1>&2
+                    rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") @(arg_q) -az --info=progress2 --cvs-exclude @(local_plugin_build_dir)/* @(host):@(host_xxh_plugins_dir)/@(local_plugin_name)/build/ 1>&2
             elif which('scp') and host_info['scp']:
                 self.eprint("Upload using scp. Note: install rsync on local and remote host to increase speed.")
-                @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(self.package_dir_path)/settings.py @(f"{host}:{host_xxh_package_dir}/") 1>&2
-                @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(shell_build_dir) @(f"{host}:{host_xxh_shell_dir}/") 1>&2
+                @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @(arg_q) @(self.package_dir_path)/settings.py @(f"{host}:{host_xxh_package_dir}/") 1>&2
+                @(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @(arg_q) @(shell_build_dir) @(f"{host}:{host_xxh_shell_dir}/") 1>&2
                 for local_plugin_dir in local_plugins_dir.glob(f'*-{short_shell_name}-*'):
                     local_plugin_build_dir = local_plugin_dir/'build'
                     local_plugin_name = local_plugin_dir.name
@@ -581,7 +586,7 @@ class Xxh:
             else:
                 self.eprint('Please install rsync or scp!')
 
-            self.eprint(f'First run xonsh on {host}\033[0m')
+            self.eprint(f'First run {self.shell} on {host}\033[0m')
 
         host_execute_file = host_execute_command = []
         if opt.host_execute_file:
