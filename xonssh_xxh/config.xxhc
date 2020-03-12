@@ -7,7 +7,7 @@
 # sections and the options with same name will be overwritten by the last matched section.
 #
 # Options without argument should be added in appropriate yaml format but empty.
-# Example of `+v` or `+if` mode below.
+# Example for `+if` mode below.
 #
 #--------------------------------------------------------------------------------------------------
 # Example ~/.xxh/.xxhc
