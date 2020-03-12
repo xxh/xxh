@@ -21,7 +21,7 @@ usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]             ____  
 usage: xxh [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY]            _____  /    / __   \  \ /   _/
            [-o SSH_OPTION -o ...] [+P PASSWORD] [+PP]                     ___ (    / /  /   \  \   /
            [user@]host[:port]                                                  \   \___/    /  /  /
-           [+i] [+if] [+iff] [+hhr] [+v] [+vv] [+s SHELL]                   ____\          /__/  /
+           [+i] [+if] [+s SHELL] [+iff] [+hhr] [+v] [+vv] [+q]              ____\          /__/  /
            [+hh HOST_XXH_HOME] [+hf HOST_EXEC_FILE] [+hc HOST_EXEC_CMD]    /     \________/     /
            [+xc XXH_CONFIG] [+lh LOCAL_XXH_HOME]                          /____________________/
 ```
