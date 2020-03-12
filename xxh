@@ -350,7 +350,7 @@ class Xxh:
             + "usage: xxh [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY]\n" \
             + "           [-o SSH_OPTION -o ...] [+P PASSWORD] [+PP]\n" \
             + "           [user@]host[:port]\n" \
-            + "           [+i] [+if] [+iff] [+hhr] [+s SHELL] [+v] [+vv] [+q]\n" \
+            + "           [+i] [+if] [+iff] [+hhr] [+s SHELL] [+e NAME=VAL +e ...] [+v] [+vv] [+q]\n" \
             + "           [+hh HOST_XXH_HOME] [+hf HOST_EXEC_FILE] [+hc HOST_EXEC_CMD]\n" \
             + "           [+xc CONFIG_FILE] [+lh LOCAL_XXH_HOME] [-h] [-V]\n"
 
