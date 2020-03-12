@@ -42,7 +42,7 @@ The arguments will be automatically added when you run `xxh myhost` or `xxh comp
 ## Supported shells
 **[Xonsh](https://github.com/xxh/xxh-shell-xonsh-appimage)** — stable version with [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner), [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar), [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) plugins. 
 
-**[Zsh](https://github.com/xxh/xxh-shell-zsh)** — beta version with [omz](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh) and [p10k](https://github.com/xxh/xxh-plugin-zsh-powerlevel10k) plugins. Help wanted for testing and improving entrypoint.
+**[Zsh](https://github.com/xxh/xxh-shell-zsh)** — beta version with [Oh My Zsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh) and [powerlevel10k](https://github.com/xxh/xxh-plugin-zsh-powerlevel10k) plugins. Help wanted for testing and improving entrypoint.
 
 **[Fish](https://github.com/xxh/xxh-shell-fish-appimage)** — alpha version. Help wanted for testing and improving entrypoint.
 
