@@ -647,6 +647,9 @@ class Xxh:
             host_entrypoint_verbose = ['-v', '1']
 
         if opt.env_mode:
+            # TODO: This PoC code should be in `xxh.zsh`. Every shell should has own `xxh.shell`
+            #       which should be "sourced". While "sourcing" the script should prepare
+            #       and pass `-e` arguments to xxh.
             xxh_env = self.get_xxh_env()
             if xxh_env:
                 host_xxh_plugins_dir = host_xxh_home / 'xxh/plugins'
