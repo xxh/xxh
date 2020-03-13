@@ -65,19 +65,24 @@ The arguments will be automatically added when you run `xxh myhost` or `xxh comp
 
 ## Use cases
 ### Python everywhere
-When you run `xxh myhost +s xonsh` you'll get python, pip and python-powered shell on the host without any system installations on the host. If you add plugins: [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) saves your time, [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner) allows to manipulate lines and [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar) looks nice. 
+When you run `xxh myhost +s xonsh` you'll get python, pip and python-powered shell on the host without any system installations on the host. Add plugins: [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) saves time, [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner) manipulates lines and [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar) looks nice. 
 
 ### Oh My Zsh seamless SSH
-Imagine you're in your lovely Oh My Zsh theme and you need to ssh to the server. If you do it using ssh say hello to bash in most cases.
-But you can bring your zsh and Oh My Zsh to the host. Install zsh, plugins and enjoy:  
+Bring zsh and Oh My Zsh with your current session settings to the host:  
 ```
-xxhp i xxh-shell-zsh && xxhp i xxh-plugin-zsh-ohmyzsh
-source xxh.zsh myhost
+zsh$ xxhp i xxh-shell-zsh && xxhp i xxh-plugin-zsh-ohmyzsh
+
+zsh$ echo $ZSH_THEME
+agnoster
+
+zsh$ source xxh.zsh myhost
+
+myhost> echo $ZSH_THEME
+agnoster
 ```
-This `source` command get your current zsh session theme and plugins and pass it to the xxh session and you're on host, in zsh, with oh-my-zsh and in your theme. If it's no then you're using non standard theme and you can just fork the [xxh-plugin-zsh-ohmyzsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh) and hack it.
+This `source` command get your current zsh session theme and plugins and pass it to the xxh session. If you need more complex settings just fork the [xxh-plugin-zsh-ohmyzsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh) and hack it.
 
 ### Read host as a table 
-With osquery you could... do just see this:
 ```
 $ xxh myhost +s osquery
 osquery> SELECT * FROM users WHERE username='news';
