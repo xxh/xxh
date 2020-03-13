@@ -290,7 +290,7 @@ class Xxh:
 
         return r
 
-    def prepare_env_args(self, envs):
+    def prepare_env_args(self, envs, to_base64=True):
         env_args=[]
         if envs:
             for e in envs:
@@ -304,7 +304,10 @@ class Xxh:
                 if (val.startswith("'") and val.endswith("'")) or (val.startswith('"') and val.endswith('"')):
                     val=val[1:-1]
 
-                env_args += ['-e', "%s=%s" % ( el[0], self.b64e(val) ) ]
+                if to_base64:
+                    val = self.b64e(val)
+
+                env_args += ['-e', "%s=%s" % ( el[0], val ) ]
         return env_args
 
     def b64e(self, s):
@@ -358,6 +361,7 @@ class Xxh:
         argp.add_argument('+iff','++install-force-full', default=False, action='store_true', help="Removing the host xxh home and install xxh again. All installed packages on the host (e.g. pip packages) will be lost.")
         argp.add_argument('+xc','++xxh-config', default=self.config_file, help=f"Xxh config file in yaml. Default: " + self.config_file)
         argp.add_argument('+e','++env', dest='env', metavar='NAME=VAL ...', action='append', help="Setting environment variables")
+        argp.add_argument('+e64','++env-b64', dest='env', metavar='NAME=BASE64 ...', action='append', help="Setting environment variables base64 encoded")
         argp.add_argument('+E','++env-mode', action='store_true', help="Environment mode in case `source xxh.sh`")
         argp.add_argument('+lh','++local-xxh-home', default=self.local_xxh_home, help=f"Local xxh home path. Default: {self.local_xxh_home}")
         argp.add_argument('+hh','++host-xxh-home', default=self.host_xxh_home, help=f"Host xxh home path. Default: {self.host_xxh_home}")
@@ -471,6 +475,7 @@ class Xxh:
             self.password = password
 
         env_args = self.prepare_env_args(opt.env)
+        env_args += self.prepare_env_args(opt.env_b64, to_base64=False)
 
         opt.install = True if opt.install_force or opt.install_force_full else opt.install
 
