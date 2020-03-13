@@ -53,7 +53,7 @@ class XxhPackage(object):
 
         self.eprint(f"Git clone {package_git_url}")
         package_dir = self.local_xxh_home_dir/'xxh'/subdir/opt.package
-        r = ![git clone -q @(package_git_url) @(package_dir) 1>&2]
+        r = ![git clone --depth 1 -q @(package_git_url) @(package_dir) 1>&2]
         if r.returncode != 0:
             self.eeprint(f'Git clone error')
 

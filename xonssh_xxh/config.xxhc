@@ -13,12 +13,11 @@
 # Example ~/.xxh/.xxhc
 #--------------------------------------------------------------------------------------------------
 #hosts:
-#  myhost:              # settings for myhost
-#    -p: 2222             # set special port
-#    +s: xxh-shell-zsh    # set zsh shell
-#                         # set Oh My Zsh plugin environment:
-#    +e: XXH_ZSH_PLUGIN_OHMYZSH_ZSH_THEME="clean"
-#    +e: XXH_ZSH_PLUGIN_OHMYZSH_PLUGINS="(git docker)"
+#  myhost:                     # settings for myhost
+#    -p: 2222                    # set special port
+#    +s: xxh-shell-zsh           # set zsh shell
+#    +e: ZSH_THEME="clean"       # set xxh-plugin-zsh-ohmyzsh theme
+#    +e: plugins="(git ubuntu)"  # set xxh-plugin-zsh-ohmyzsh plugins
 #
 #  "company-.*":        # for all hosts by regex pattern
 #    +if:                 # don't asking about install (++install-force)

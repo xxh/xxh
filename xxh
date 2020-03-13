@@ -70,26 +70,22 @@ class Xxh:
                 return 'fish'
         return 'xonsh'
 
-    def d2F0Y2ggLW4uMiB4eGggLWg(self):
-        try:
-            terminal = os.get_terminal_size()
-            terminal_cols = terminal.columns
-        except:
-            terminal_cols=70
-        if terminal_cols < 70:
-            return f"\n\nContribution: {self.url_xxh_github}\n\nPlugins: {self.url_xxh_plugins_search}"
-        l,r,s,t = (['@','-','_'][randint(0,2)], ['@','-','_'][randint(0,2)], ['_',' '][randint(0,1)], ['_',''][randint(0,1)])
-        return f"\n" \
-            +f"     {s}___  __________     {l}    {r}\n" \
-            +f"  {s}_____  /          \\     \\__/\n" \
-            +f"   {s}___  /    ______  \\   /   \\           contribution\n" \
-            +f" {s}____  /    / __   \\  \\ /   _/   {self.url_xxh_github}\n" \
-            +f"   {s}__ (    / /  /   \\  \\   /\n" \
-            +f"        \\   \\___/    /  /  /                plugins\n" \
-            +f"{' ' if not t else ''}     _{t}__\\          /__/  /   {self.url_xxh_plugins_search}\n" \
-            +f"{' ' if not t else ''}    / {'' if not t else ' '}   \\________/     /\n" \
-            +f"{' ' if not t else ''}   /_{t}__________________/\n" \
-            +f""
+    def stripunquote(self, s):
+        s = s.strip()
+        if s.startswith('"') and s.endswith('"'):
+            s = s[1:-1]
+        return s
+
+    def get_xxh_env(self):
+        xxh_env = {}
+        if 'XXH_SH_ENV' in ${...}:
+            xxh_env = $XXH_SH_ENV
+            for kw in ['declare', 'typeset', 'export']:
+                xxh_env = xxh_env.replace('\n' + kw + ' ', '\n\n' + kw + ' ')
+            xxh_env += '\n\n'
+            xxh_env = re.findall('^.+ ([a-zA-Z_0-9]+?)=((?:.+\n)+)', xxh_env, re.MULTILINE)
+            xxh_env = {v[0]: self.stripunquote(v[1]) for v in xxh_env}
+        return xxh_env
 
     def pssh(self, cmd, accept_host=None, host_password=None, key_password=None):
         if self.password:
@@ -308,9 +304,11 @@ class Xxh:
                 if (val.startswith("'") and val.endswith("'")) or (val.startswith('"') and val.endswith('"')):
                     val=val[1:-1]
 
-                env_args+=['-e', "%s=%s" % ( el[0], b64encode(val.encode()).decode() ) ]
+                env_args += ['-e', "%s=%s" % ( el[0], self.b64e(val) ) ]
         return env_args
 
+    def b64e(self, s):
+        return b64encode(s.encode()).decode()
 
     def create_xxh_env(self):
         home = fp'{self.local_xxh_home}'
@@ -321,6 +319,27 @@ class Xxh:
         sample_config_file = self.package_dir_path / 'config.xxhc'
         if not config_file.exists() and sample_config_file.exists():
             cp @(sample_config_file) @(config_file)
+
+    def d2F0Y2ggLW4uMiB4eGggLWg(self):
+        try:
+            terminal = os.get_terminal_size()
+            terminal_cols = terminal.columns
+        except:
+            terminal_cols=70
+        if terminal_cols < 70:
+            return f"\n\nContribution: {self.url_xxh_github}\n\nPlugins: {self.url_xxh_plugins_search}"
+        l,r,s,t = (['@','-','_'][randint(0,2)], ['@','-','_'][randint(0,2)], ['_',' '][randint(0,1)], ['_',''][randint(0,1)])
+        return f"\n" \
+            +f"     {s}___  __________     {l}    {r}\n" \
+            +f"  {s}_____  /          \\     \\__/\n" \
+            +f"   {s}___  /    ______  \\   /   \\           contribution\n" \
+            +f" {s}____  /    / __   \\  \\ /   _/   {self.url_xxh_github}\n" \
+            +f"   {s}__ (    / /  /   \\  \\   /\n" \
+            +f"        \\   \\___/    /  /  /                plugins\n" \
+            +f"{' ' if not t else ''}     _{t}__\\          /__/  /   {self.url_xxh_plugins_search}\n" \
+            +f"{' ' if not t else ''}    / {'' if not t else ' '}   \\________/     /\n" \
+            +f"{' ' if not t else ''}   /_{t}__________________/\n" \
+            +f""
 
     def main(self):
         self.create_xxh_env()
@@ -339,6 +358,7 @@ class Xxh:
         argp.add_argument('+iff','++install-force-full', default=False, action='store_true', help="Removing the host xxh home and install xxh again. All installed packages on the host (e.g. pip packages) will be lost.")
         argp.add_argument('+xc','++xxh-config', default=self.config_file, help=f"Xxh config file in yaml. Default: " + self.config_file)
         argp.add_argument('+e','++env', dest='env', metavar='NAME=VAL ...', action='append', help="Setting environment variables")
+        argp.add_argument('+E','++env-mode', action='store_true', help="Environment mode in case `source xxh.sh`")
         argp.add_argument('+lh','++local-xxh-home', default=self.local_xxh_home, help=f"Local xxh home path. Default: {self.local_xxh_home}")
         argp.add_argument('+hh','++host-xxh-home', default=self.host_xxh_home, help=f"Host xxh home path. Default: {self.host_xxh_home}")
         argp.add_argument('+hhr','++host-xxh-home-remove', action='store_true', help=f"Remove xxh home on host after disconnect")
@@ -625,6 +645,21 @@ class Xxh:
             host_entrypoint_verbose = ['-v', '2']
         elif self.verbose:
             host_entrypoint_verbose = ['-v', '1']
+
+        if opt.env_mode:
+            xxh_env = self.get_xxh_env()
+            if xxh_env:
+                host_xxh_plugins_dir = host_xxh_home / 'xxh/plugins'
+                for local_plugin_dir in local_plugins_dir.glob(f'*-{short_shell_name}-*'):
+                    local_plugin_env = local_plugin_dir / 'env'
+                    if local_plugin_env.exists():
+                        with open(local_plugin_env) as f:
+                            plugin_envs = f.read().split('\n')
+                        for e in plugin_envs:
+                            if e in xxh_env:
+                                if self.vverbose:
+                                    self.eprint(f'Plugin {local_plugin_dir.name} environment: {e}={xxh_env[e]}')
+                                env_args += ['-e', "%s=%s" % ( e, self.b64e(xxh_env[e]) ) ]
 
         @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -t bash @(str(host_xxh_home/'xxh/shells'/self.shell/'build/entrypoint.sh')) @(host_execute_file) @(host_execute_command) @(host_entrypoint_verbose) @(env_args)
 

@@ -29,12 +29,11 @@ usage: xxh [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY]            _____  /
 There is `~/.xxh/.xxhc` [yaml](https://en.wikipedia.org/wiki/YAML) config to save arguments and reuse it:
 ```
 hosts:
-  myhost:              # settings for myhost
-    -p: 2222             # set special port
-    +s: xxh-shell-zsh    # set zsh shell
-                         # set Oh My Zsh plugin environment:
-    +e: XXH_ZSH_PLUGIN_OHMYZSH_ZSH_THEME="clean"
-    +e: XXH_ZSH_PLUGIN_OHMYZSH_PLUGINS="(git docker)"
+  myhost:                     # settings for myhost
+    -p: 2222                    # set special port
+    +s: xxh-shell-zsh           # set zsh shell                         
+    +e: ZSH_THEME="clean"       # set xxh-plugin-zsh-ohmyzsh theme
+    +e: plugins="(git ubuntu)"  # set xxh-plugin-zsh-ohmyzsh plugins
 
   "company-.*":        # for all hosts by regex pattern
     +if:                 # don't asking about install (++install-force)
@@ -63,6 +62,35 @@ The arguments will be automatically added when you run `xxh myhost` or `xxh comp
 **How xxh works?** When you run `xxh myhost` command xxh download portable shell and store locally to future use. Then if it needed xxh upload the portable shell, init scripts and plugins to the host. Finally xxh make ssh connection to the host and run portable shell without any system installs and affection on the target host.
 
 **What about speed?** The first connection takes time for downloading and uploading portable shell. It depends on portable shell size and channel speed. But when xxh is installed on the host and you do just `xxh myhost` then it works as ordinary ssh connection speed.
+
+## Use cases
+### Python everywhere
+When you run `xxh myhost +s xonsh` you'll get python, pip and python-powered shell on the host without any system installations on the host. If you add plugins: [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) saves your time, [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner) allows to manipulate lines and [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar) looks nice. 
+
+### Oh My Zsh seamless SSH
+Imagine you're in your lovely Oh My Zsh theme and you need to ssh to the server. If you do it using ssh say hello to bash in most cases.
+But you can bring your zsh and Oh My Zsh to the host. Install zsh, plugins and enjoy:  
+```
+xxhp i xxh-shell-zsh && xxhp i xxh-plugin-zsh-ohmyzsh
+source xxh.zsh myhost
+```
+This `source` command get your current zsh session theme and plugins and pass it to the xxh session and you're on host, in zsh, with oh-my-zsh and in your theme. If it's no then you're using non standard theme and you can just fork the [xxh-plugin-zsh-ohmyzsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh) and hack it.
+
+### Read host as a table 
+With osquery you could... do just see this:
+```
+$ xxh myhost +s osquery
+osquery> SELECT * FROM users WHERE username='news';
++-----+-----+----------+-------------+-----------------+-------------------+
+| uid | gid | username | description | directory       | shell             |
++-----+-----+----------+-------------+-----------------+-------------------+
+| 9   | 9   | news     | news        | /var/spool/news | /usr/sbin/nologin |
++-----+-----+----------+-------------+-----------------+-------------------+
+```   
+
+### All in one portable home
+The xxh is very agile. You can create your own `xxh-shell` (shell word means it has entrypoint) which has any portable tools
+that you could help you on the host. [Bash-zero](https://github.com/xxh/xxh-shell-bash-zero) xxh-shell is one of this platforms that could be forked and stuffed.
 
 ## Development
 In the [xxh-dev](https://github.com/xxh/xxh-dev) repo there is full [docker](https://www.docker.com/)ised environment for development, testing and contribution. The process of testing and development is orchestrated by `xde` tool and as easy as possible.
