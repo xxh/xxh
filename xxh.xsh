@@ -27,5 +27,5 @@ for local_plugin_dir in local_plugins_dir.glob(f'*-xonsh-*'):
                     print(f'Plugin {local_plugin_dir.name} environment: {e}='+${e}, file=sys.stderr)
                 env_args += ['+e64', "%s=%s" % ( e, b64e(${e}) ) ]
 
-xxh @(env_args) +s xonsh @(sys.argv[1:])
+xxh @(sys.argv[1:]) +s xonsh @(env_args)
 
