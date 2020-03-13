@@ -22,8 +22,8 @@ for local_plugin_dir in local_plugins_dir.glob(f'*-xonsh-*'):
             plugin_envs = f.read().split('\n')
         for e in plugin_envs:
             if e in ${...}:
-                if ['+v'] in $ARGS:
-                    print(f'Plugin {local_plugin_dir.name} environment: {e}='+${e}, file=sys.stderr)
+                if '+v' in $ARGS or '+vv' in $ARGS:
+                    print(f'Plugin {local_plugin_dir.name} environment: {e}='+str(${e}), file=sys.stderr)
                 env_args += ['+eb', "%s=%s" % ( e, b64e(${e}) ) ]
 
 ./xxh @($ARGS) +s xonsh @(env_args)
