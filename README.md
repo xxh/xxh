@@ -32,8 +32,8 @@ hosts:
   myhost:                     # settings for myhost
     -p: 2222                    # set special port
     +s: xxh-shell-zsh           # set zsh shell                         
-    +e: ZSH_THEME="clean"       # set xxh-plugin-zsh-ohmyzsh theme
-    +e: plugins="(git ubuntu)"  # set xxh-plugin-zsh-ohmyzsh plugins
+    +e: ZSH_THEME="clean"       # set ohmyzsh theme
+    +e: plugins="(git ubuntu)"  # set ohmyzsh plugins
 
   "company-.*":        # for all hosts by regex pattern
     +if:                 # don't asking about install (++install-force)
