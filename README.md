@@ -64,7 +64,7 @@ The arguments will be automatically added when you run `xxh myhost` or `xxh comp
 **What about speed?** The first connection takes time for downloading and uploading portable shell. It depends on portable shell size and channel speed. But when xxh is installed on the host and you do just `xxh myhost` then it works as ordinary ssh connection speed.
 
 ## Use cases
-### Python everywhere
+### Python everywhere with xonsh
 When you run `xxh myhost +s xonsh` you'll get python, pip and python-powered shell on the host without any system installations on the host. Add plugins: [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) saves time, [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner) manipulates lines and [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar) looks nice. 
 
 ### Oh My Zsh seamless SSH
@@ -82,7 +82,7 @@ agnoster
 ```
 This `source` command get your current zsh session theme and plugins and pass it to the xxh session. If you need more complex settings just fork the [xxh-plugin-zsh-ohmyzsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh) and hack it.
 
-### Read host as a table 
+### Read host as a table with osquery
 ```
 $ xxh myhost +s osquery
 osquery> SELECT * FROM users WHERE username='news';
