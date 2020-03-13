@@ -612,7 +612,7 @@ class Xxh:
             host_xxh_shell_build_dir = host_xxh_shell_dir  / 'build'
             echo @(f"mkdir -p {host_xxh_package_dir} {host_xxh_shell_build_dir} {host_xxh_dirs_str}") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
 
-            arg_q = [] if self.vverbose else ['-q']
+            arg_q = ['-q'] if self.quiet else []
             if which('rsync') and host_info['rsync']:
                 self.eprint('Upload using rsync')
                 rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") @(arg_q) -az --info=progress2 --cvs-exclude @(self.package_dir_path)/settings.py @(host):@(host_xxh_package_dir)/ 1>&2
