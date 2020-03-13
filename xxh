@@ -476,8 +476,9 @@ class Xxh:
         env_args = self.prepare_env_args(opt.env)
         env_args += self.prepare_env_args(opt.envb, to_base64=False)
 
-        for heb in opt.host_execute_bash:
-            env_args += ['-b', heb]
+        if opt.host_execute_bash:
+            for heb in opt.host_execute_bash:
+                env_args += ['-b', heb]
 
         opt.install = True if opt.install_force or opt.install_force_full else opt.install
 
