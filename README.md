@@ -33,7 +33,7 @@ hosts:
     -p: 2222                    # set special port
     +s: xxh-shell-zsh           # set zsh shell                         
     +e: ZSH_THEME="clean"       # set ohmyzsh theme
-    +e: plugins="(git ubuntu)"  # set ohmyzsh plugins
+    +e: plugins="(git docker)"  # set ohmyzsh plugins
 
   "company-.*":        # for all hosts by regex pattern
     +if:                 # don't asking about install (++install-force)
