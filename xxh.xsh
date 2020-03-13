@@ -27,5 +27,5 @@ for local_plugin_dir in sorted(local_plugins_dir.glob(f'*-xonsh-*'))+[local_shel
                     print(f'Plugin {local_plugin_dir.name} environment: {e}='+str(${e}), file=sys.stderr)
                 env_args += ['+eb', "%s=%s" % ( e, b64e(${e}) ) ]
 
-./xxh @($ARGS) +s xonsh @(env_args)
+xxh @($ARGS) +s xonsh @(env_args)
 

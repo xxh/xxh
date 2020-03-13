@@ -30,4 +30,4 @@ for pluginenv_file in $local_xxh_home/xxh/plugins/*-zsh-*/env; do
   fi
 done
 
-./xxh "$@" +s xxh-shell-zsh ${(z)eargs}
+xxh "$@" +s xxh-shell-zsh ${(z)eargs}
