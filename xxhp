@@ -9,9 +9,10 @@ class XxhPackage(object):
 
         parser = argparse.ArgumentParser(description='xxhp is xxh package manager.',
             usage='xxhp <command>\n\n'
-                    + '   install   i   Install xxh plugin or shell from https://github.com/xxh\n'
-                    + '   list      l   List of installed packages\n'
-                    + '   remove    r   Remove xxh plugin or shell\n\n'
+                    + '   install    i   Install xxh package from https://github.com/xxh\n'
+                    + '   list       l   List of installed packages\n'
+                    + '   remove     r   Remove xxh package\n\n'
+                    + '   reinstall  ri  Reinstall xxh package\n\n'
                     + 'Try `./xxhp <command> --help` to get more info.\n')
         parser.add_argument('command', help='Command to run')
 
@@ -77,6 +78,13 @@ class XxhPackage(object):
             self.eprint(f"Removed {package_dir}")
         else:
             self.eeprint(f"Package not found: {package_dir}")
+
+    def ri(self):
+        return self.reinstall()
+
+    def reinstall(self):
+        self.remove()
+        return self.install()
 
     def l(self):
         return self.list()
