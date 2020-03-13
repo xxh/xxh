@@ -6,7 +6,6 @@
 # Usage in xonsh: source xxh.xsh [ordinary xxh arguments]
 #
 
-import sys
 from base64 import b64encode
 
 def b64e(s):
@@ -23,9 +22,10 @@ for local_plugin_dir in local_plugins_dir.glob(f'*-xonsh-*'):
             plugin_envs = f.read().split('\n')
         for e in plugin_envs:
             if e in ${...}:
-                if ['+v'] in sys.argv:
+                if ['+v'] in $ARGS:
                     print(f'Plugin {local_plugin_dir.name} environment: {e}='+${e}, file=sys.stderr)
-                env_args += ['+e64', "%s=%s" % ( e, b64e(${e}) ) ]
+                env_args += ['+eb', "%s=%s" % ( e, b64e(${e}) ) ]
 
-xxh @(sys.argv[1:]) +s xonsh @(env_args)
+echo ./xxh @($ARGS) +s xonsh @(env_args)
+./xxh @($ARGS) +s xonsh @(env_args)
 
