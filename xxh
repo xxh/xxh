@@ -346,7 +346,6 @@ class Xxh:
 
     def main(self):
         self.create_xxh_env()
-
         argp = argparse.ArgumentParser(description=f"Your favorite shell wherever you go through the ssh.\n{self.d2F0Y2ggLW4uMiB4eGggLWg()}", formatter_class=RawTextHelpFormatter, prefix_chars='-+')
         argp.add_argument('--version', '-V', action='version', version=f"xonssh-xxh/{self.local_xxh_version}")
         argp.add_argument('-p', dest='ssh_port', help="Port to connect to on the remote host.")
@@ -360,14 +359,14 @@ class Xxh:
         argp.add_argument('+if','++install-force', default=False, action='store_true', help="Removing the host xxh package and install xxh again.")
         argp.add_argument('+iff','++install-force-full', default=False, action='store_true', help="Removing the host xxh home and install xxh again. All installed packages on the host (e.g. pip packages) will be lost.")
         argp.add_argument('+xc','++xxh-config', default=self.config_file, help=f"Xxh config file in yaml. Default: " + self.config_file)
-        argp.add_argument('+e','++env', dest='env', metavar='NAME=VAL ...', action='append', help="Setting environment variables")
-        argp.add_argument('+eb','++envb', dest='envb', metavar='NAME=BASE64 ...', action='append', help="Setting environment variables base64 encoded")
-        argp.add_argument('+E','++env-mode', action='store_true', help="Environment mode in case `source xxh.sh`")
+        argp.add_argument('+e','++env', dest='env', metavar='NAME=VAL ...', action='append', help="Setting environment variables if supported by shell entrypoint.")
+        argp.add_argument('+eb','++envb', dest='envb', metavar='NAME=BASE64 ...', action='append', help="Setting environment variables base64 encoded if supported by shell entrypoint.")
         argp.add_argument('+lh','++local-xxh-home', default=self.local_xxh_home, help=f"Local xxh home path. Default: {self.local_xxh_home}")
         argp.add_argument('+hh','++host-xxh-home', default=self.host_xxh_home, help=f"Host xxh home path. Default: {self.host_xxh_home}")
-        argp.add_argument('+hhr','++host-xxh-home-remove', action='store_true', help=f"Remove xxh home on host after disconnect")
-        argp.add_argument('+hf','++host-execute-file', help=f"Execute script file placed on host and exit.")
-        argp.add_argument('+hc','++host-execute-command', help=f"Execute command on host and exit.")
+        argp.add_argument('+hhr','++host-xxh-home-remove', action='store_true', help=f"Remove xxh home on host after disconnect.")
+        argp.add_argument('+hf','++host-execute-file', help=f"Execute script file placed on host and exit. If supported by shell entrypoint.")
+        argp.add_argument('+hc','++host-execute-command', help=f"Execute command on host and exit. If supported by shell entrypoint.")
+        argp.add_argument('+heb','++host-execute-bash', dest='host_execute_bash', metavar='BASE64', action='append', help="Bash command will be executed before shell entrypoint (base64 encoded) if supported by shell entrypoint.")
         argp.add_argument('+s','++shell', default=self.shell, help="Xxh shell: " + self.shells()['available_help'])
         argp.add_argument('+ss','++shell-source', default=self.shell_source, help=f"(future) Custom source of xxh-shell: git url or local path")
         argp.add_argument('+v','++verbose', default=False, action='store_true', help="Verbose mode.")
@@ -476,6 +475,9 @@ class Xxh:
 
         env_args = self.prepare_env_args(opt.env)
         env_args += self.prepare_env_args(opt.envb, to_base64=False)
+
+        for heb in opt.host_execute_bash:
+            env_args += ['-b', heb]
 
         opt.install = True if opt.install_force or opt.install_force_full else opt.install
 
@@ -650,24 +652,6 @@ class Xxh:
             host_entrypoint_verbose = ['-v', '2']
         elif self.verbose:
             host_entrypoint_verbose = ['-v', '1']
-
-        if opt.env_mode:
-            # TODO: This PoC code should be in `xxh.zsh`. Every shell should has own `xxh.shell`
-            #       which should be "sourced". While "sourcing" the script should prepare
-            #       and pass `-e` arguments to xxh. See how it works in `xxh.xsh`.
-            xxh_env = self.get_xxh_env()
-            if xxh_env:
-                host_xxh_plugins_dir = host_xxh_home / 'xxh/plugins'
-                for local_plugin_dir in local_plugins_dir.glob(f'*-{short_shell_name}-*'):
-                    local_plugin_env = local_plugin_dir / 'env'
-                    if local_plugin_env.exists():
-                        with open(local_plugin_env) as f:
-                            plugin_envs = f.read().split('\n')
-                        for e in plugin_envs:
-                            if e in xxh_env:
-                                if self.vverbose:
-                                    self.eprint(f'Plugin {local_plugin_dir.name} environment: {e}={xxh_env[e]}')
-                                env_args += ['-e', "%s=%s" % ( e, self.b64e(xxh_env[e]) ) ]
 
         @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -t bash @(str(host_xxh_home/'xxh/shells'/self.shell/'build/entrypoint.sh')) @(host_execute_file) @(host_execute_command) @(host_entrypoint_verbose) @(env_args)
 
