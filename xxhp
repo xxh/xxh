@@ -39,45 +39,47 @@ class XxhPackage(object):
 
     def install(self):
         parser = argparse.ArgumentParser(description='')
-        parser.add_argument('package', help=f"xxh-package")
+        parser.add_argument('packages', nargs='+', help=f"xxh-package")
         parser.add_argument('-v', '--verbose', action='store_true', help=f"Verbose mode")
         parser.usage = parser.format_usage().replace('usage: xxhp ', 'xxhp install ')
         opt = parser.parse_args(sys.argv[2:])
 
-        if not re.match('^[a-zA-Z-]+$', opt.package):
-            self.eeprint(f'Invalid package name: {opt.package}')
+        for package in opt.packages:
+            print(f'Install {package}')
+            if not re.match('^[a-zA-Z-]+$', package):
+                self.eeprint(f'Invalid package name: {package}')
 
-        subdir = self.package_subdir(opt.package) or self.eeprint(f"Unknown package: {opt.package}")
+            subdir = self.package_subdir(package) or self.eeprint(f"Unknown package: {package}")
 
-        package_git_url = f'https://github.com/xxh/{opt.package}'
+            package_git_url = f'https://github.com/xxh/{package}'
 
-        self.eprint(f"Git clone {package_git_url}")
-        package_dir = self.local_xxh_home_dir/'xxh'/subdir/opt.package
-        r = ![git clone --depth 1 -q @(package_git_url) @(package_dir) 1>&2]
-        if r.returncode != 0:
-            self.eeprint(f'Git clone error')
+            self.eprint(f"Git clone {package_git_url}")
+            package_dir = self.local_xxh_home_dir/'xxh'/subdir/package
+            r = ![git clone --depth 1 -q @(package_git_url) @(package_dir) 1>&2]
+            if r.returncode != 0:
+                self.eeprint(f'If the package already exists try reinstall: xxhp ri <package>')
 
-        self.eprint(f"Build {opt.package}")
-        @(package_dir/'build.xsh') 1>&2
-        self.eprint(f"Installed {opt.package}")
+            self.eprint(f"Build {package}")
+            @(package_dir/'build.xsh') 1>&2
+            self.eprint(f"Installed {package_dir}")
 
     def r(self):
         return self.remove()
 
     def remove(self):
         parser = argparse.ArgumentParser(description='')
-        parser.add_argument('package', help=f"xxh-package")
+        parser.add_argument('packages', nargs='+', help=f"xxh-package")
         parser.add_argument('-v', '--verbose', action='store_true', help=f"Verbose mode")
         parser.usage = parser.format_usage().replace('usage: xxhp ', 'xxhp remove ')
         opt = parser.parse_args(sys.argv[2:])
 
-        subdir = self.package_subdir(opt.package) or self.eeprint(f"Unknown package: {opt.package}")
-        package_dir = self.local_xxh_home_dir / 'xxh' / subdir / opt.package
-        if package_dir.exists():
-            rm -rf @(package_dir)
-            self.eprint(f"Removed {package_dir}")
-        else:
-            self.eeprint(f"Package not found: {package_dir}")
+        for package in opt.packages:
+            print(f'Remove {package}')
+            subdir = self.package_subdir(package) or self.eeprint(f"Unknown package: {package}")
+            package_dir = self.local_xxh_home_dir / 'xxh' / subdir / package
+            if package_dir.exists():
+                rm -rf @(package_dir)
+                self.eprint(f"Removed {package_dir}")
 
     def ri(self):
         return self.reinstall()
@@ -91,13 +93,18 @@ class XxhPackage(object):
 
     def list(self):
         parser = argparse.ArgumentParser(description='')
+        parser.add_argument('packages', nargs='*', help=f"xxh-package")
         parser.add_argument('-v', '--verbose', action='store_true', help=f"Verbose mode")
         parser.usage = parser.format_usage().replace('usage: xxhp ', 'xxhp remove ')
         opt = parser.parse_args(sys.argv[2:])
 
         packages_dir = (self.local_xxh_home_dir / 'xxh').glob('**/xxh-*')
         for p in sorted(packages_dir):
-            print(p.name)
+            if opt.packages:
+                if p.name in opt.packages:
+                    print(p.name)
+            else:
+                print(p.name)
 
     def package_subdir(self, name):
         if 'xxh-shell' in name:

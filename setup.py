@@ -1,8 +1,8 @@
 import setuptools
-from xonssh_xxh.settings import global_settings
+from xxh_xxh.settings import global_settings
 
 setuptools.setup(
-    name="xonssh-xxh",
+    name="xxh-xxh",
     version=global_settings['XXH_VERSION'],
     description="xxh is for using portable xonsh shell wherever you go through the ssh",
     url="https://github.com/xxh/xxh",
@@ -19,7 +19,7 @@ setuptools.setup(
     ],
     platforms='Unix-like',
     scripts=['xxh','xxhp','xxh.zsh','xxh.xsh'],
-    package_data={'xonssh_xxh':['*.xsh', '*.sh']},
+    package_data={'xxh_xxh':['*.xsh', '*.sh']},
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",

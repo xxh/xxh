@@ -347,7 +347,7 @@ class Xxh:
     def main(self):
         self.create_xxh_env()
         argp = argparse.ArgumentParser(description=f"Your favorite shell wherever you go through the ssh.\n{self.d2F0Y2ggLW4uMiB4eGggLWg()}", formatter_class=RawTextHelpFormatter, prefix_chars='-+')
-        argp.add_argument('--version', '-V', action='version', version=f"xonssh-xxh/{self.local_xxh_version}")
+        argp.add_argument('--version', '-V', action='version', version=f"xxh/{self.local_xxh_version}")
         argp.add_argument('-p', dest='ssh_port', help="Port to connect to on the remote host.")
         argp.add_argument('-l', dest='ssh_login', help="Specifies the user to log in as on the remote machine.")
         argp.add_argument('-i', dest='ssh_private_key', help="File from which the identity (private key) for public key authentication is read.")
@@ -674,8 +674,8 @@ if __name__ == '__main__':
         this_file = __file__
     sys.path.append(str(pf"{this_file}".absolute().parent))
 
-    import xonssh_xxh
-    from xonssh_xxh.settings import global_settings
+    import xxh_xxh
+    from xxh_xxh.settings import global_settings
 
-    xxh = Xxh(package_dir_path=pf"{xonssh_xxh.__file__}".parent, version=global_settings['XXH_VERSION'])
+    xxh = Xxh(package_dir_path=pf"{xxh_xxh.__file__}".parent, version=global_settings['XXH_VERSION'])
     xxh.main()

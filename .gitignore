@@ -8,7 +8,7 @@ squashfs-root
 .pytest_cache/
 build/
 dist/
-xonssh_xxh.egg-info/
+xxh_xxh.egg-info/
 venv/
 
 # temporary files from vim and emacs
