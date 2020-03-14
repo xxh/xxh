@@ -69,7 +69,7 @@ When you run `xxh myhost +s xonsh` you'll get python, pip and python-powered she
 ### Oh My Zsh seamless SSH
 Bring zsh and Oh My Zsh with your current session settings to the host:  
 ```
-zsh$ xxhp ri xxh-shell-zsh && xxhp ri xxh-plugin-zsh-ohmyzsh
+zsh$ xxhp  ri  xxh-shell-zsh  xxh-plugin-zsh-ohmyzsh
 
 zsh$ echo $ZSH_THEME
 agnoster
