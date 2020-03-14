@@ -17,7 +17,6 @@ class Xxh:
         self.local_xxh_home = '~/.xxh'
         self.config_file = '~/.xxh/.xxhc'
         self.host_xxh_home = '~/.xxh'
-
         self.default_shells = {
             'xxh-shell-xonsh-appimage':{
                 'alias':'xonsh',
@@ -41,12 +40,11 @@ class Xxh:
             }
         }
         self.default_shells_aliases = {d['alias']:s for s,d in self.default_shells.items() if 'alias' in d}
-
         current_shell = self.get_current_shell()
         current_shell = self.default_shells_aliases[current_shell] if current_shell in self.default_shells_aliases else current_shell
         self.shell = current_shell
         self.shell_source = self.default_shells[current_shell]['xxh-shell-source']
-
+        self.build_file_exts = ['xsh', 'zsh', 'fish', 'sh']
         self.url = None
         self.ssh_arguments = []
         self.ssh_arg_v = []
@@ -62,8 +60,7 @@ class Xxh:
             print(*args, file=sys.stderr, **kwargs)
 
     def eeprint(self, *args, **kwargs):
-        if not self.quiet:
-            print(*args, file=sys.stderr, **kwargs)
+        self.eprint(*args, **kwargs)
         exit(1)
 
     def get_current_shell(self):
@@ -424,15 +421,12 @@ class Xxh:
 
         if opt.shell in self.default_shells_aliases:
             opt.shell = self.default_shells_aliases[opt.shell]
-
         if opt.shell in self.default_shells:
             self.shell = opt.shell
             self.shell_source = self.default_shells[opt.shell]['xxh-shell-source']
         else:
             self.shell = opt.shell
             self.shell_source = opt.shell_source
-
-        short_shell_name = self.shell.split('-')[2]
 
         username = getpass.getuser()
         host = url.hostname
@@ -525,7 +519,9 @@ class Xxh:
             self.eeprint(f"There are no rsync or scp on target host. Sad but files can't be uploaded.")
 
         if opt.install_force == False and opt.install_force_full == False:
+
             # Check version
+
             ask = False
             if host_xxh_version == 'version_not_found':
                 ask = f'Host xxh home is not empty but something went wrong while getting host xxh version.'
@@ -560,7 +556,7 @@ class Xxh:
                 else:
                     self.eeprint('Unknown answer')
 
-        if (host_xxh_version in ['dir_not_found','dir_empty'] or host_info['xxh_shell_exists'] == '0') and opt.install_force == False and opt.install_force_full == False:
+        if (host_xxh_version in ['dir_not_found', 'dir_empty'] or host_info['xxh_shell_exists'] == '0') and opt.install_force == False and opt.install_force_full == False:
             yn = input(f"{host}:{host_xxh_home}/xxh/shells/{self.shell} not found. Install {self.shell}? [Y/n] ").strip().lower()
             if yn == 'y' or yn == '':
                 opt.install = True
@@ -568,56 +564,74 @@ class Xxh:
                 self.eeprint('Unknown answer')
 
         if opt.install:
-            self.eprint("\033[0;33m", end='')
-
             self.eprint(f"Install {self.shell} to {host}:{host_xxh_home}" )
 
-            shells_dir = self.local_xxh_home / 'xxh/shells'
-            shells = sorted(shells_dir.glob('*'))
+            # Download xxh shell
 
-            shell_dir = shells_dir / f'{self.shell}'
+            shells_dir = self.local_xxh_home / 'xxh/shells'
+            shell_dir = shells_dir / self.shell
+            shell_build_dir = shell_dir / 'build'
             if not shell_dir.exists():
                 if not self.shell_source:
                     self.eeprint(f'{self.shell} is not installed. Try +ss <git> to add the shell git repo.')
 
                 self.eprint(f'First time download {self.shell} shell from {self.shell_source}')
-                if self.shell_source[:6] in ['http:/', 'https:'] and 'git' in self.shell_source:
+                if self.shell_source[:6] in ['http:/', 'https:']:
                     git clone -q --depth 1 @(self.shell_source) @(shells_dir / self.shell)
                 elif fp'{self.shell_source}'.exists():
                     cp -r @(self.shell_source) @(shells_dir)
                 else:
                     self.eeprint(f'Unknown shell source: {self.shell_source}')
 
-            shell_build_dir = shell_dir / 'build'
-            if not shell_build_dir.exists():
-                self.eprint(f"First time build {self.shell}")
-                xonsh @(shell_build_dir.parent / 'build.xsh') @(arg_q)
+            # Build xxh packages
 
-            if opt.install_force:
-                self.eprint(f'Remove {host}:{host_xxh_home}/xxh')
-                echo @(f"rm -rf {host_xxh_home}/xxh") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
+            if self.shell.startswith('xxh-shell-'):
+                short_shell_name = self.shell.split('-')[2]
+            else:
+                short_shell_name = self.shell
+
+            base_dir = self.local_xxh_home / 'xxh'
+            build_packages = list([base_dir / 'shells' / self.shell]) + list( (base_dir / 'plugins').glob(f'*-{short_shell_name}-*') )
+
+            for package_dir in build_packages:
+                package_name = package_dir.name
+                build_dir = package_dir / 'build'
+                if not build_dir.exists():
+                    build_file_found = False
+                    for ext in self.build_file_exts:
+                        build_file = package_dir / f'build.{ext}'
+                        if build_file.exists():
+                            self.eprint(f"First time build {package_dir}")
+                            @(build_file) @(arg_q) 1>&2
+                            build_file_found = True
+                            break
+                    if not build_file_found:
+                        self.eeprint(f"Build file not found in {package_dir}")
+
+            # Remove xxh home directories
 
             if opt.install_force_full:
                 self.eprint(f'Remove {host}:{host_xxh_home}')
                 echo @(f"rm -rf {host_xxh_home}") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
+            elif opt.install_force:
+                self.eprint(f'Remove {host}:{host_xxh_home}/xxh')
+                echo @(f"rm -rf {host_xxh_home}/xxh") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
+
+            # Create host xxh home directories
 
             host_xxh_plugins_dir = host_xxh_home / 'xxh/plugins'
             host_xxh_dirs_str = ''
             for local_plugin_dir in local_plugins_dir.glob(f'*-{short_shell_name}-*'):
-                local_plugin_build_file = local_plugin_dir / 'build.xsh'
                 local_plugin_build_dir = local_plugin_dir / 'build'
-                if not local_plugin_build_dir.exists():
-                    if not local_plugin_build_file.exists():
-                        self.eeprint(f'Please update {local_plugin_dir.name} and {self.shell}. Build file not found: {local_plugin_build_file}')
-
-                    self.eprint(f'First time build {local_plugin_dir}')
-                    @(local_plugin_build_file) 1>&2
-                host_xxh_dirs_str += ' ' + str(fp'{str(local_plugin_build_dir).replace(str(self.local_xxh_home), str(host_xxh_home))}')
+                host_plugin_build_dir = str(local_plugin_build_dir).replace(str(self.local_xxh_home), str(host_xxh_home))
+                host_xxh_dirs_str += ' ' + host_plugin_build_dir
 
             host_xxh_package_dir = host_xxh_home  / 'xxh/package'
             host_xxh_shell_dir = host_xxh_home / f'xxh/shells/{self.shell}'
             host_xxh_shell_build_dir = host_xxh_shell_dir  / 'build'
             echo @(f"mkdir -p {host_xxh_package_dir} {host_xxh_shell_build_dir} {host_xxh_dirs_str}") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
+
+            # Upload files
 
             if which('rsync') and host_info['rsync']:
                 self.eprint('Upload using rsync')
@@ -638,7 +652,9 @@ class Xxh:
             else:
                 self.eprint('Please install rsync or scp!')
 
-            self.eprint(f'First run {self.shell} on {host}\033[0m')
+            self.eprint(f'First run {self.shell} on {host}')
+
+        # Connect to host
 
         host_execute_file = host_execute_command = []
         if opt.host_execute_file:

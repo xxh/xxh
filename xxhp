@@ -5,6 +5,7 @@ from sys import exit
 class XxhPackage(object):
     def __init__(self):
         self.local_xxh_home_dir = p'~/.xxh'
+        self.build_file_exts = ['xsh', 'zsh', 'fish', 's']
         self.quiet = False
 
         parser = argparse.ArgumentParser(description='xxhp is xxh package manager.',
@@ -68,7 +69,16 @@ class XxhPackage(object):
                 self.eeprint(f'If the package already exists try reinstall: xxhp ri <package>')
 
             self.eprint(f"Build {package}")
-            @(package_dir/'build.xsh') @(arg_q) 1>&2
+            build_file_found = False
+            for ext in self.build_file_exts:
+                build_file = package_dir / f'build.{ext}'
+                if build_file.exists():
+                    @(build_file) @(arg_q) 1>&2
+                    build_file_found = True
+                    break
+            if not build_file_found:
+                self.eeprint(f"Build file not found in {package_dir}")
+
             self.eprint(f"Installed {package_dir}")
 
     def r(self):
