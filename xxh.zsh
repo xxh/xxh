@@ -19,14 +19,16 @@ for pluginenv_file in $local_xxh_home/xxh/plugins/*-zsh-*/env; do
 
     for l in `cat $pluginenv_file`
     do
-      d=`declare -p $l | base64 --wrap=0`
-      dd="export $plugin_name"_EXE_"$l=$d"
-      ddd=`echo $dd | base64 --wrap=0`
-      if [[ $XXH_VERBOSE == '2' ]]; then
-        echo Prepare plugin env $pluginenv_file: name=$l, declare=$d
-        echo Prepare plugin env $pluginenv_file bash: $dd
+      if [[ -v $l ]]; then
+        d=`declare -p $l | base64 --wrap=0`
+        dd="export $plugin_name"_EXE_"$l=$d"
+        ddd=`echo $dd | base64 --wrap=0`
+        if [[ $XXH_VERBOSE == '2' ]]; then
+          echo Prepare plugin env $pluginenv_file: name=$l, declare=$d
+          echo Prepare plugin env $pluginenv_file bash: $dd
+        fi
+        eargs="$eargs +heb $ddd"
       fi
-      eargs="$eargs +heb $ddd"
     done
   fi
 done
