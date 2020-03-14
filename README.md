@@ -14,7 +14,7 @@ python3 -m pip install --upgrade xxh-xxh
 After install you can just using `xxh` command as replace `ssh` to connecting to the host because `xxh` has seamless support of basic `ssh` command arguments. 
 
 ## Usage
-```shell script
+```
 $ ./xxh -h                                                                  ____  __________     @    @ 
 usage: xxh <host from ~/.ssh/config>                                     ______  /          \     \__/
 usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]             ____  /    ______  \   /   \
@@ -82,7 +82,7 @@ agnoster
 This `source` command get your current zsh session theme and plugins and pass it to the xxh session. If you need more complex settings just fork the [xxh-plugin-zsh-ohmyzsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh) and hack it.
 
 ### Read host as a table with osquery
-```shell script
+```
 $ xxh myhost +s osquery
 osquery> SELECT * FROM users WHERE username='news';
 +-----+-----+----------+-------------+-----------------+-------------------+
