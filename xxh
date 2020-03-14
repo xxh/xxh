@@ -19,29 +19,33 @@ class Xxh:
         self.host_xxh_home = '~/.xxh'
 
         self.default_shells = {
-            'xonsh':{
-                'xxh-shell': 'xxh-shell-xonsh-appimage',
+            'xxh-shell-xonsh-appimage':{
+                'alias':'xonsh',
                 'xxh-shell-source': 'https://github.com/xxh/xxh-shell-xonsh-appimage.git'
             },
-            'zsh': {
-                'xxh-shell': 'xxh-shell-zsh',
+            'xxh-shell-zsh': {
+                'alias':'zsh',
                 'xxh-shell-source': 'https://github.com/xxh/xxh-shell-zsh.git'
             },
-            'fish': {
-                'xxh-shell': 'xxh-shell-fish-appimage',
+            'xxh-shell-fish-appimage': {
+                'alias':'fish',
                 'xxh-shell-source': 'https://github.com/xxh/xxh-shell-fish-appimage.git'
             },
-            'bash-zero': {
-                'xxh-shell': 'xxh-shell-bash-zero',
+            'xxh-shell-bash-zero': {
+                'alias':'bash-zero',
                 'xxh-shell-source': 'https://github.com/xxh/xxh-shell-bash-zero.git'
             },
-            'osquery':{
-                'xxh-shell': 'xxh-shell-osquery',
+            'xxh-shell-osquery':{
+                'alias':'osquery',
                 'xxh-shell-source': 'https://github.com/xxh/xxh-shell-osquery.git'
             }
         }
-        self._shell = self.default_shells[self.get_current_shell()]['xxh-shell']
-        self.shell_source = self.default_shells[self.get_current_shell()]['xxh-shell-source']
+        self.default_shells_aliases = {d['alias']:s for s,d in self.default_shells.items() if 'alias' in d}
+
+        current_shell = self.get_current_shell()
+        current_shell = self.default_shells_aliases[current_shell] if current_shell in self.default_shells_aliases else current_shell
+        self.shell = current_shell
+        self.shell_source = self.default_shells[current_shell]['xxh-shell-source']
 
         self.url = None
         self.ssh_arguments = []
@@ -181,10 +185,10 @@ class Xxh:
         return {}
 
     def shells(self):
-        default_shells = [v['xxh-shell'] for k,v in self.default_shells.items()]
+        default_shells = [k for k,v in self.default_shells.items()]
         installed_shells = [str(s.name) for s in pf'{self.local_xxh_home}/xxh/shells'.glob('*')]
         available_shells = list(set(default_shells + installed_shells))
-        defaults = [k+' (%s)'%v['xxh-shell']  for k,v in self.default_shells.items()]
+        defaults = [('%s (%s)'%(v['alias'], k) if 'alias' in v else k)  for k,v in self.default_shells.items()]
         list_str = ', '.join(defaults + [s for s in available_shells if s not in default_shells])
 
         return {
@@ -209,18 +213,6 @@ class Xxh:
             self.sshpass = ['sshpass', '-p', password] + verbose
         else:
             self.sshpass = []
-
-    @property
-    def shell(self):
-        return self._shell
-
-    @shell.setter
-    def shell(self, value):
-        default_shells = [v['xxh-shell'] for k,v in self.default_shells.items()]
-        shells = self.shells()
-        if value not in shells['available']:
-            self.eeprint('Currently supported shells: ' + shells['available_help'])
-        self._shell = value
 
     @property
     def verbose(self):
@@ -368,7 +360,7 @@ class Xxh:
         argp.add_argument('+hc','++host-execute-command', help=f"Execute command on host and exit. If supported by shell entrypoint.")
         argp.add_argument('+heb','++host-execute-bash', dest='host_execute_bash', metavar='BASE64 +heb ...', action='append', help="Bash command will be executed before shell entrypoint (base64 encoded) if supported by shell entrypoint.")
         argp.add_argument('+s','++shell', default=self.shell, help="Xxh shell: " + self.shells()['available_help'])
-        argp.add_argument('+ss','++shell-source', default=self.shell_source, help=f"(future) Custom source of xxh-shell: git url or local path")
+        argp.add_argument('+ss','++shell-source', help=f"(future) Custom source of xxh-shell: git url or local path")
         argp.add_argument('+v','++verbose', default=False, action='store_true', help="Verbose mode.")
         argp.add_argument('+vv','++vverbose', default=False, action='store_true', help="Super verbose mode.")
         argp.add_argument('+q','++quiet', default=False, action='store_true', help="Quiet mode.")
@@ -387,6 +379,7 @@ class Xxh:
         opt = argp.parse_args()
 
         self.quiet = opt.quiet
+        arg_q = ['-q'] if self.quiet else []
         if not self.quiet:
             self.verbose = opt.verbose
             self.vverbose = opt.vverbose
@@ -429,8 +422,11 @@ class Xxh:
         self.verbose = opt.verbose
         self.vverbose = opt.vverbose
 
+        if opt.shell in self.default_shells_aliases:
+            opt.shell = self.default_shells_aliases[opt.shell]
+
         if opt.shell in self.default_shells:
-            self.shell = self.default_shells[opt.shell]['xxh-shell']
+            self.shell = opt.shell
             self.shell_source = self.default_shells[opt.shell]['xxh-shell-source']
         else:
             self.shell = opt.shell
@@ -581,6 +577,9 @@ class Xxh:
 
             shell_dir = shells_dir / f'{self.shell}'
             if not shell_dir.exists():
+                if not self.shell_source:
+                    self.eeprint(f'{self.shell} is not installed. Try +ss <git> to add the shell git repo.')
+
                 self.eprint(f'First time download {self.shell} shell from {self.shell_source}')
                 if self.shell_source[:6] in ['http:/', 'https:'] and 'git' in self.shell_source:
                     git clone -q --depth 1 @(self.shell_source) @(shells_dir / self.shell)
@@ -592,7 +591,7 @@ class Xxh:
             shell_build_dir = shell_dir / 'build'
             if not shell_build_dir.exists():
                 self.eprint(f"First time build {self.shell}")
-                xonsh @(shell_build_dir.parent / 'build.xsh')
+                xonsh @(shell_build_dir.parent / 'build.xsh') @(arg_q)
 
             if opt.install_force:
                 self.eprint(f'Remove {host}:{host_xxh_home}/xxh')
@@ -620,7 +619,6 @@ class Xxh:
             host_xxh_shell_build_dir = host_xxh_shell_dir  / 'build'
             echo @(f"mkdir -p {host_xxh_package_dir} {host_xxh_shell_build_dir} {host_xxh_dirs_str}") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
 
-            arg_q = ['-q'] if self.quiet else []
             if which('rsync') and host_info['rsync']:
                 self.eprint('Upload using rsync')
                 rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") @(arg_q) -az --info=progress2 --cvs-exclude @(self.package_dir_path)/settings.py @(host):@(host_xxh_package_dir)/ 1>&2

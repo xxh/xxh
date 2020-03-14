@@ -60,7 +60,7 @@ The arguments will be automatically added when you run `xxh myhost` or `xxh comp
 
 **How xxh works?** When you run `xxh myhost` command xxh download portable shell and store locally to future use. Then if it needed xxh upload the portable shell, init scripts and plugins to the host. Finally xxh make ssh connection to the host and run portable shell without any system installs and affection on the target host.
 
-**What about speed?** The first connection takes time for downloading and uploading portable shell. It depends on portable shell size and channel speed. But when xxh is installed on the host and you do just `xxh myhost` then it works as ordinary ssh connection speed.
+**What about speed?** The first connection takes time for downloading and uploading portable shell. It depends on portable shell size and channel speed. But when xxh is installed on the host and you do just `xxh myhost` then it works as ordinary ssh connection speed. You could monitor all process using `+vv` argument.
 
 ## Use cases
 ### Python everywhere with xonsh
