@@ -1,10 +1,15 @@
 import setuptools
 from xxh_xxh.settings import global_settings
 
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
 setuptools.setup(
     name="xxh-xxh",
     version=global_settings['XXH_VERSION'],
-    description="xxh is for using portable xonsh shell wherever you go through the ssh",
+    description="Bring your favorite shell wherever you go through the ssh",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     url="https://github.com/xxh/xxh",
     project_urls={
         "Documentation": "https://github.com/xxh/xxh/blob/master/README.md",
