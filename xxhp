@@ -25,6 +25,10 @@ class XxhPackage(object):
         mkdir -p @(self.local_xxh_home_dir / 'xxh/shells') @(self.local_xxh_home_dir / 'xxh/plugins')
         getattr(self, args.command)()
 
+    def print(self, *args, **kwargs):
+        if not self.quiet:
+            print(*args, **kwargs)
+
     def eprint(self, *args, **kwargs):
         if not self.quiet:
             print(*args, file=sys.stderr, **kwargs)
@@ -41,11 +45,15 @@ class XxhPackage(object):
         parser = argparse.ArgumentParser(description='')
         parser.add_argument('packages', nargs='+', help=f"xxh-package")
         parser.add_argument('-v', '--verbose', action='store_true', help=f"Verbose mode")
+        parser.add_argument('-q', '--quiet', action='store_true', help=f"Quiet mode")
         parser.usage = parser.format_usage().replace('usage: xxhp ', 'xxhp install ')
         opt = parser.parse_args(sys.argv[2:])
 
+        self.quiet = opt.quiet
+        arg_q = ['-q'] if self.quiet else []
+
         for package in opt.packages:
-            print(f'Install {package}')
+            self.print(f'Install {package}')
             if not re.match('^[a-zA-Z-]+$', package):
                 self.eeprint(f'Invalid package name: {package}')
 
@@ -55,12 +63,12 @@ class XxhPackage(object):
 
             self.eprint(f"Git clone {package_git_url}")
             package_dir = self.local_xxh_home_dir/'xxh'/subdir/package
-            r = ![git clone --depth 1 -q @(package_git_url) @(package_dir) 1>&2]
+            r = ![git clone @(arg_q) --depth 1 -q @(package_git_url) @(package_dir) 1>&2]
             if r.returncode != 0:
                 self.eeprint(f'If the package already exists try reinstall: xxhp ri <package>')
 
             self.eprint(f"Build {package}")
-            @(package_dir/'build.xsh') 1>&2
+            @(package_dir/'build.xsh') @(arg_q) 1>&2
             self.eprint(f"Installed {package_dir}")
 
     def r(self):
@@ -70,11 +78,14 @@ class XxhPackage(object):
         parser = argparse.ArgumentParser(description='')
         parser.add_argument('packages', nargs='+', help=f"xxh-package")
         parser.add_argument('-v', '--verbose', action='store_true', help=f"Verbose mode")
+        parser.add_argument('-q', '--quiet', action='store_true', help=f"Quiet mode")
         parser.usage = parser.format_usage().replace('usage: xxhp ', 'xxhp remove ')
         opt = parser.parse_args(sys.argv[2:])
 
+        self.quiet = opt.quiet
+
         for package in opt.packages:
-            print(f'Remove {package}')
+            self.print(f'Remove {package}')
             subdir = self.package_subdir(package) or self.eeprint(f"Unknown package: {package}")
             package_dir = self.local_xxh_home_dir / 'xxh' / subdir / package
             if package_dir.exists():
