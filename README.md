@@ -15,15 +15,15 @@ After install you can just using `xxh` command as replace `ssh` to connecting to
 
 ## Usage
 ```
-$ ./xxh -h                                                                  ____  __________     @    @ 
-usage: xxh <host from ~/.ssh/config>                                     ______  /          \     \__/
-usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]             ____  /    ______  \   /   \
-usage: xxh [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY]            _____  /    / __   \  \ /   _/
-           [-o SSH_OPTION -o ...] [+P PASSWORD] [+PP]                     ___ (    / /  /   \  \   /
-           [user@]host[:port]                                                  \   \___/    /  /  /
-           [+i] [+if] [+s SHELL] [+e NAME=VAL +e ...] [+iff] [+hhr]         ____\          /__/  /
-           [+hh HOST_XXH_HOME] [+hf HOST_EXEC_FILE] [+hc HOST_EXEC_CMD]    /     \________/     /
-           [+xc XXH_CONFIG] [+lh LOCAL_XXH_HOME] [+v] [+vv] [+q]          /____________________/
+$ ./xxh -h 
+usage: xxh <host from ~/.ssh/config>
+usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]
+usage: xxh [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY]
+           [-o SSH_OPTION -o ...] [+P PASSWORD] [+PP]
+           [user@]host[:port]
+           [+i] [+if] [+s SHELL] [+e NAME=VAL +e ...] [+iff] [+hhr]
+           [+hh HOST_XXH_HOME] [+hf HOST_EXEC_FILE] [+hc HOST_EXEC_CMD]
+           [+xc XXH_CONFIG] [+lh LOCAL_XXH_HOME] [+v] [+vv] [+q]
 ```
 
 There is `~/.xxh/.xxhc` [yaml](https://en.wikipedia.org/wiki/YAML) config to save arguments and reuse it:
