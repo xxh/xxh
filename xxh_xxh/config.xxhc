@@ -20,5 +20,5 @@
 #
 #  "company-.*":        # for all hosts by regex pattern
 #    +if:                 # don't asking about install (++install-force)
-#    +hhr:                # remove host xxh home after disconnect (++host-xxh-home-remove)
 #    +hh: /tmp/.xxh       # use special xxh home directory (++host-xxh-home)
+#    +hhr:                # remove host xxh home after disconnect (++host-xxh-home-remove)
