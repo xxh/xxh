@@ -66,16 +66,13 @@ The arguments will be automatically added when you run `xxh myhost` or `xxh comp
 ### Python everywhere with xonsh
 When you run `xxh myhost +s xonsh` you'll get python, pip and python-powered shell on the host without any system installations on the host. Add plugins: [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) saves time, [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner) manipulates lines and [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar) looks nice. 
 
-### Oh My Zsh seamless SSH
+### Oh My Zsh seamless SSH ([demo](https://asciinema.org/a/rCiT9hXQ5IdwqOwg6rifyFZzb))
 Bring zsh and Oh My Zsh with your current session settings to the host:  
 ```shell script
 zsh$ xxhp ri xxh-shell-zsh xxh-plugin-zsh-ohmyzsh
-
 zsh$ echo $ZSH_THEME
 agnoster
-
 zsh$ source xxh.zsh myhost
-
 myhost> echo $ZSH_THEME
 agnoster
 ```
