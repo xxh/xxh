@@ -67,7 +67,7 @@ The arguments will be automatically added when you run `xxh myhost` or `xxh comp
 When you run `xxh myhost +s xonsh` you'll get python, pip and python-powered shell on the host without any system installations on the host. Add plugins: [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) saves time, [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner) manipulates lines and [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar) looks nice. 
 
 ### Oh My Zsh seamless SSH ([demo](https://asciinema.org/a/rCiT9hXQ5IdwqOwg6rifyFZzb))
-Bring zsh and Oh My Zsh with your current session settings to the host:  
+Bring Zsh and Oh My Zsh with your current environment to the host:  
 ```shell script
 zsh$ xxhp ri xxh-shell-zsh xxh-plugin-zsh-ohmyzsh
 zsh$ echo $ZSH_THEME
@@ -76,7 +76,7 @@ zsh$ source xxh.zsh myhost
 myhost> echo $ZSH_THEME
 agnoster
 ```
-This `source` command get your current zsh session theme and plugins and pass it to the xxh session. If you need more complex settings just fork the [xxh-plugin-zsh-ohmyzsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh) and hack it.
+This `source` command get your current Zsh session theme and plugins and pass it to the xxh session. If you need more complex settings just fork the [xxh-plugin-zsh-ohmyzsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh) and hack it.
 
 ### Read host as a table with osquery
 ```
