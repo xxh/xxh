@@ -16,16 +16,24 @@ local_xxh_home = p"~/.xxh"
 env_args = []
 local_shell_dir = local_xxh_home / 'xxh/shells/xxh-shell-xonsh-appimage'
 local_plugins_dir = local_xxh_home / 'xxh/plugins'
-for local_plugin_dir in [local_shell_dir]+sorted(local_plugins_dir.glob(f'*-xonsh-*')):
-    local_plugin_env = local_plugin_dir / 'env'
-    if local_plugin_env.exists():
-        with open(local_plugin_env) as f:
+for local_package_dir in [local_shell_dir]+sorted(local_plugins_dir.glob(f'*-xonsh-*')):
+    plugin_name = local_package_dir.name
+    local_package_env = local_package_dir / 'env'
+    if local_package_env.exists():
+        plugin_env_name = plugin_name.upper().replace('-', '_')
+        with open(local_package_env) as f:
             plugin_envs = f.read().split('\n')
         for e in plugin_envs:
             if e in ${...}:
+                xonsh_exec = '__xonsh__.env["%s"]=%s' % (e, repr(${e}))
+                bash_env = plugin_env_name + '_EXE_' + e
+                bash_exec = f'export {bash_env}={b64e(xonsh_exec)}'
+
                 if '+v' in $ARGS or '+vv' in $ARGS:
-                    print(f'Plugin {local_plugin_dir.name} environment: {e}='+str(${e}), file=sys.stderr)
-                env_args += ['+eb', "%s=%s" % ( e, b64e(${e}) ) ]
+                    print(f'Plugin {local_package_dir.name} xonsh exec: {xonsh_exec}', file=sys.stderr)
+                    print(f'Plugin {local_package_dir.name} bash exec: {bash_exec}', file=sys.stderr)
+
+                env_args += ['+heb', b64e(bash_exec)]
 
 xxh @($ARGS) +s xonsh @(env_args)
 
