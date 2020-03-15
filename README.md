@@ -54,6 +54,14 @@ The arguments will be automatically added when you run `xxh myhost` or `xxh comp
 
 [Search xxh shell on Github](https://github.com/search?q=xxh-shell&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-shell) or [create your shell entrypoint](https://github.com/xxh/xxh-shell-sample) to use another portable shell. 
 
+## The ideas behind xxh
+* **No build on remote host**. The security and careful about environment on the host are behind it. This could be the optional future feature but not now. 
+* **No copying** config files from local to remote host "as is". The privacy and repeatability reasons are behind it. Every xxh package, shell or plugin is the bridge that use only what required, no more.
+* **Portable means clean**. If you delete `~/.xxh` directory from the remote host then xxh has never been on the host.
+* **Be fork-ready**. Every repo could be forked, customize and used without affection on package management system, xxh releases or any third party lags.
+* **Do more**. The xxh packages are not only about shells. Any type of tool or code could be behind "shell entrypoint". If you want to play super mario on the remote host just put it as entrypoint.
+* **Be open**. Currently supported four shells and the count could be grow by community.
+
 ## Q&A
 
 **What is plugin?** It is the set of scripts which will be run on the host when you go using xxh. It could be shell settings, environment variables, plugins, color themes and everything you need. You can find the links to plugins on [xxh-shells repos](https://github.com/search?q=xxh%2Fxxh-shell&type=Repositories). Feel free to fork it.
