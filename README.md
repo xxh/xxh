@@ -57,7 +57,7 @@ The arguments will be automatically added when you run `xxh myhost` or `xxh comp
 ## The ideas behind xxh
 * **No build on remote host**. The security and careful about environment on the host are behind it. This could be the optional future feature but not now. 
 * **No copying** config files from local to remote host "as is". The privacy and repeatability reasons are behind it. Every xxh package, shell or plugin is the bridge that use only what required, no more.
-* **Portable means clean**. If you delete `~/.xxh` directory from the remote host then xxh has never been on the host.
+* **Portable means clean**. If you delete `~/.xxh` directory from the remote host then xxh has never been on the host. Some temporary files of third party tools you use could be in the home directory after usage but we stand for moving them to the xxh home directory. Feel free to report about this cases.
 * **Be fork-ready**. Every repo could be forked, customize and used without affection on package management system, xxh releases or any third party lags.
 * **Do more**. The xxh packages are not only about shells. Any type of tool or code could be behind "shell entrypoint". If you want to play Super Mario on the remote host just put it as entrypoint.
 * **Be open**. Currently supported four shells and the count could be grow by community.
