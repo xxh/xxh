@@ -24,7 +24,7 @@ setuptools.setup(
     ],
     platforms='Unix-like',
     scripts=['xxh','xxhp','xxh.zsh','xxh.xsh'],
-    package_data={'xxh_xxh':['*.xsh', '*.sh']},
+    package_data={'xxh_xxh':['*.py', '*.sh', '*.xxhc']},
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
