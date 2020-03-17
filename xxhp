@@ -55,7 +55,7 @@ class XxhPackage(object):
 
         for package in opt.packages:
             self.print(f'Install {package}')
-            if not re.match('^[a-zA-Z-]+$', package):
+            if not re.match('^[a-zA-Z0-9-_]+$', package):
                 self.eeprint(f'Invalid package name: {package}')
 
             subdir = self.package_subdir(package) or self.eeprint(f"Unknown package: {package}")
