@@ -7,13 +7,21 @@ from random import randint
 from base64 import b64encode
 
 from .shell import *
+from .settings import global_settings
+
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
+def eeprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+    exit(1)
 
 class xxh:
-    def __init__(self, package_dir_path, version='0.0.0'):
-        self.package_dir_path = package_dir_path
+    def __init__(self):
+        self.package_dir_path = p(f"{__file__}").parent
         self.url_xxh_github = 'https://github.com/xxh/xxh'
         self.url_xxh_plugins_search = 'https://github.com/search?q=xxh-plugin'
-        self.local_xxh_version = version
+        self.local_xxh_version = global_settings['XXH_VERSION']
         self.local_xxh_home = p('~/.xxh')
         self.config_file = p('~/.xxh/.xxhc')
         self.host_xxh_home = '~/.xxh'
@@ -57,11 +65,10 @@ class xxh:
 
     def eprint(self, *args, **kwargs):
         if not self.quiet:
-            print(*args, file=sys.stderr, **kwargs)
+            eprint(*args, **kwargs)
 
     def eeprint(self, *args, **kwargs):
-        self.eprint(*args, **kwargs)
-        exit(1)
+        eeprint(*args, **kwargs)
 
     def get_current_shell(self):
         if 'SHELL' in os.environ:
@@ -314,12 +321,12 @@ class xxh:
         return b64encode(s.encode()).decode()
 
     def create_xxh_env(self):
-        home = p(f'{self.local_xxh_home}')
+        home = p(self.local_xxh_home)
         if not home.exists():
             #mkdir -p @(home) @(home / 'xxh/shells') @(home / 'xxh/plugins')
             S(f"mkdir -p {home} {home / 'xxh/shells'} {home / 'xxh/plugins'}")
 
-        config_file = p(f'{self.config_file}')
+        config_file = p(self.config_file)
         sample_config_file = self.package_dir_path / 'config.xxhc'
         if not config_file.exists() and sample_config_file.exists():
             #cp @(sample_config_file) @(config_file)
@@ -506,7 +513,7 @@ class xxh:
             shells_dir=(self.local_xxh_home / 'xxh/shells')
         ))
 
-        if p(f'{opt.host_xxh_home}') == p(f'/'):
+        if p(opt.host_xxh_home) == p(f'/'):
             self.eeprint("Host xxh home path {host_xxh_home} looks like /. Please check twice!")
 
         self.host_xxh_home = opt.host_xxh_home
@@ -605,7 +612,7 @@ class xxh:
                         shell_source=A(self.shell_source),
                         shells_dir=A(shells_dir / self.shell)
                     ))
-                elif p(f'{self.shell_source}').exists():
+                elif p(self.shell_source).exists():
                     S('cp -r {self.shell_source} {shells_dir}')
                 else:
                     self.eeprint(f'Unknown shell source: {self.shell_source}')

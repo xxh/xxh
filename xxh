@@ -2,23 +2,13 @@
 
 import os, sys
 from shutil import which
-from xxh_xxh.xxh import xxh
-from xxh_xxh.shell import *
+from xxh_xxh.xxh import xxh, eeprint
 
 if __name__ == '__main__':
     if os.name == 'nt':
-        self.eeprint(f"Windows is not supported. WSL1 is not recommended also. WSL2 is not tested yet.\nContribution: {self.url_xxh_github}")
+        eeprint(f"Windows is not supported. WSL1 is not recommended also. WSL2 is not tested yet.")
     if not which('ssh'):
-        self.eeprint('Install OpenSSH client before using xxh: https://duckduckgo.com/?q=how+to+install+openssh+client+in+linux')
+        eeprint('Install OpenSSH client before using xxh: https://duckduckgo.com/?q=how+to+install+openssh+client+in+linux')
 
-    try:
-        this_file = os.readlink(__file__)
-    except:
-        this_file = __file__
-    sys.path.append(str(p(f"{this_file}").absolute().parent))
-
-    import xxh_xxh
-    from xxh_xxh.settings import global_settings
-
-    xxh = xxh(package_dir_path=p(f"{xxh_xxh.__file__}").parent, version=global_settings['XXH_VERSION'])
+    xxh = xxh()
     xxh.main()
