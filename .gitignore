@@ -1,5 +1,6 @@
 xxh-shell-*
 squashfs-root
+*.build
 *.pyc
 *.out
 *.xcf
