@@ -673,7 +673,7 @@ class Xxh:
         if opt.host_xxh_home_remove:
             if self.verbose:
                 self.eprint(f'Remove {host}:{host_xxh_home}')
-                echo @(f"rm -rf {host_xxh_home}") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
+            echo @(f"rm -rf {host_xxh_home}") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
 
 
 if __name__ == '__main__':
