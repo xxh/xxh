@@ -110,6 +110,7 @@ In the [xxh-dev](https://github.com/xxh/xxh-dev) repo there is full [docker](htt
 **We have teams.** If you're in team it does not oblige to do something. The main goal of teams is to create group of passionate people who could help or support in complex questions. Some people could be expert in one shell and newbie in another shell and mutual assistance is the key to xxh evolution. [Ask join.](https://github.com/xxh/xxh/issues/50)
 
 ## Thanks
-* **niess** for https://github.com/niess/linuxdeploy-plugin-python/ 
-* **probonopd** and **TheAssassin** for https://github.com/AppImage
-* **scopatz**, **gforsyth**, **astronouth7303**, **laloch**, **melund** and **all xore** for https://github.com/xonsh/xonsh
+* **niess** for great [linuxdeploy-plugin-python](https://github.com/niess/linuxdeploy-plugin-python/) 
+* **probonopd** and **TheAssassin** for hard-working [AppImage](https://github.com/AppImage)
+* **Roman Perepelitsa** for incredible [statically-linked, hermetic, relocatable Zsh](https://github.com/romkatv/zsh-bin) 
+* **scopatz**, **gforsyth**, **astronouth7303**, **laloch**, **melund** and **all xore** for amazing [xonsh](https://github.com/xonsh/xonsh) shell
