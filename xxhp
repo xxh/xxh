@@ -5,7 +5,7 @@ from sys import exit
 class XxhPackage(object):
     def __init__(self):
         self.local_xxh_home_dir = p'~/.xxh'
-        self.build_file_exts = ['xsh', 'zsh', 'fish', 's']
+        self.build_file_exts = ['xsh', 'zsh', 'fish', 'sh']
         self.quiet = False
 
         parser = argparse.ArgumentParser(description='xxhp is xxh package manager.',
