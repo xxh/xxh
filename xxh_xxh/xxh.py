@@ -23,7 +23,7 @@ class xxh:
         self.url_xxh_plugins_search = 'https://github.com/search?q=xxh-plugin'
         self.local_xxh_version = global_settings['XXH_VERSION']
         self.local_xxh_home = p('~/.xxh')
-        self.config_file = p('~/.xxh/.xxhc')
+        self.config_file = self.generate_config_filepath()
         self.host_xxh_home = '~/.xxh'
         self.default_shells = {
             'xxh-shell-xonsh-appimage':{
@@ -69,6 +69,13 @@ class xxh:
 
     def eeprint(self, *args, **kwargs):
         eeprint(*args, **kwargs)
+
+    @staticmethod
+    def generate_config_filepath():
+        if os.environ.get('XDG_CONFIG_HOME'):
+            return p(os.environ['XDG_CONFIG_HOME']) / 'xxh' / 'xxhc'
+        else:
+            return p(os.environ['HOME']) / 'xxh' / 'xxhc'
 
     def get_current_shell(self):
         if 'SHELL' in os.environ:
