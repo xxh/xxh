@@ -57,7 +57,7 @@ The arguments will be automatically added when you run `xxh myhost` or `xxh comp
 
 ## The ideas behind xxh
 * **Avoid building on remote host**. The security and careful about environment on the host are behind it. This could be the optional future feature but not now. 
-* **No blindfold copying** config files from local to remote host "as is". The privacy and repeatability reasons are behind it. Every xxh package, shell or plugin is the bridge that use only what required, no more.
+* **No blindfold copying** config files from local to remote host. The privacy and repeatability reasons are behind it. Every xxh package, shell or plugin is the bridge that use only what required, no more.
 * **Portable means clean**. If you delete `~/.xxh` directory from the remote host then xxh has never been on the host. Some temporary files of third party tools you use could be in the home directory after usage but we stand for moving them to the xxh home directory. Feel free to report about this cases.
 * **Be fork-ready**. Every repo could be forked, customize and used without affection on package management system, xxh releases or any third party lags.
 * **Do more**. The xxh packages are not only about shells. Any type of tool or code could be behind "shell entrypoint". If you want to play Super Mario on the remote host just put it as entrypoint.
@@ -67,13 +67,13 @@ The arguments will be automatically added when you run `xxh myhost` or `xxh comp
 
 **What is plugin?** It is the set of scripts which will be run on the host when you go using xxh. It could be shell settings, environment variables, plugins, color themes and everything you need. You can find the links to plugins on [xxh-shells repos](https://github.com/search?q=xxh%2Fxxh-shell&type=Repositories). Feel free to fork it.
 
-**How xxh works?** When you run `xxh myhost` command xxh download portable shell and store locally to future use. Then if it needed xxh upload the portable shell, init scripts and plugins to the host. Finally xxh make ssh connection to the host and run portable shell without any system installs and affection on the target host.
+**How it works?** When you run `xxh myhost` command xxh download portable shell and store locally to future use. Then if it needed xxh upload the portable shell, init scripts and plugins to the host. Finally xxh make ssh connection to the host and run portable shell without any system installs and affection on the target host.
 
 **What about speed?** The first connection takes time for downloading and uploading portable shell. It depends on portable shell size and channel speed. But when xxh is installed on the host and you do just `xxh myhost` then it works as ordinary ssh connection speed. You could monitor all process using `+vv` argument.
 
 ## Use cases
 ### Python everywhere with xonsh
-When you run `xxh myhost +s xonsh` you'll get python, pip and python-powered shell on the host without any system installations on the host. Add plugins: [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) saves time, [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner) manipulates lines and [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar) looks nice. 
+When you run `xxh myhost +s xonsh` you'll get portable python, pip and python-powered shell on the host without any system installations on the host. Add plugins: [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) saves time, [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner) manipulates lines and [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar) looks nice. 
 
 ### Oh My Zsh seamless SSH ([demo](https://asciinema.org/a/rCiT9hXQ5IdwqOwg6rifyFZzb))
 ```shell script
