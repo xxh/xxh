@@ -9,11 +9,12 @@
 
 ## Install or update
 ```shell script
-python3 -m pip install --upgrade xxh-xxh
+pip install --upgrade xxh-xxh
 ```
-After install you can just using `xxh` command as replace `ssh` to connecting to the host because `xxh` has seamless support of basic `ssh` command arguments. 
 
 ## Usage
+Use `xxh` as replace `ssh` to connecting to the host. Seamless support of basic ssh arguments. 
+
 ```
 $ ./xxh -h 
 usage: xxh <host from ~/.ssh/config>
@@ -56,7 +57,7 @@ The arguments will be automatically added when you run `xxh myhost` or `xxh comp
 
 ## The ideas behind xxh
 * **Avoid building on remote host**. The security and careful about environment on the host are behind it. This could be the optional future feature but not now. 
-* **No copying** config files from local to remote host "as is". The privacy and repeatability reasons are behind it. Every xxh package, shell or plugin is the bridge that use only what required, no more.
+* **No blindfold copying** config files from local to remote host "as is". The privacy and repeatability reasons are behind it. Every xxh package, shell or plugin is the bridge that use only what required, no more.
 * **Portable means clean**. If you delete `~/.xxh` directory from the remote host then xxh has never been on the host. Some temporary files of third party tools you use could be in the home directory after usage but we stand for moving them to the xxh home directory. Feel free to report about this cases.
 * **Be fork-ready**. Every repo could be forked, customize and used without affection on package management system, xxh releases or any third party lags.
 * **Do more**. The xxh packages are not only about shells. Any type of tool or code could be behind "shell entrypoint". If you want to play Super Mario on the remote host just put it as entrypoint.
@@ -75,16 +76,11 @@ The arguments will be automatically added when you run `xxh myhost` or `xxh comp
 When you run `xxh myhost +s xonsh` you'll get python, pip and python-powered shell on the host without any system installations on the host. Add plugins: [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) saves time, [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner) manipulates lines and [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar) looks nice. 
 
 ### Oh My Zsh seamless SSH ([demo](https://asciinema.org/a/rCiT9hXQ5IdwqOwg6rifyFZzb))
-Bring Zsh and Oh My Zsh with your current environment to the host:  
 ```shell script
-zsh$ xxhp ri xxh-shell-zsh xxh-plugin-zsh-ohmyzsh
-zsh$ echo $ZSH_THEME
-agnoster
-zsh$ source xxh.zsh myhost
-myhost> echo $ZSH_THEME
-agnoster
+xxhp i xxh-plugin-zsh-ohmyzsh
+source xxh.zsh myhost +if +q
 ```
-This `source` command get your current Zsh session theme and plugins and pass it to the xxh session. If you need more complex settings just fork the [xxh-plugin-zsh-ohmyzsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh) and hack it.
+This command brings your current Oh My Zsh session theme to the xxh session. If you need more complex settings just fork the [xxh-plugin-zsh-ohmyzsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh) and hack it.
 
 ### Read host as a table with osquery
 ```
