@@ -62,6 +62,7 @@ class xxh:
         self._verbose = False
         self._vverbose = False
         self.quiet = False
+        self.os = os.name
 
     def eprint(self, *args, **kwargs):
         if not self.quiet:
@@ -695,14 +696,15 @@ class xxh:
             # Upload files
 
             if which('rsync') and host_info['rsync']:
-                self.eprint('Upload using rsync')
+                self.eprint('First time upload using rsync (this will be omitted on the next connections)')
 
-                rsync = "rsync {ssh_arg_v} -e \"{sshpass} ssh {ssh_arg_v} {ssh_arguments}\" {arg_q} -az --info=progress2 --cvs-exclude".format(
+                rsync = "rsync {ssh_arg_v} -e \"{sshpass} ssh {ssh_arg_v} {ssh_arguments}\" {arg_q} -az {progress} --cvs-exclude".format(
                     host_xxh_home=host_xxh_home,
                     sshpass=A(self.sshpass),
                     ssh_arg_v=('' if self.ssh_arg_v == [] else '-v'),
                     ssh_arguments=A(self.ssh_arguments),
-                    arg_q=A(arg_q)
+                    arg_q=A(arg_q),
+                    progress=('' if self.quiet or not self.verbose else '--progress')
                 )
                 #rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") @(arg_q) -az --info=progress2 --cvs-exclude @(self.package_dir_path)/settings.py @(host):@(host_xxh_package_dir)/ 1>&2
                 S("{rsync} {package_dir_path}/settings.py {host}:{host_xxh_package_dir}/ 1>&2".format(
@@ -731,7 +733,7 @@ class xxh:
                         local_plugin_name=local_plugin_name
                     ))
             elif which('scp') and host_info['scp']:
-                self.eprint("Upload using scp. Note: install rsync on local and remote host to increase speed.")
+                self.eprint("First time upload using scp (this will be omitted on the next connections).\nNote: you can install rsync on local and remote host to increase speed.")
                 scp = "{sshpass} scp {ssh_arg_v} {ssh_arguments} -r -C {arg_q}".format(
                     sshpass=A(self.sshpass),
                     ssh_arg_v=A(self.ssh_arg_v),
