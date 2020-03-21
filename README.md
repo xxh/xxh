@@ -72,6 +72,8 @@ The arguments will be automatically added when you run `xxh myhost` or `xxh comp
 
 **What about speed?** The first connection takes time for downloading and uploading portable shell. It depends on portable shell size and channel speed. But when xxh is installed on the host and you do just `xxh myhost` then it works as ordinary ssh connection speed. You could monitor all process using `+vv` argument.
 
+**What if my `host_internal` can be reached only from my `host_external`?** Add `ProxyCommand` or `ProxyJump` to your ssh config [as described](https://superuser.com/questions/96489/an-ssh-tunnel-via-multiple-hops#answer-170592) and then do ordinary `xxh host_internal`.
+
 ## Use cases
 ### Python everywhere with xonsh
 When you run `xxh myhost +s xonsh` you'll get portable python, pip and python-powered shell on the host without any system installations on the host. Add plugins: [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) saves time, [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner) manipulates lines and [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar) looks nice. 
