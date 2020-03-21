@@ -13,8 +13,12 @@ def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
 def eeprint(*args, **kwargs):
+    return_code=1
+    if 'return_code' in kwargs:
+        return_code = kwargs['return_code']
+        del kwargs['return_code']
     print(*args, file=sys.stderr, **kwargs)
-    exit(1)
+    exit(return_code)
 
 class xxh:
     def __init__(self):
@@ -354,6 +358,66 @@ class xxh:
             +f"{' ' if not t else ''}   /_{t}__________________/\n" \
             +f""
 
+    def packages_install(self, packages):
+        arg_q = '-q' if self.quiet else ''
+        for package in packages:
+            self.eprint(f'Install {package}')
+            if not re.match('^[a-zA-Z0-9-_]+$', package):
+                self.eeprint(f'Invalid package name: {package}')
+
+            subdir = self.package_subdir(package) or self.eeprint(f"Unknown package: {package}")
+
+            package_git_url = f'https://github.com/xxh/{package}'
+
+            self.eprint(f"Git clone {package_git_url}")
+            package_dir = self.local_xxh_home/'xxh'/subdir/package
+            [o,e,p] = SC(f'git clone {arg_q} --depth 1 -q {package_git_url} {package_dir} 1>&2')
+            if p.returncode != 0:
+                self.eeprint(f'If the package already exists try reinstall: xxh +RI <package>')
+
+            self.eprint(f"Build {package}")
+            build_file_found = False
+            for ext in self.build_file_exts:
+                build_file = package_dir / f'build.{ext}'
+                if build_file.exists():
+                    S(f'{build_file} {arg_q} 1>&2')
+                    build_file_found = True
+                    break
+            if not build_file_found:
+                self.eeprint(f"Build file not found in {package_dir}")
+
+            self.eprint(f"Installed {package_dir}")
+
+    def packages_remove(self, packages):
+        for package in packages:
+            self.eprint(f'Remove {package}')
+            subdir = self.package_subdir(package) or self.eeprint(f"Unknown package: {package}")
+            package_dir = self.local_xxh_home / 'xxh' / subdir / package
+            if package_dir.exists():
+                S(f'rm -rf {package_dir}')
+                self.eprint(f"Removed {package_dir}")
+
+    def packages_reinstall(self, packages):
+        self.packages_remove(packages)
+        return self.packages_install(packages)
+
+    def packages_list(self, packages=None):
+        packages_dir = (self.local_xxh_home / 'xxh').glob('**/xxh-*')
+        for p in sorted(packages_dir):
+            if packages:
+                if p.name in packages:
+                    print(p.name)
+            else:
+                print(p.name)
+
+    def package_subdir(self, name):
+        if 'xxh-shell' in name:
+            return 'shells'
+        elif 'xxh-plugin' in name:
+            return 'plugins'
+        return None
+
+
     def main(self):
         self.create_xxh_env()
         argp = argparse.ArgumentParser(description=f"Your favorite shell wherever you go through the ssh.\n{self.d2F0Y2ggLW4uMiB4eGggLWg()}", formatter_class=RawTextHelpFormatter, prefix_chars='-+')
@@ -364,7 +428,7 @@ class xxh:
         argp.add_argument('-o', dest='ssh_options', metavar='SSH_OPTION -o ...', action='append', help="SSH options are described in ssh man page. Example: -o Port=22 -o User=snail")
         argp.add_argument('+P','++password', help="Password for ssh auth.")
         argp.add_argument('+PP','++password-prompt', default=False, action='store_true', help="Enter password manually using prompt.")
-        argp.add_argument('destination', metavar='[user@]host[:port]', help="Destination may be specified as [ssh://][user@]host[:port] or host from ~/.ssh/config")
+        argp.add_argument('destination', nargs='?', metavar='[user@]host[:port]', help="Destination may be specified as [ssh://][user@]host[:port] or host from ~/.ssh/config")
         argp.add_argument('+i','++install', default=False, action='store_true', help="Install xxh to destination host.")
         argp.add_argument('+if','++install-force', default=False, action='store_true', help="Removing the host xxh package and install xxh again.")
         argp.add_argument('+iff','++install-force-full', default=False, action='store_true', help="Removing the host xxh home and install xxh again. All installed packages on the host (e.g. pip packages) will be lost.")
@@ -382,6 +446,10 @@ class xxh:
         argp.add_argument('+v','++verbose', default=False, action='store_true', help="Verbose mode.")
         argp.add_argument('+vv','++vverbose', default=False, action='store_true', help="Super verbose mode.")
         argp.add_argument('+q','++quiet', default=False, action='store_true', help="Quiet mode.")
+        argp.add_argument('+I','++install-xxh-packages', nargs='*', metavar='xxh-package', dest='install_xxh_packages', help="Install xxh package.")
+        argp.add_argument('+L','++list-xxh-packages', nargs='*', metavar='xxh-package', dest='list_xxh_packages', help="List xxh package.")
+        argp.add_argument('+RI','++reinstall-xxh-packages', nargs='*', metavar='xxh-package', dest='reinstall_xxh_packages', help="Reinstall xxh package.")
+        argp.add_argument('+R','++remove-xxh-packages', nargs='*', metavar='xxh-package', dest='remove_xxh_packages', help="Remove xxh package.")
         argp.usage = "xxh <host from ~/.ssh/config>\n" \
             + "usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]\n" \
             + "usage: xxh [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY]\n" \
@@ -389,10 +457,12 @@ class xxh:
             + "           [user@]host[:port]\n" \
             + "           [+i] [+if] [+iff] [+hhr] [+s SHELL] [+e NAME=VAL +e ...] [+v] [+vv] [+q]\n" \
             + "           [+hh HOST_XXH_HOME] [+hf HOST_EXEC_FILE] [+hc HOST_EXEC_CMD]\n" \
-            + "           [+xc CONFIG_FILE] [+lh LOCAL_XXH_HOME] [-h] [-V]\n"
+            + "           [+xc CONFIG_FILE] [+lh LOCAL_XXH_HOME] [-h] [-V]\n" \
+            + "usage: xxh [+I xxh-package ...] [+L] [+RI xxh-package ...] [+R xxh-package ...]\n"
 
         help = argp.format_help().replace('\n  +','\n\nxxh arguments:\n  +',1).replace('optional ', 'common ')\
-            .replace('number and exit', 'number and exit\n\nssh arguments:').replace('positional ', 'required ')
+            .replace('number and exit', 'number and exit\n\nssh arguments:').replace('positional ', 'required ') \
+            .replace('Quiet mode.', 'Quiet mode.\n\nxxh packages:')
         argp.format_help = lambda: help
         opt = argp.parse_args()
 
@@ -401,6 +471,9 @@ class xxh:
         if not self.quiet:
             self.verbose = opt.verbose
             self.vverbose = opt.vverbose
+
+        if not opt.destination:
+            opt.destination = '`'
 
         self.url = url = self.parse_destination(opt.destination)
 
@@ -439,6 +512,27 @@ class xxh:
 
         self.verbose = opt.verbose
         self.vverbose = opt.vverbose
+        self.local_xxh_home = p(f"{opt.local_xxh_home}")
+
+        packages_operation = False
+        if opt.install_xxh_packages:
+            self.packages_install(opt.install_xxh_packages)
+            packages_operation = True
+        if opt.reinstall_xxh_packages:
+            self.packages_reinstall(opt.reinstall_xxh_packages)
+            packages_operation = True
+        if opt.remove_xxh_packages:
+            self.packages_remove(opt.remove_xxh_packages)
+            packages_operation = True
+        if opt.list_xxh_packages or opt.list_xxh_packages == []:
+            self.packages_list(opt.list_xxh_packages)
+            packages_operation = True
+
+        if not opt.destination or opt.destination == '`':
+            if packages_operation:
+                exit(0)
+            else:
+                self.eeprint(argp.format_usage()+'\nThe following arguments are required: [user@]host[:port]')
 
         if opt.shell in self.default_shells_aliases:
             opt.shell = self.default_shells_aliases[opt.shell]
@@ -493,7 +587,6 @@ class xxh:
 
         opt.install = True if opt.install_force or opt.install_force_full else opt.install
 
-        self.local_xxh_home = p(f"{opt.local_xxh_home}")
         local_xxh_home_parent = self.local_xxh_home.parent
 
         if self.local_xxh_home.exists():

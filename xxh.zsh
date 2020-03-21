@@ -34,4 +34,6 @@ for pluginenv_file in $local_xxh_home/xxh/plugins/*-zsh-*/env; do
 done
 setopt -o nomatch
 
-xxh "$@" +s xxh-shell-zsh ${(z)eargs}
+
+[ -f xxh ] && xxh='./xxh' || xxh='xxh'
+$xxh "$@" +s xxh-shell-zsh ${(z)eargs}

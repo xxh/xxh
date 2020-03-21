@@ -35,5 +35,10 @@ for local_package_dir in [local_shell_dir]+sorted(local_plugins_dir.glob(f'*-xon
 
                 env_args += ['+heb', b64e(bash_exec)]
 
-xxh @($ARGS) +s xonsh @(env_args)
+if p'xxh'.exists():
+    xxh='./xxh'
+else:
+    xxh='xxh'
+
+@(xxh) @($ARGS) +s xonsh @(env_args)
 

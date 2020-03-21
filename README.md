@@ -80,8 +80,7 @@ When you run `xxh myhost +s xonsh` you'll get portable python, pip and python-po
 
 ### Oh My Zsh seamless SSH ([demo](https://asciinema.org/a/rCiT9hXQ5IdwqOwg6rifyFZzb))
 ```shell script
-xxhp i xxh-plugin-zsh-ohmyzsh
-source xxh.zsh myhost +if +q
+source xxh.zsh myhost +I xxh-plugin-zsh-ohmyzsh +if +q 
 ```
 This command brings your current Oh My Zsh session theme to the xxh session. If you need more complex settings just fork the [xxh-plugin-zsh-ohmyzsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh) and hack it.
 
