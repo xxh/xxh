@@ -374,7 +374,7 @@ class xxh:
                 self.eprint(f'Skip installed package: {package_dir}')
             else:
                 self.eprint(f"Git clone {package_git_url}")
-                [o,e,p] = SC(f'git clone {arg_q} --depth 1 -q {package_git_url} {package_dir} 1>&2')
+                [o,e,p] = SC(f'git clone {arg_q} --depth 1 {package_git_url} {package_dir} 1>&2')
                 if p.returncode != 0:
                     self.eeprint(f'If the package already exists try reinstall: xxh +RI <package>')
 
@@ -704,10 +704,13 @@ class xxh:
                 if not self.shell_source:
                     self.eeprint(f'{self.shell} is not installed. Try +ss <git> to add the shell git repo.')
 
+                # TODO: replace to packages_install
                 self.eprint(f'First time download {self.shell} shell from {self.shell_source}')
                 if self.shell_source[:6] in ['http:/', 'https:']:
+                    arg_q = '-q' if self.quiet else ''
                     #git clone -q --depth 1 @(self.shell_source) @(shells_dir / self.shell)
-                    S('git clone -q --depth 1 {shell_source} {shells_dir}'.format(
+                    S('git clone {arg_q} --depth 1 {shell_source} {shells_dir}'.format(
+                        arg_q=arg_q,
                         shell_source=A(self.shell_source),
                         shells_dir=A(shells_dir / self.shell)
                     ))
