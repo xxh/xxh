@@ -369,24 +369,27 @@ class xxh:
 
             package_git_url = f'https://github.com/xxh/{package}'
 
-            self.eprint(f"Git clone {package_git_url}")
             package_dir = self.local_xxh_home/'xxh'/subdir/package
-            [o,e,p] = SC(f'git clone {arg_q} --depth 1 -q {package_git_url} {package_dir} 1>&2')
-            if p.returncode != 0:
-                self.eeprint(f'If the package already exists try reinstall: xxh +RI <package>')
+            if package_dir.exists():
+                self.eprint(f'Skip installed package: {package_dir}')
+            else:
+                self.eprint(f"Git clone {package_git_url}")
+                [o,e,p] = SC(f'git clone {arg_q} --depth 1 -q {package_git_url} {package_dir} 1>&2')
+                if p.returncode != 0:
+                    self.eeprint(f'If the package already exists try reinstall: xxh +RI <package>')
 
-            self.eprint(f"Build {package}")
-            build_file_found = False
-            for ext in self.build_file_exts:
-                build_file = package_dir / f'build.{ext}'
-                if build_file.exists():
-                    S(f'{build_file} {arg_q} 1>&2')
-                    build_file_found = True
-                    break
-            if not build_file_found:
-                self.eeprint(f"Build file not found in {package_dir}")
+                self.eprint(f"Build {package}")
+                build_file_found = False
+                for ext in self.build_file_exts:
+                    build_file = package_dir / f'build.{ext}'
+                    if build_file.exists():
+                        S(f'{build_file} {arg_q} 1>&2')
+                        build_file_found = True
+                        break
+                if not build_file_found:
+                    self.eeprint(f"Build file not found in {package_dir}")
 
-            self.eprint(f"Installed {package_dir}")
+                self.eprint(f"Installed {package_dir}")
 
     def packages_remove(self, packages):
         for package in packages:
