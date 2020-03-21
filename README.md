@@ -26,6 +26,8 @@ usage: xxh [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY]
            [+i] [+if] [+s SHELL] [+e NAME=VAL +e ...] [+iff] [+hhr]
            [+hh HOST_XXH_HOME] [+hf HOST_EXEC_FILE] [+hc HOST_EXEC_CMD]
            [+xc XXH_CONFIG] [+lh LOCAL_XXH_HOME] [+v] [+vv] [+q]
+
+usage: xxh [+I xxh-package ...] [+L] [+RI xxh-package ...] [+R xxh-package ...]
 ```
 
 There is `~/.xxh/.xxhc` [yaml](https://en.wikipedia.org/wiki/YAML) config to save arguments and reuse it:
