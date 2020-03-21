@@ -75,7 +75,7 @@ class xxh:
         if os.environ.get('XDG_CONFIG_HOME'):
             return p(os.environ['XDG_CONFIG_HOME']) / 'xxh' / 'xxhc'
         else:
-            return p(os.environ['HOME']) / 'xxh' / 'xxhc'
+            return p(os.environ['HOME']) / '.config' / 'xxh' / 'xxhc'
 
     def get_current_shell(self):
         if 'SHELL' in os.environ:
