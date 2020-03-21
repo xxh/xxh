@@ -27,7 +27,7 @@ class xxh:
         self.url_xxh_plugins_search = 'https://github.com/search?q=xxh-plugin'
         self.local_xxh_version = global_settings['XXH_VERSION']
         self.local_xxh_home = p('~/.xxh')
-        self.config_file = p('~/.xxh/.xxhc')
+        self.config_file = self.local_xxh_home / '.xxhc'
         self.host_xxh_home = '~/.xxh'
         self.default_shells = {
             'xxh-shell-xonsh-appimage':{
@@ -422,7 +422,6 @@ class xxh:
 
 
     def main(self):
-        self.create_xxh_env()
         argp = argparse.ArgumentParser(description=f"Your favorite shell wherever you go through the ssh.\n{self.d2F0Y2ggLW4uMiB4eGggLWg()}", formatter_class=RawTextHelpFormatter, prefix_chars='-+')
         argp.add_argument('--version', '-V', action='version', version=f"xxh/{self.local_xxh_version}")
         argp.add_argument('-p', dest='ssh_port', help="Port to connect to on the remote host.")
@@ -469,6 +468,16 @@ class xxh:
         argp.format_help = lambda: help
         opt = argp.parse_args()
 
+        self.local_xxh_home = p(f"{opt.local_xxh_home}")
+        self.config_file = self.local_xxh_home/'.xxhc'
+        self.create_xxh_env()
+        xxh_config_file = p(opt.xxh_config)
+
+        if self.config_file != xxh_config_file and not xxh_config_file.exists():
+            self.eeprint(f'Config does not exist: {xxh_config_file}')
+        else:
+            self.config_file = xxh_config_file
+
         self.quiet = opt.quiet
         arg_q = ['-q'] if self.quiet else []
         if not self.quiet:
@@ -480,42 +489,35 @@ class xxh:
 
         self.url = url = self.parse_destination(opt.destination)
 
-        xxh_config_file = p(f"{opt.xxh_config}")
+        if self.config_file.exists():
+            if self.verbose:
+                self.eprint(f'Load xxh config from {self.config_file}')
+            with open(self.config_file) as f:
+                xxh_config = yaml.safe_load(f)
 
-        if xxh_config_file:
-            if not xxh_config_file.exists():
-                if xxh_config_file != p('~/.xxh/.xxhc'):
-                    self.eeprint(f'Config does not exist: {xxh_config_file}')
-            else:
-                if self.verbose:
-                    self.eprint(f'Load xxh config from {xxh_config_file}')
-                with open(xxh_config_file) as f:
-                    xxh_config = yaml.safe_load(f)
-
-                if xxh_config and 'hosts' in xxh_config:
-                    sys_args = sys.argv[1:]
-                    conf_args = []
-                    for h, hc in xxh_config['hosts'].items():
-                        if re.match(h, url.hostname):
-                            if self.verbose:
-                                self.eprint('Load xxh config for host ' + h)
-                            if hc and len(hc) > 0:
-                                for k, v in hc.items():
-                                    conf_args += [k, v] if v is not None else [k]
-                                    if k in ['+P', '++password']:
-                                        current_user = getpass.getuser()
-                                        current_mode = oct(xxh_config_file.stat().st_mode)[-4:]
-                                        if xxh_config_file.owner() != current_user or current_mode != '0600':
-                                            self.eprint('\n\033[0;93mWARN! There is password in the config file but the file is too open!\n'
-                                                   + f'Run to restrict: chown {current_user}:{current_user} {xxh_config_file} && chmod 0600 {xxh_config_file}\033[0m\n')
-                    args = conf_args + sys_args
-                    if opt.verbose:
-                        print('Final arguments list: ' + str(args))
-                    opt = argp.parse_args(args)
+            if xxh_config and 'hosts' in xxh_config:
+                sys_args = sys.argv[1:]
+                conf_args = []
+                for h, hc in xxh_config['hosts'].items():
+                    if re.match(h, url.hostname):
+                        if self.verbose:
+                            self.eprint('Load xxh config for host ' + h)
+                        if hc and len(hc) > 0:
+                            for k, v in hc.items():
+                                conf_args += [k, v] if v is not None else [k]
+                                if k in ['+P', '++password']:
+                                    current_user = getpass.getuser()
+                                    current_mode = oct(self.config_file.stat().st_mode)[-4:]
+                                    if self.config_file.owner() != current_user or current_mode != '0600':
+                                        self.eprint('\n\033[0;93mWARN! There is password in the config file but the file is too open!\n'
+                                               + f'Run to restrict: chown {current_user}:{current_user} {self.config_file} && chmod 0600 {self.config_file}\033[0m\n')
+                args = conf_args + sys_args
+                if opt.verbose:
+                    print('Final arguments list: ' + str(args))
+                opt = argp.parse_args(args)
 
         self.verbose = opt.verbose
         self.vverbose = opt.vverbose
-        self.local_xxh_home = p(f"{opt.local_xxh_home}")
 
         packages_operation = False
         if opt.install_xxh_packages:
