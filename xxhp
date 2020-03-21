@@ -1,10 +1,12 @@
-#!/usr/bin/env xonsh
+#!/usr/bin/env python3
+
 import os, sys, argparse, re
 from sys import exit
+from xxh_xxh.shell import *
 
 class XxhPackage(object):
     def __init__(self):
-        self.local_xxh_home_dir = p'~/.xxh'
+        self.local_xxh_home_dir = p('~/.xxh')
         self.build_file_exts = ['xsh', 'zsh', 'fish', 'sh']
         self.quiet = False
 
@@ -23,7 +25,11 @@ class XxhPackage(object):
             parser.print_help()
             sys.exit(1)
 
-        mkdir -p @(self.local_xxh_home_dir / 'xxh/shells') @(self.local_xxh_home_dir / 'xxh/plugins')
+        #mkdir -p @(self.local_xxh_home_dir / 'xxh/shells') @(self.local_xxh_home_dir / 'xxh/plugins')
+        S("mkdir -p {shells_dir} {plugins_dir}".format(
+            shells_dir=(self.local_xxh_home_dir / 'xxh/shells'),
+            plugins_dir=(self.local_xxh_home_dir / 'xxh/plugins')
+        ))
         getattr(self, args.command)()
 
     def print(self, *args, **kwargs):
@@ -51,7 +57,7 @@ class XxhPackage(object):
         opt = parser.parse_args(sys.argv[2:])
 
         self.quiet = opt.quiet
-        arg_q = ['-q'] if self.quiet else []
+        arg_q = '-q' if self.quiet else ''
 
         for package in opt.packages:
             self.print(f'Install {package}')
@@ -64,8 +70,8 @@ class XxhPackage(object):
 
             self.eprint(f"Git clone {package_git_url}")
             package_dir = self.local_xxh_home_dir/'xxh'/subdir/package
-            r = ![git clone @(arg_q) --depth 1 -q @(package_git_url) @(package_dir) 1>&2]
-            if r.returncode != 0:
+            [o,e,p] = SC(f'git clone {arg_q} --depth 1 -q {package_git_url} {package_dir} 1>&2')
+            if p.returncode != 0:
                 self.eeprint(f'If the package already exists try reinstall: xxhp ri <package>')
 
             self.eprint(f"Build {package}")
@@ -73,7 +79,7 @@ class XxhPackage(object):
             for ext in self.build_file_exts:
                 build_file = package_dir / f'build.{ext}'
                 if build_file.exists():
-                    @(build_file) @(arg_q) 1>&2
+                    S(f'{build_file} {arg_q} 1>&2')
                     build_file_found = True
                     break
             if not build_file_found:
@@ -99,7 +105,7 @@ class XxhPackage(object):
             subdir = self.package_subdir(package) or self.eeprint(f"Unknown package: {package}")
             package_dir = self.local_xxh_home_dir / 'xxh' / subdir / package
             if package_dir.exists():
-                rm -rf @(package_dir)
+                S(f'rm -rf {package_dir}')
                 self.eprint(f"Removed {package_dir}")
 
     def ri(self):

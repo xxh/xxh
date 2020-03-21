@@ -25,3 +25,12 @@ def A(args, q=0):
 
 def p(path_str):
     return Path(path_str).expanduser()
+
+if __name__ == '__main__':
+    print('Example')
+    [o, e, p] = SC('ls')
+
+    if p.returncode == 0:
+        print(f'OUTPUT: {o}')
+    else:
+        print(f'ERROR: {e}')

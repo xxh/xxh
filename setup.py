@@ -18,7 +18,6 @@ setuptools.setup(
     },
     python_requires='>=3.6',
     install_requires=[
-        'xonsh >= 0.9.13',
         'pexpect >= 4.8.0',
         'pyyaml'
     ],
