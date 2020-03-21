@@ -22,7 +22,7 @@ setuptools.setup(
         'pyyaml'
     ],
     platforms='Unix-like',
-    scripts=['xxh','xxhp','xxh.zsh','xxh.xsh'],
+    scripts=['xxh','xxh.zsh','xxh.xsh'],
     package_data={'xxh_xxh':['*.py', '*.sh', '*.xxhc']},
     packages=setuptools.find_packages(),
     classifiers=[
