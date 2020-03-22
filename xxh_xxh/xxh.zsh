@@ -34,6 +34,6 @@ for pluginenv_file in $local_xxh_home/xxh/plugins/*-zsh-*/env; do
 done
 setopt -o nomatch
 
-
-[ -f xxh ] && xxh='./xxh' || xxh='xxh'
+CDIR="$(cd "$(dirname "$0")" && pwd)"
+[ -f $CDIR/xxh ] && xxh=$CDIR/xxh || xxh='xxh'
 $xxh "$@" +s xxh-shell-zsh ${(z)eargs}

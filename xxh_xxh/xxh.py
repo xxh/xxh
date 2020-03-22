@@ -30,32 +30,31 @@ class xxh:
         self.config_file = self.local_xxh_home / '.xxhc'
         self.host_xxh_home = '~/.xxh'
         self.default_shells = {
-            'xxh-shell-xonsh-appimage':{
-                'alias':'xonsh',
-                'xxh-shell-source': 'https://github.com/xxh/xxh-shell-xonsh-appimage.git'
+            'xxh-shell-xonsh-appimage': {
+                'alias': 'xonsh',
+                'source': 'https://github.com/xxh/xxh-shell-xonsh-appimage.git'
             },
             'xxh-shell-zsh': {
-                'alias':'zsh',
-                'xxh-shell-source': 'https://github.com/xxh/xxh-shell-zsh.git'
+                'alias': 'zsh',
+                'source': 'https://github.com/xxh/xxh-shell-zsh.git'
             },
             'xxh-shell-fish-appimage': {
-                'alias':'fish',
-                'xxh-shell-source': 'https://github.com/xxh/xxh-shell-fish-appimage.git'
+                'alias': 'fish',
+                'source': 'https://github.com/xxh/xxh-shell-fish-appimage.git'
             },
             'xxh-shell-bash-zero': {
-                'alias':'bash-zero',
-                'xxh-shell-source': 'https://github.com/xxh/xxh-shell-bash-zero.git'
+                'alias': 'bash-zero',
+                'source': 'https://github.com/xxh/xxh-shell-bash-zero.git'
             },
-            'xxh-shell-osquery':{
-                'alias':'osquery',
-                'xxh-shell-source': 'https://github.com/xxh/xxh-shell-osquery.git'
+            'xxh-shell-osquery': {
+                'alias': 'osquery',
+                'source': 'https://github.com/xxh/xxh-shell-osquery.git'
             }
         }
         self.default_shells_aliases = {d['alias']:s for s,d in self.default_shells.items() if 'alias' in d}
         current_shell = self.get_current_shell()
         current_shell = self.default_shells_aliases[current_shell] if current_shell in self.default_shells_aliases else current_shell
         self.shell = current_shell
-        self.shell_source = self.default_shells[current_shell]['xxh-shell-source']
         self.build_file_exts = ['xsh', 'zsh', 'fish', 'sh']
         self.url = None
         self.ssh_arguments = []
@@ -278,7 +277,6 @@ class xxh:
 
             r = pr['output']
         else:
-            #r = $(cat @(host_info_sh) | sed @(f's|_xxh_home_|{self.host_xxh_home}|') | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s" ).strip()
             [o,e,p] = SC("cat {host_info_sh} | sed 's|_xxh_home_|{host_xxh_home}|' | {sshpass} ssh {ssh_arg_v} {ssh_arguments} {host} -T \"bash -s\"".format(
                 host_info_sh=A(host_info_sh),
                 host_xxh_home=A(self.host_xxh_home),
@@ -328,13 +326,11 @@ class xxh:
     def create_xxh_env(self):
         home = p(self.local_xxh_home)
         if not home.exists():
-            #mkdir -p @(home) @(home / 'xxh/shells') @(home / 'xxh/plugins')
             S(f"mkdir -p {home} {home / 'xxh/shells'} {home / 'xxh/plugins'}")
 
         config_file = p(self.config_file)
         sample_config_file = self.package_dir_path / 'config.xxhc'
         if not config_file.exists() and sample_config_file.exists():
-            #cp @(sample_config_file) @(config_file)
             S(f'cp {sample_config_file} {config_file}')
 
     def d2F0Y2ggLW4uMiB4eGggLWg(self):
@@ -360,36 +356,80 @@ class xxh:
 
     def packages_install(self, packages):
         arg_q = '-q' if self.quiet else ''
+        supported_xxh_packages = ['shell', 'plugin']
+        supported_source_types = ['git', 'path']
+        supported_xxh_packages_regex = '|'.join(supported_xxh_packages)
+        supported_source_types_regex = '|'.join(supported_source_types)
+        package_name_regex = f'xxh\-({supported_xxh_packages_regex})-[a-zA-Z0-9_-]+'
         for package in packages:
-            self.eprint(f'Install {package}')
-            if not re.match('^[a-zA-Z0-9-_]+$', package):
-                self.eeprint(f'Invalid package name: {package}')
-
-            subdir = self.package_subdir(package) or self.eeprint(f"Unknown package: {package}")
-
-            package_git_url = f'https://github.com/xxh/{package}'
-
-            package_dir = self.local_xxh_home/'xxh'/subdir/package
+            subdir = self.package_subdir(package)
+            package_dir = self.local_xxh_home / 'xxh' / str(subdir) / package
             if package_dir.exists():
+                if self.vverbose:
+                    self.eprint(f'Package exists, skip install: {package_dir}')
+                continue
+
+            self.eprint(f'Install {package} to local {package_dir}')
+
+            package_name = package
+            package_source_type = 'git'
+            package_source = f'https://github.com/xxh/{package}'
+
+            parse_source = False
+            if package_name in self.default_shells.keys():
+                package_source = self.default_shells[package_name]['source']
+                parse_source = True
+            elif package_name in self.default_shells_aliases.keys():
+                package_name = self.default_shells_aliases[package_name]
+                package_source = self.default_shells[ package_name ]['source']
+                parse_source = True
+
+            if '+' in package_name or parse_source:
+                g = re.match(f'^({package_name_regex})\+({supported_source_types_regex})\+(.+)$', package_name)
+                if g:
+                    package_name = g.group(1)
+                    package_source_type = g.group(3)
+                    package_source = g.group(4)
+
+            if not re.match(f'^{package_name_regex}$', package_name):
+                self.eeprint(f'Invalid package name: {package_name}\n'
+                             + f'  Package name format: {package_name_regex}\n'
+                             + f'  Package name with source format: xxh-({supported_xxh_packages_regex})-(<package_name>)+({supported_source_types_regex})+(<url>|<path>)')
+
+            subdir = self.package_subdir(package_name) or self.eeprint(f"Unknown package type: {package_name}")
+
+            package_dir = self.local_xxh_home/'xxh'/subdir/package_name
+            if package_dir.exists() and len(list(package_dir.glob('*'))) != 0:
                 self.eprint(f'Skip installed package: {package_dir}')
+                continue
+
+            if package_source_type == 'git':
+                self.eprint(f"Git clone {package_source}")
+                [o,e,proc] = SC(f'git clone {arg_q} --depth 1 {package_source} {package_dir} 1>&2')
+                if proc.returncode != 0:
+                    self.eeprint(f'Error:\n{o.decode().strip()}\n{e.decode().strip()}')
+            elif package_source_type == 'url':
+                self.eeprint(f'URL source type is not supported yet. Contribute: https://github.com/xxh/xxh')
+            elif package_source_type == 'path':
+                self.eprint(f"Package source path: {package_source}")
+                package_source = p(package_source)
+                if package_source.exists():
+                    S(f'mkdir -p {package_dir} && cp -r {package_source}/* {package_dir}')
             else:
-                self.eprint(f"Git clone {package_git_url}")
-                [o,e,p] = SC(f'git clone {arg_q} --depth 1 {package_git_url} {package_dir} 1>&2')
-                if p.returncode != 0:
-                    self.eeprint(f'If the package already exists try reinstall: xxh +RI <package>')
+                self.eeprint(f'Unknown source type: {package_source_type}')
 
-                self.eprint(f"Build {package}")
-                build_file_found = False
-                for ext in self.build_file_exts:
-                    build_file = package_dir / f'build.{ext}'
-                    if build_file.exists():
-                        S(f'{build_file} {arg_q} 1>&2')
-                        build_file_found = True
-                        break
-                if not build_file_found:
-                    self.eeprint(f"Build file not found in {package_dir}")
+            self.eprint(f"Build {package_name}")
+            build_file_found = False
+            for ext in self.build_file_exts:
+                build_file = package_dir / f'build.{ext}'
+                if build_file.exists():
+                    S(f'{build_file} {arg_q} 1>&2')
+                    build_file_found = True
+                    break
+            if not build_file_found:
+                self.eeprint(f"Build file not found in {package_dir}")
 
-                self.eprint(f"Installed {package_dir}")
+            self.eprint(f"Installed {package_dir}")
 
     def packages_remove(self, packages):
         for package in packages:
@@ -444,14 +484,14 @@ class xxh:
         argp.add_argument('+hc','++host-execute-command', help=f"Execute command on host and exit. If supported by shell entrypoint.")
         argp.add_argument('+heb','++host-execute-bash', dest='host_execute_bash', metavar='BASE64 +heb ...', action='append', help="Bash command will be executed before shell entrypoint (base64 encoded) if supported by shell entrypoint.")
         argp.add_argument('+s','++shell', default=self.shell, help="Xxh shell: " + self.shells()['available_help'])
-        argp.add_argument('+ss','++shell-source', help=f"(future) Custom source of xxh-shell: git url or local path")
         argp.add_argument('+v','++verbose', default=False, action='store_true', help="Verbose mode.")
         argp.add_argument('+vv','++vverbose', default=False, action='store_true', help="Super verbose mode.")
         argp.add_argument('+q','++quiet', default=False, action='store_true', help="Quiet mode.")
-        argp.add_argument('+I','++install-xxh-packages', nargs='*', metavar='xxh-package', dest='install_xxh_packages', help="Install xxh package.")
-        argp.add_argument('+L','++list-xxh-packages', nargs='*', metavar='xxh-package', dest='list_xxh_packages', help="List xxh package.")
-        argp.add_argument('+RI','++reinstall-xxh-packages', nargs='*', metavar='xxh-package', dest='reinstall_xxh_packages', help="Reinstall xxh package.")
-        argp.add_argument('+R','++remove-xxh-packages', nargs='*', metavar='xxh-package', dest='remove_xxh_packages', help="Remove xxh package.")
+        argp.add_argument('+I','++install-xxh-packages', action='append', metavar='xxh-package', dest='install_xxh_packages', help="Local install xxh packages.")
+        argp.add_argument('+L','++list-xxh-packages', nargs='*', metavar='xxh-package', dest='list_xxh_packages', help="List local xxh packages.")
+        argp.add_argument('+RI','++reinstall-xxh-packages', action='append', metavar='xxh-package', dest='reinstall_xxh_packages', help="Local reinstall xxh packages.")
+        argp.add_argument('+R','++remove-xxh-packages', action='append', metavar='xxh-package', dest='remove_xxh_packages', help="Local remove xxh packages.")
+        argp.add_argument('+ES','++extract-sourcing-files', action='store_true', dest='extract_sourcing_files', help="Used for AppImage. Extract sourcing files.")
         argp.usage = "xxh <host from ~/.ssh/config>\n" \
             + "usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]\n" \
             + "usage: xxh [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY]\n" \
@@ -460,13 +500,19 @@ class xxh:
             + "           [+i] [+if] [+iff] [+hhr] [+s SHELL] [+e NAME=VAL +e ...] [+v] [+vv] [+q]\n" \
             + "           [+hh HOST_XXH_HOME] [+hf HOST_EXEC_FILE] [+hc HOST_EXEC_CMD]\n" \
             + "           [+xc CONFIG_FILE] [+lh LOCAL_XXH_HOME] [-h] [-V]\n" \
-            + "usage: xxh [+I xxh-package ...] [+L] [+RI xxh-package ...] [+R xxh-package ...]\n"
+            + "usage: xxh [+I xxh-package +I ...] [+L] [+RI xxh-package +RI ...] [+R xxh-package +R ...]\n"
 
         help = argp.format_help().replace('\n  +','\n\nxxh arguments:\n  +',1).replace('optional ', 'common ')\
             .replace('number and exit', 'number and exit\n\nssh arguments:').replace('positional ', 'required ') \
             .replace('Quiet mode.', 'Quiet mode.\n\nxxh packages:')
         argp.format_help = lambda: help
         opt = argp.parse_args()
+
+        if opt.extract_sourcing_files:
+            cdir = p(sys.argv[0]).absolute().parent
+            S(f'cp {self.package_dir_path}/xxh.*sh {cdir}')
+            print(f'Sourcing files extracted to {cdir}')
+            exit(0)
 
         self.local_xxh_home = p(f"{opt.local_xxh_home}")
         self.config_file = self.local_xxh_home/'.xxhc'
@@ -519,34 +565,22 @@ class xxh:
         self.verbose = opt.verbose
         self.vverbose = opt.vverbose
 
-        packages_operation = False
         if opt.install_xxh_packages:
             self.packages_install(opt.install_xxh_packages)
-            packages_operation = True
         if opt.reinstall_xxh_packages:
             self.packages_reinstall(opt.reinstall_xxh_packages)
-            packages_operation = True
         if opt.remove_xxh_packages:
             self.packages_remove(opt.remove_xxh_packages)
-            packages_operation = True
         if opt.list_xxh_packages or opt.list_xxh_packages == []:
             self.packages_list(opt.list_xxh_packages)
-            packages_operation = True
 
         if not opt.destination or opt.destination == '`':
-            if packages_operation:
-                exit(0)
-            else:
-                self.eeprint(argp.format_usage()+'\nThe following arguments are required: [user@]host[:port]')
+            self.eeprint(argp.format_usage()+'\nThe following arguments are required: [user@]host[:port]')
 
         if opt.shell in self.default_shells_aliases:
             opt.shell = self.default_shells_aliases[opt.shell]
-        if opt.shell in self.default_shells:
-            self.shell = opt.shell
-            self.shell_source = self.default_shells[opt.shell]['xxh-shell-source']
-        else:
-            self.shell = opt.shell
-            self.shell_source = opt.shell_source
+
+        self.shell = opt.shell
 
         username = getpass.getuser()
         host = url.hostname
@@ -604,7 +638,6 @@ class xxh:
             self.eeprint(f"Paths aren't writable:\n  {local_xxh_home_parent}\n  {self.local_xxh_home}")
 
         local_plugins_dir = self.local_xxh_home / 'xxh/plugins'
-        #mkdir @(self.ssh_arg_v) -p @(self.local_xxh_home) @(local_plugins_dir) @(self.local_xxh_home / 'xxh/shells')
         S("mkdir {ssh_arg_v} -p {local_xxh_home} {local_plugins_dir} {shells_dir}".format(
             ssh_arg_v=A(self.ssh_arg_v),
             local_xxh_home=self.local_xxh_home,
@@ -664,7 +697,6 @@ class xxh:
                 elif choice == 'u':
                     local_time = datetime.datetime.now().isoformat()[:19]
                     self.eprint(f"Move {host}:{host_xxh_home} to {host}:{host_xxh_home}-{local_time}")
-                    # echo @(f"mv {host_xxh_home} {host_xxh_home}-{local_time}") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
                     S('echo "mv {host_xxh_home} {host_xxh_home}-{local_time}" | {sshpass} ssh {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
                         host_xxh_home=A(host_xxh_home),
                         local_time=A(local_time),
@@ -696,28 +728,7 @@ class xxh:
             self.eprint(f"Install {self.shell} to {host}:{host_xxh_home}" )
 
             # Download xxh shell
-
-            shells_dir = self.local_xxh_home / 'xxh/shells'
-            shell_dir = shells_dir / self.shell
-            shell_build_dir = shell_dir / 'build'
-            if not shell_dir.exists():
-                if not self.shell_source:
-                    self.eeprint(f'{self.shell} is not installed. Try +ss <git> to add the shell git repo.')
-
-                # TODO: replace to packages_install
-                self.eprint(f'First time download {self.shell} shell from {self.shell_source}')
-                if self.shell_source[:6] in ['http:/', 'https:']:
-                    arg_q = '-q' if self.quiet else ''
-                    #git clone -q --depth 1 @(self.shell_source) @(shells_dir / self.shell)
-                    S('git clone {arg_q} --depth 1 {shell_source} {shells_dir}'.format(
-                        arg_q=arg_q,
-                        shell_source=A(self.shell_source),
-                        shells_dir=A(shells_dir / self.shell)
-                    ))
-                elif p(self.shell_source).exists():
-                    S('cp -r {self.shell_source} {shells_dir}')
-                else:
-                    self.eeprint(f'Unknown shell source: {self.shell_source}')
+            self.packages_install([self.shell])
 
             # Build xxh packages
 
@@ -727,6 +738,7 @@ class xxh:
                 short_shell_name = self.shell
 
             base_dir = self.local_xxh_home / 'xxh'
+            shell_build_dir = base_dir / 'shells' / self.shell / 'build'
             build_packages = list([base_dir / 'shells' / self.shell]) + list( (base_dir / 'plugins').glob(f'*-{short_shell_name}-*') )
 
             for package_dir in build_packages:
@@ -748,7 +760,6 @@ class xxh:
 
             if opt.install_force_full:
                 self.eprint(f'Remove {host}:{host_xxh_home}')
-                #echo @(f"rm -rf {host_xxh_home}") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
                 S('echo "rm -rf {host_xxh_home}" | {sshpass} ssh {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
                     host_xxh_home=host_xxh_home,
                     sshpass=A(self.sshpass),
@@ -759,14 +770,12 @@ class xxh:
                 ))
             elif opt.install_force:
                 self.eprint(f'Remove {host}:{host_xxh_home}/xxh')
-                #echo @(f"rm -rf {host_xxh_home}/xxh") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
                 S('echo "rm -rf {host_xxh_home}/xxh" | {sshpass} ssh {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
                     host_xxh_home=host_xxh_home,
                     sshpass=A(self.sshpass),
                     ssh_arg_v=A(self.ssh_arg_v),
                     ssh_arguments=A(self.ssh_arguments),
-                    host=A(host),
-
+                    host=A(host)
                 ))
 
             # Create host xxh home directories
@@ -781,7 +790,6 @@ class xxh:
             host_xxh_package_dir = host_xxh_home  / 'xxh/package'
             host_xxh_shell_dir = host_xxh_home / f'xxh/shells/{self.shell}'
             host_xxh_shell_build_dir = host_xxh_shell_dir  / 'build'
-            #echo @(f"mkdir -p {host_xxh_package_dir} {host_xxh_shell_build_dir} {host_xxh_dirs_str}") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
             S('echo "mkdir -p {host_xxh_package_dir} {host_xxh_shell_build_dir} {host_xxh_dirs_str}" | {sshpass} ssh {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
                 host_xxh_package_dir=host_xxh_package_dir,
                 host_xxh_shell_build_dir=host_xxh_shell_build_dir,
@@ -790,8 +798,7 @@ class xxh:
                 sshpass=A(self.sshpass),
                 ssh_arg_v=A(self.ssh_arg_v),
                 ssh_arguments=A(self.ssh_arguments),
-                host=A(host),
-
+                host=A(host)
             ))
 
             # Upload files
@@ -807,7 +814,6 @@ class xxh:
                     arg_q=A(arg_q),
                     progress=('' if self.quiet or not self.verbose else '--progress')
                 )
-                #rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") @(arg_q) -az --info=progress2 --cvs-exclude @(self.package_dir_path)/settings.py @(host):@(host_xxh_package_dir)/ 1>&2
                 S("{rsync} {package_dir_path}/settings.py {host}:{host_xxh_package_dir}/ 1>&2".format(
                     rsync=rsync,
                     host=A(host),
@@ -815,7 +821,6 @@ class xxh:
                     host_xxh_package_dir=host_xxh_package_dir
                 ))
 
-                #rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") @(arg_q) -az --info=progress2 --cvs-exclude @(shell_build_dir)/ @(host):@(host_xxh_shell_build_dir)/ 1>&2
                 S("{rsync} {shell_build_dir}/ {host}:{host_xxh_shell_build_dir}/ 1>&2".format(
                     rsync=rsync,
                     host=A(host),
@@ -825,7 +830,6 @@ class xxh:
                 for local_plugin_dir in local_plugins_dir.glob(f'*-{short_shell_name}-*'):
                     local_plugin_build_dir = local_plugin_dir/'build'
                     local_plugin_name = local_plugin_dir.name
-                    #rsync @(self.ssh_arg_v) -e @(f"{''.join(self.sshpass)} ssh {'' if self.ssh_arg_v == [] else '-v'} {' '.join(self.ssh_arguments)}") @(arg_q) -az --info=progress2 --cvs-exclude @(local_plugin_build_dir)/* @(host):@(host_xxh_plugins_dir)/@(local_plugin_name)/build/ 1>&2
                     S("{rsync} {local_plugin_build_dir}/* {host}:{host_xxh_plugins_dir}/{local_plugin_name}/build/ 1>&2".format(
                         rsync=rsync,
                         host=A(host),
@@ -841,14 +845,12 @@ class xxh:
                     ssh_arguments=A(self.ssh_arguments),
                     arg_q=A(arg_q)
                 )
-                #@(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @(arg_q) @(self.package_dir_path)/settings.py @(f"{host}:{host_xxh_package_dir}/") 1>&2
                 S('{scp} {package_dir_path}/settings.py {host}:{host_xxh_package_dir}/ 1>&2'.format(
                     scp=scp,
                     package_dir_path=self.package_dir_path,
                     host=host,
                     host_xxh_package_dir=host_xxh_package_dir
                 ))
-                #@(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @(arg_q) @(shell_build_dir) @(f"{host}:{host_xxh_shell_dir}/") 1>&2
                 S('{scp} {shell_build_dir} {host}:{host_xxh_shell_dir}/ 1>&2'.format(
                     scp=scp,
                     shell_build_dir=shell_build_dir,
@@ -859,7 +861,6 @@ class xxh:
                 for local_plugin_dir in local_plugins_dir.glob(f'*-{short_shell_name}-*'):
                     local_plugin_build_dir = local_plugin_dir/'build'
                     local_plugin_name = local_plugin_dir.name
-                    #@(self.sshpass) scp @(self.ssh_arg_v) @(self.ssh_arguments) -r -C @([] if self.vverbose else ['-q']) @(local_plugin_build_dir)/* @(f"{host}:{host_xxh_plugins_dir}/{local_plugin_name}/build/") 1>&2
                     S('{scp} {local_plugin_build_dir}/* {host}:{host_xxh_plugins_dir}/{local_plugin_name}/build/ 1>&2'.format(
                         scp=scp,
                         local_plugin_build_dir=local_plugin_build_dir,
@@ -891,7 +892,6 @@ class xxh:
         for lc in ['LC_TIME','LC_MONETARY','LC_ADDRESS','LC_IDENTIFICATION','LC_MEASUREMENT','LC_NAME','LC_NUMERIC','LC_PAPER','LC_TELEPHONE']:
             lcs.append(f"{lc}=POSIX")
 
-        #@(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -t bash @(str(host_xxh_home/'xxh/shells'/self.shell/'build/entrypoint.sh')) @(host_execute_file) @(host_execute_command) @(host_entrypoint_verbose) @(env_args)
         S("{lcs} {sshpass} ssh {ssh_arg_v} {ssh_arguments} {host} -t 'bash {entrypoint} {host_execute_file} {host_execute_command} {host_entrypoint_verbose} {env_args}'".format(
             lcs=A(lcs),
             sshpass=A(self.sshpass),
@@ -908,7 +908,6 @@ class xxh:
         if opt.host_xxh_home_remove:
             if self.verbose:
                 self.eprint(f'Remove {host}:{host_xxh_home}')
-            #echo @(f"rm -rf {host_xxh_home}") | @(self.sshpass) ssh @(self.ssh_arg_v) @(self.ssh_arguments) @(host) -T "bash -s"
             S('echo "rm -rf {host_xxh_home}" | {sshpass} ssh {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
                 host_xxh_home=host_xxh_home,
                 sshpass=A(self.sshpass),

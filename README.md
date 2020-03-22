@@ -10,7 +10,7 @@
 
 ## Install or update
 ```shell script
-pip install --upgrade xxh-xxh
+pip install -U xxh-xxh
 ```
 
 ## Usage
@@ -36,6 +36,7 @@ hosts:
   myhost:                     # settings for myhost
     -p: 2222                    # set special port
     +s: xxh-shell-zsh           # set zsh shell                         
+    +I: xxh-plugin-zsh-ohmyzsh  # install xxh-plugin before connect
     +e: ZSH_THEME="clean"       # set ohmyzsh theme
 
   "company-.*":        # for all hosts by regex pattern

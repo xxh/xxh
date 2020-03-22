@@ -22,8 +22,8 @@ setuptools.setup(
         'pyyaml'
     ],
     platforms='Unix-like',
-    scripts=['xxh','xxh.zsh','xxh.xsh'],
-    package_data={'xxh_xxh':['*.py', '*.sh', '*.xxhc']},
+    scripts=['xxh', 'xxh_xxh/xxh.zsh', 'xxh_xxh/xxh.xsh'],
+    package_data={'xxh_xxh': ['*.py', '*.sh', '*.xxhc', 'xxh.*']},
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
