@@ -8,11 +8,21 @@
   <img alt="[BSD license]" src="https://img.shields.io/pypi/l/xxh-xxh">
 </p>
 
-## Install or update
+## Installation methods
+#### pip
 ```shell script
 pip install -U xxh-xxh
+xxh myhost                # Default mode
+source xxh.zsh myhost     # Seamless mode
 ```
-
+#### AppImage
+```
+mkdir ~/xxh && cd ~/xxh
+wget -O xxh https://github.com/xxh/linuxdeploy-plugin-python/releases/download/continuous/xxh-release-x86_64.AppImage
+chmod +x xxh 
+./xxh myhost
+```
+To use with seamless mode run `./xxh ++extract-sourcing-files` to extract `xxh.zsh` and `xxh.zsh` to the current directory then run `source xxh.zsh myhost` command for seamless connecting.
 ## Usage
 Use `xxh` as replace `ssh` to connecting to the host. Seamless support of basic ssh arguments. 
 
