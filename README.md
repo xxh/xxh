@@ -23,43 +23,11 @@ chmod +x xxh
 ./xxh myhost
 ```
 To use with seamless mode run `./xxh ++extract-sourcing-files` to extract `xxh.zsh` and `xxh.zsh` to the current directory then run `source xxh.zsh myhost` command for seamless connecting.
-## Usage
-Use `xxh` as replace `ssh` to connecting to the host. Seamless support of basic ssh arguments. 
-
-```
-$ ./xxh -h 
-usage: xxh <host from ~/.ssh/config>
-usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]
-usage: xxh [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY]
-           [-o SSH_OPTION -o ...] [+P PASSWORD] [+PP]
-           [user@]host[:port]
-           [+i] [+if] [+s SHELL] [+e NAME=VAL +e ...] [+iff] [+hhr]
-           [+hh HOST_XXH_HOME] [+hf HOST_EXEC_FILE] [+hc HOST_EXEC_CMD]
-           [+xc XXH_CONFIG] [+lh LOCAL_XXH_HOME] [+v] [+vv] [+q]
-
-usage: xxh [+I xxh-package ...] [+L] [+RI xxh-package ...] [+R xxh-package ...]
-```
-
-There is `~/.xxh/.xxhc` [yaml](https://en.wikipedia.org/wiki/YAML) config to save arguments and reuse it:
-```yaml
-hosts:
-  myhost:                     # settings for myhost
-    -p: 2222                    # set special port
-    +s: xxh-shell-zsh           # set zsh shell                         
-    +I: xxh-plugin-zsh-ohmyzsh  # install xxh-plugin before connect
-    +e: ZSH_THEME="clean"       # set ohmyzsh theme
-
-  "company-.*":        # for all hosts by regex pattern
-    +if:                 # don't asking about install (++install-force)
-    +hh: /tmp/.xxh       # use special xxh home directory (++host-xxh-home)
-    +hhr:                # remove host xxh home after disconnect (++host-xxh-home-remove)
-```
-The arguments will be automatically added when you run `xxh myhost` or `xxh company-server1`.
 
 ## Supported shells
 **[Xonsh](https://github.com/xxh/xxh-shell-xonsh-appimage)** — stable version with [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner), [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar), [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) plugins. 
 
-**[Zsh](https://github.com/xxh/xxh-shell-zsh)** — beta version with [Oh My Zsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh) and [powerlevel10k](https://github.com/xxh/xxh-plugin-zsh-powerlevel10k) plugins, waiting for feedback.
+**[Zsh](https://github.com/xxh/xxh-shell-zsh)** — pre stable version with [Oh My Zsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh) and [powerlevel10k](https://github.com/xxh/xxh-plugin-zsh-powerlevel10k) plugins, waiting for feedback.
 
 **[osquery](https://github.com/xxh/xxh-shell-osquery)** — beta version, waiting for feedback.
 
@@ -68,6 +36,43 @@ The arguments will be automatically added when you run `xxh myhost` or `xxh comp
 **[Bash](https://github.com/xxh/xxh-shell-bash-zero)** — zero version that just runs bash installed on the host with plugins like [vim](https://github.com/xxh/xxh-plugin-bash-vim). 
 
 [Search xxh shell on Github](https://github.com/search?q=xxh-shell&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-shell) or [create your shell entrypoint](https://github.com/xxh/xxh-shell-sample) to use another portable shell. 
+
+## Usage
+Use `xxh` as replace `ssh` to connecting to the host without changing ssh arguments:
+```
+xxh <host from ~/.ssh/config>
+xxh [ssh arguments] [user@]host[:port] [xxh arguments]
+xxh [+I xxh-package ...] [+L] [+RI xxh-package ...] [+R xxh-package ...]
+```
+Common examples (use `xxh --help` to get info about arguments):
+```shell script
+xxh myhost                                          # connect to the host
+xxh -i id_rsa -p 2222 myhost                        # connect using key and port
+xxh myhost +s zsh                                   # connect to the host into zsh shell
+source xxh.zsh myhost +I xxh-plugin-zsh-ohmyzsh     # install zsh plugin then connect into zsh with seamless mode (zsh theme name will be add from local host) 
+xxh myhost +s xonsh +I xxh-plugin-xonsh-theme-bar   # install xonsh plugin before connect into xonsh shell
+xxh myhost +s bash-zero +I xxh-plugin-bash-vim      # install bash plugin before connect
+xxh myhost +if +q                                   # install without questions in quiet mode
+xxh myhost +hh /tmp/xxh +hhr                        # upload xxh to myhost:/tmp/xxh and remove it after disconnect 
+```
+To reusing arguments there is `~/.xxh/.xxhc` [yaml](https://en.wikipedia.org/wiki/YAML) config:
+```yaml
+hosts:
+  myhost:                     # settings for myhost
+    -p: 2222                    # set special port
+    +s: xxh-shell-zsh           # use zsh shell                         
+    +I: xxh-shell-zsh           # install xxh-shell before connect
+    +I: xxh-plugin-zsh-ohmyzsh  # install xxh-plugin before connect
+    +e: ZSH_THEME="clean"       # set ohmyzsh theme
+
+  "company-.*":        # for all hosts by regex pattern
+    +if:                 # don't asking about install (++install-force)
+    +s: xonsh            # use xonsh shell
+    +hh: /tmp/.xxh       # use special xxh home directory (++host-xxh-home)
+    +hhr:                # remove host xxh home after disconnect (++host-xxh-home-remove)
+```
+The arguments will be automatically added when you run `xxh myhost` or `xxh company-server1`. 
+If you add `+I` arguments with appropriate xxh packages (customizations described in development section) you can make your config file complete and simplify the usage command to `xxh myhost`. All xxh packages will be installed automatically.
 
 ## The ideas behind xxh
 * **Avoid building on remote host**. The security and careful about environment on the host are behind it. This could be the optional future feature but not now. 
@@ -83,7 +88,7 @@ The arguments will be automatically added when you run `xxh myhost` or `xxh comp
 
 **How it works?** When you run `xxh myhost` command xxh download portable shell and store locally to future use. Then if it needed xxh upload the portable shell, init scripts and plugins to the host. Finally xxh make ssh connection to the host and run portable shell without any system installs and affection on the target host.
 
-**What about speed?** The first connection takes time for downloading and uploading portable shell. It depends on portable shell size and channel speed. But when xxh is installed on the host and you do just `xxh myhost` then it works as ordinary ssh connection speed. You could monitor all process using `+vv` argument.
+**What about speed?** The first connection takes time for downloading and uploading portable shell. It depends on portable shell size and channel speed. But when xxh is installed on the host and you do just `xxh myhost` then it works as ordinary ssh connection speed plus speed of initializing the shell you used. You could monitor all process using `+vv` argument.
 
 **What if my `host_internal` can be reached only from my `host_external`?** Add `ProxyCommand` or `ProxyJump` to your ssh config [as described](https://superuser.com/questions/96489/an-ssh-tunnel-via-multiple-hops#answer-170592) and then do ordinary `xxh host_internal`.
 
@@ -115,6 +120,12 @@ that you could help you on the host. [Bash-zero](https://github.com/xxh/xxh-shel
 ## Development
 In the [xxh-dev](https://github.com/xxh/xxh-dev) repo there is full [docker](https://www.docker.com/)ised environment for development, testing and contribution. The process of testing and development is orchestrated by `xde` tool and as easy as possible.
 
+Use custom source to install your version of xxh packages:
+```shell script
+xxh +I xxh-shell-sample+git+https://github.com/xxh/xxh-shell-sample
+xxh +I xxh-shell-sample+path+/home/user/xxh/xxh-shell-sample
+xxh myhost +s xxh-shell-sample
+```
 ## Community
 **Spread the word!** If you like the idea of xxh click ⭐ on the repo and <a href="https://twitter.com/intent/tweet?text=Python-powered%20shell%20wherever%20you%20go%20through%20the%20ssh&url=https%3A%2F%2Fgithub.com%2Fxxh%2Fxxh&related=" target="_blank">tweet the link</a>. 
 
