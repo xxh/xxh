@@ -261,8 +261,15 @@ class xxh:
         host = self.url.hostname
         host_info_sh = self.package_dir_path / 'host_info.sh'
         if self.use_pexpect:
-            cmd = "bash -c 'cat {host_info_sh} | sed \"s|_xxh_home_|{host_xxh_home}|\" | sed \"s|_xxh_shell_|{shell}|\" | ssh {ssh_v} {ssh_arguments} {host} -T \"bash -s\"'".format(
-                host_info_sh=host_info_sh, host_xxh_home=self.host_xxh_home, shell=self.shell, ssh_v=('' if not self.ssh_arg_v else '-v'), ssh_arguments=' '.join(self.ssh_arguments), host=host)
+            cmd = "bash -c 'cat {host_info_sh} | sed \"s|_xxh_home_|{host_xxh_home}|\" | sed \"s|_xxh_shell_|{shell}|\" | {ssh} {ssh_v} {ssh_arguments} {host} -T \"bash -s\"'".format(
+                host_info_sh=host_info_sh,
+                host_xxh_home=self.host_xxh_home,
+                shell=self.shell,
+                ssh=self.ssh_command,
+                ssh_v=('' if not self.ssh_arg_v else '-v'),
+                ssh_arguments=' '.join(self.ssh_arguments),
+                host=host
+            )
             pr = self.pssh(cmd)
 
             if pr == {}:
@@ -277,10 +284,11 @@ class xxh:
 
             r = pr['output']
         else:
-            [o,e,p] = SC("cat {host_info_sh} | sed 's|_xxh_home_|{host_xxh_home}|' | {sshpass} ssh {ssh_arg_v} {ssh_arguments} {host} -T \"bash -s\"".format(
+            [o,e,p] = SC("cat {host_info_sh} | sed 's|_xxh_home_|{host_xxh_home}|' | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T \"bash -s\"".format(
                 host_info_sh=A(host_info_sh),
                 host_xxh_home=A(self.host_xxh_home),
                 sshpass=A(self.sshpass),
+                ssh=A(self.ssh_command),
                 ssh_arg_v=A(self.ssh_arg_v),
                 ssh_arguments=A(self.ssh_arguments),
                 host=A(host)
@@ -468,6 +476,7 @@ class xxh:
         argp.add_argument('-l', dest='ssh_login', help="Specifies the user to log in as on the remote machine.")
         argp.add_argument('-i', dest='ssh_private_key', help="File from which the identity (private key) for public key authentication is read.")
         argp.add_argument('-o', dest='ssh_options', metavar='SSH_OPTION -o ...', action='append', help="SSH options are described in ssh man page. Example: -o Port=22 -o User=snail")
+        argp.add_argument('+c', dest='ssh_command', help="Command to execute instead of 'ssh'.")
         argp.add_argument('+P','++password', help="Password for ssh auth.")
         argp.add_argument('+PP','++password-prompt', default=False, action='store_true', help="Enter password manually using prompt.")
         argp.add_argument('destination', nargs='?', metavar='[user@]host[:port]', help="Destination may be specified as [ssh://][user@]host[:port] or host from ~/.ssh/config")
@@ -495,7 +504,7 @@ class xxh:
         argp.usage = "xxh <host from ~/.ssh/config>\n" \
             + "usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]\n" \
             + "usage: xxh [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY]\n" \
-            + "           [-o SSH_OPTION -o ...] [+P PASSWORD] [+PP]\n" \
+            + "           [-o SSH_OPTION -o ...] [+c SSH_COMMAND] [+P PASSWORD] [+PP]\n" \
             + "           [user@]host[:port]\n" \
             + "           [+i] [+if] [+iff] [+hhr] [+s SHELL] [+e NAME=VAL +e ...] [+v] [+vv] [+q]\n" \
             + "           [+hh HOST_XXH_HOME] [+hf HOST_EXEC_FILE] [+hc HOST_EXEC_CMD]\n" \
@@ -592,6 +601,11 @@ class xxh:
             opt.ssh_login = url.username
         if opt.ssh_login:
             username = opt.ssh_login
+        
+        if opt.ssh_command:
+            self.ssh_command = opt.ssh_command
+        else:
+            self.ssh_command = 'ssh'
 
         self.ssh_arguments = ['-o', 'StrictHostKeyChecking=accept-new']
         if not self.verbose:
@@ -697,10 +711,11 @@ class xxh:
                 elif choice == 'u':
                     local_time = datetime.datetime.now().isoformat()[:19]
                     self.eprint(f"Move {host}:{host_xxh_home} to {host}:{host_xxh_home}-{local_time}")
-                    S('echo "mv {host_xxh_home} {host_xxh_home}-{local_time}" | {sshpass} ssh {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
+                    S('echo "mv {host_xxh_home} {host_xxh_home}-{local_time}" | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
                         host_xxh_home=A(host_xxh_home),
                         local_time=A(local_time),
                         sshpass=A(self.sshpass),
+                        ssh=A(self.ssh_command),
                         ssh_arg_v=A(self.ssh_arg_v),
                         ssh_arguments=A(self.ssh_arguments),
                         host=A(host)
@@ -760,9 +775,10 @@ class xxh:
 
             if opt.install_force_full:
                 self.eprint(f'Remove {host}:{host_xxh_home}')
-                S('echo "rm -rf {host_xxh_home}" | {sshpass} ssh {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
+                S('echo "rm -rf {host_xxh_home}" | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
                     host_xxh_home=host_xxh_home,
                     sshpass=A(self.sshpass),
+                    ssh=A(self.ssh_command),
                     ssh_arg_v=A(self.ssh_arg_v),
                     ssh_arguments=A(self.ssh_arguments),
                     host=A(host),
@@ -770,9 +786,10 @@ class xxh:
                 ))
             elif opt.install_force:
                 self.eprint(f'Remove {host}:{host_xxh_home}/xxh')
-                S('echo "rm -rf {host_xxh_home}/xxh" | {sshpass} ssh {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
+                S('echo "rm -rf {host_xxh_home}/xxh" | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
                     host_xxh_home=host_xxh_home,
                     sshpass=A(self.sshpass),
+                    ssh=A(self.ssh_command),
                     ssh_arg_v=A(self.ssh_arg_v),
                     ssh_arguments=A(self.ssh_arguments),
                     host=A(host)
@@ -790,12 +807,13 @@ class xxh:
             host_xxh_package_dir = host_xxh_home  / 'xxh/package'
             host_xxh_shell_dir = host_xxh_home / f'xxh/shells/{self.shell}'
             host_xxh_shell_build_dir = host_xxh_shell_dir  / 'build'
-            S('echo "mkdir -p {host_xxh_package_dir} {host_xxh_shell_build_dir} {host_xxh_dirs_str}" | {sshpass} ssh {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
+            S('echo "mkdir -p {host_xxh_package_dir} {host_xxh_shell_build_dir} {host_xxh_dirs_str}" | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
                 host_xxh_package_dir=host_xxh_package_dir,
                 host_xxh_shell_build_dir=host_xxh_shell_build_dir,
                 host_xxh_dirs_str=host_xxh_dirs_str,
                 host_xxh_home=host_xxh_home,
                 sshpass=A(self.sshpass),
+                ssh=A(self.ssh_command),
                 ssh_arg_v=A(self.ssh_arg_v),
                 ssh_arguments=A(self.ssh_arguments),
                 host=A(host)
@@ -806,9 +824,10 @@ class xxh:
             if which('rsync') and host_info['rsync']:
                 self.eprint('First time upload using rsync (this will be omitted on the next connections)')
 
-                rsync = "rsync {ssh_arg_v} -e \"{sshpass} ssh {ssh_arg_v} {ssh_arguments}\" {arg_q} -az {progress} --cvs-exclude".format(
+                rsync = "rsync {ssh_arg_v} -e \"{sshpass} {ssh} {ssh_arg_v} {ssh_arguments}\" {arg_q} -az {progress} --cvs-exclude".format(
                     host_xxh_home=host_xxh_home,
                     sshpass=A(self.sshpass),
+                    ssh=A(self.ssh_command),
                     ssh_arg_v=('' if self.ssh_arg_v == [] else '-v'),
                     ssh_arguments=A(self.ssh_arguments),
                     arg_q=A(arg_q),
@@ -892,9 +911,10 @@ class xxh:
         for lc in ['LC_TIME','LC_MONETARY','LC_ADDRESS','LC_IDENTIFICATION','LC_MEASUREMENT','LC_NAME','LC_NUMERIC','LC_PAPER','LC_TELEPHONE']:
             lcs.append(f"{lc}=POSIX")
 
-        S("{lcs} {sshpass} ssh {ssh_arg_v} {ssh_arguments} {host} -t 'bash {entrypoint} {host_execute_file} {host_execute_command} {host_entrypoint_verbose} {env_args}'".format(
+        S("{lcs} {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -t 'bash {entrypoint} {host_execute_file} {host_execute_command} {host_entrypoint_verbose} {env_args}'".format(
             lcs=A(lcs),
             sshpass=A(self.sshpass),
+            ssh=A(self.ssh_command),
             ssh_arg_v=A(self.ssh_arg_v),
             ssh_arguments=A(self.ssh_arguments),
             host=A(host),
@@ -908,9 +928,10 @@ class xxh:
         if opt.host_xxh_home_remove:
             if self.verbose:
                 self.eprint(f'Remove {host}:{host_xxh_home}')
-            S('echo "rm -rf {host_xxh_home}" | {sshpass} ssh {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
+            S('echo "rm -rf {host_xxh_home}" | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
                 host_xxh_home=host_xxh_home,
                 sshpass=A(self.sshpass),
+                ssh=A(self.ssh_command),
                 ssh_arg_v=A(self.ssh_arg_v),
                 ssh_arguments=A(self.ssh_arguments),
                 host=A(host)
