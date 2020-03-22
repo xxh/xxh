@@ -35,9 +35,9 @@ for local_package_dir in [local_shell_dir]+sorted(local_plugins_dir.glob(f'*-xon
 
                 env_args += ['+heb', b64e(bash_exec)]
 
-if p'xxh'.exists():
-    xxh='./xxh'
-else:
+cdir = pf'{__file__}'.absolute().parent
+xxh = cdir/'xxh'
+if not xxh.exists():
     xxh='xxh'
 
 @(xxh) @($ARGS) +s xonsh @(env_args)
