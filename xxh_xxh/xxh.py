@@ -26,6 +26,7 @@ class xxh:
         self.url_xxh_github = 'https://github.com/xxh/xxh'
         self.url_xxh_plugins_search = 'https://github.com/search?q=xxh-plugin'
         self.local_xxh_version = global_settings['XXH_VERSION']
+        self.ssh_command = 'ssh'
         self.local_xxh_home = p('~/.xxh')
         self.config_file = self.local_xxh_home / '.xxhc'
         self.host_xxh_home = '~/.xxh'
@@ -476,7 +477,7 @@ class xxh:
         argp.add_argument('-l', dest='ssh_login', help="Specifies the user to log in as on the remote machine.")
         argp.add_argument('-i', dest='ssh_private_key', help="File from which the identity (private key) for public key authentication is read.")
         argp.add_argument('-o', dest='ssh_options', metavar='SSH_OPTION -o ...', action='append', help="SSH options are described in ssh man page. Example: -o Port=22 -o User=snail")
-        argp.add_argument('+c', dest='ssh_command', help="Command to execute instead of 'ssh'.")
+        argp.add_argument('+c', dest='ssh_command', default=self.ssh_command, help="Command to execute instead of 'ssh'.")
         argp.add_argument('+P','++password', help="Password for ssh auth.")
         argp.add_argument('+PP','++password-prompt', default=False, action='store_true', help="Enter password manually using prompt.")
         argp.add_argument('destination', nargs='?', metavar='[user@]host[:port]', help="Destination may be specified as [ssh://][user@]host[:port] or host from ~/.ssh/config")
@@ -602,11 +603,7 @@ class xxh:
         if opt.ssh_login:
             username = opt.ssh_login
         
-        if opt.ssh_command:
-            self.ssh_command = opt.ssh_command
-        else:
-            self.ssh_command = 'ssh'
-
+        self.ssh_command = opt.ssh_command
         self.ssh_arguments = ['-o', 'StrictHostKeyChecking=accept-new']
         if not self.verbose:
            self.ssh_arguments += ['-o', 'LogLevel=QUIET']
