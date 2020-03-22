@@ -30,7 +30,7 @@ To use with seamless mode run `./xxh ++extract-sourcing-files` to extract `xxh.z
 | **[Zsh](https://github.com/xxh/xxh-shell-zsh)**              | prestable  | `xxh.zsh` | [OhMyZsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh), [powerlevel10k](https://github.com/xxh/xxh-plugin-zsh-powerlevel10k) |
 | **[osquery](https://github.com/xxh/xxh-shell-osquery)**      | beta       |           | |
 | **[Fish](https://github.com/xxh/xxh-shell-fish-appimage)**   | alpha      |           | |
-| **[Bash](https://github.com/xxh/xxh-shell-bash-zero)**       | <abbr title="The 'zero' version means using shell installed on host without any installs.">zero</abbr>       |           | [vim](https://github.com/xxh/xxh-plugin-bash-vim) |
+| **[Bash](https://github.com/xxh/xxh-shell-bash-zero)**       | zero       |           | [vim](https://github.com/xxh/xxh-plugin-bash-vim) |
 
 [Search xxh shell on Github](https://github.com/search?q=xxh-shell&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-shell) or [create your shell entrypoint](https://github.com/xxh/xxh-shell-sample) to use another portable shell.  
 
