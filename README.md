@@ -24,7 +24,7 @@ chmod +x xxh
 To use with seamless mode run `./xxh ++extract-sourcing-files` to extract `xxh.zsh` and `xxh.zsh` to the current directory then run `source xxh.zsh myhost` command for seamless connecting.
 
 ## Supported shells
-| Shell                                                        | Status     | Seamless  | Plugins |
+| xxh-shell                                                        | status     | seamless  | plugins |
 |--------------------------------------------------------------|------------|-----------|---------|
 | **[Xonsh](https://github.com/xxh/xxh-shell-xonsh-appimage)** | stable     | `xxh.xsh` | [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner), [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar), [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) | 
 | **[Zsh](https://github.com/xxh/xxh-shell-zsh)**              | prestable  | `xxh.zsh` | [OhMyZsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh), [powerlevel10k](https://github.com/xxh/xxh-plugin-zsh-powerlevel10k) |
