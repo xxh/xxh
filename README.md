@@ -7,6 +7,9 @@
   <a href="https://gitter.im/xxh-xxh/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge" target="_blank"><img alt="[gitter chat]" src="https://badges.gitter.im/xxh-xxh/community.svg"></a>
   <img alt="[BSD license]" src="https://img.shields.io/pypi/l/xxh-xxh">
 </p>
+<p align="center">  
+If you like the idea of xxh click ⭐ on the repo and spread the word.
+</p>
 
 ## Installation methods
 #### pip
@@ -122,9 +125,7 @@ Use custom source to install your version of xxh packages:
 xxh +I xxh-shell-sample+git+https://github.com/xxh/xxh-shell-sample
 xxh +I xxh-shell-sample+path+/home/user/xxh/xxh-shell-sample
 xxh myhost +s xxh-shell-sample
-```
-## Community
-**Spread the word!** If you like the idea of xxh click ⭐ on the repo and <a href="https://twitter.com/intent/tweet?text=Python-powered%20shell%20wherever%20you%20go%20through%20the%20ssh&url=https%3A%2F%2Fgithub.com%2Fxxh%2Fxxh&related=" target="_blank">tweet the link</a>. 
+``` 
 
 **We have teams.** If you're in team it does not oblige to do something. The main goal of teams is to create group of passionate people who could help or support in complex questions. Some people could be expert in one shell and newbie in another shell and mutual assistance is the key to xxh evolution. [Ask join.](https://github.com/xxh/xxh/issues/50)
 
