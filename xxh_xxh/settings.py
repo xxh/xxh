@@ -1,7 +1,7 @@
 import sys, os
 
 global_settings = {
-    'XXH_VERSION': '0.6.8'
+    'XXH_VERSION': '0.6.9'
 }
 
 if __name__ == "__main__":
