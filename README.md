@@ -24,17 +24,15 @@ chmod +x xxh
 To use with seamless mode run `./xxh ++extract-sourcing-files` to extract `xxh.zsh` and `xxh.zsh` to the current directory then run `source xxh.zsh myhost` command for seamless connecting.
 
 ## Supported shells
-**[Xonsh](https://github.com/xxh/xxh-shell-xonsh-appimage)** — stable version with [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner), [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar), [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) plugins. 
+| Shell                                                        | Status     | Seamless  | Plugins |
+|--------------------------------------------------------------|------------|-----------|---------|
+| **[Xonsh](https://github.com/xxh/xxh-shell-xonsh-appimage)** | stable     | `xxh.xsh` | [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner), [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar), [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) | 
+| **[Zsh](https://github.com/xxh/xxh-shell-zsh)**              | prestable  | `xxh.zsh` | [OhMyZsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh), [powerlevel10k](https://github.com/xxh/xxh-plugin-zsh-powerlevel10k) |
+| **[osquery](https://github.com/xxh/xxh-shell-osquery)**      | beta       |           | |
+| **[Fish](https://github.com/xxh/xxh-shell-fish-appimage)**   | alpha      |           | |
+| **[Bash](https://github.com/xxh/xxh-shell-bash-zero)**       | zero       |           | [vim](https://github.com/xxh/xxh-plugin-bash-vim) |
 
-**[Zsh](https://github.com/xxh/xxh-shell-zsh)** — pre stable version with [Oh My Zsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh) and [powerlevel10k](https://github.com/xxh/xxh-plugin-zsh-powerlevel10k) plugins, waiting for feedback.
-
-**[osquery](https://github.com/xxh/xxh-shell-osquery)** — beta version, waiting for feedback.
-
-**[Fish](https://github.com/xxh/xxh-shell-fish-appimage)** — alpha version, waiting for feedback.
-
-**[Bash](https://github.com/xxh/xxh-shell-bash-zero)** — zero version that just runs bash installed on the host with plugins like [vim](https://github.com/xxh/xxh-plugin-bash-vim). 
-
-[Search xxh shell on Github](https://github.com/search?q=xxh-shell&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-shell) or [create your shell entrypoint](https://github.com/xxh/xxh-shell-sample) to use another portable shell. 
+[Search xxh shell on Github](https://github.com/search?q=xxh-shell&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-shell) or [create your shell entrypoint](https://github.com/xxh/xxh-shell-sample) to use another portable shell.  
 
 ## Usage
 Use `xxh` as replace `ssh` to connecting to the host without changing ssh arguments:
