@@ -66,7 +66,16 @@ class xxh:
         self._verbose = False
         self._vverbose = False
         self.quiet = False
-        self.os = os.name
+
+    def S(self, *args, **kwargs):
+        if self.vverbose:
+            eprint(f'RUN SHELL COMMAND: {args[0]}')
+        return S(*args, **kwargs)
+
+    def SC(self, *args, **kwargs):
+        if self.vverbose:
+            eprint(f'RUN SHELL COMMAND CAPTURED: {args[0]}')
+        return SC(*args, **kwargs)
 
     def eprint(self, *args, **kwargs):
         if not self.quiet:
@@ -262,16 +271,24 @@ class xxh:
         host = self.url.hostname
         host_info_sh = self.package_dir_path / 'host_info.sh'
         if self.use_pexpect:
-            cmd = "bash -c 'cat {host_info_sh} | sed \"s|_xxh_home_|{host_xxh_home}|\" | sed \"s|_xxh_shell_|{shell}|\" | {ssh} {ssh_v} {ssh_arguments} {host} -T \"bash -s\"'".format(
-                host_info_sh=host_info_sh,
-                host_xxh_home=self.host_xxh_home,
-                shell=self.shell,
-                ssh=self.ssh_command,
-                ssh_v=('' if not self.ssh_arg_v else '-v'),
-                ssh_arguments=' '.join(self.ssh_arguments),
-                host=host
-            )
-            pr = self.pssh(cmd)
+            while 1:
+                cmd = "bash -c 'cat {host_info_sh} | sed \"s|_xxh_home_|{host_xxh_home}|\" | sed \"s|_xxh_shell_|{shell}|\" | {ssh} {ssh_v} {ssh_arguments} {host} -T \"bash -s\"'".format(
+                    host_info_sh=host_info_sh,
+                    host_xxh_home=self.host_xxh_home,
+                    shell=self.shell,
+                    ssh=self.ssh_command,
+                    ssh_v=('' if not self.ssh_arg_v else '-v'),
+                    ssh_arguments=A(self.ssh_arguments),
+                    host=host
+                )
+                pr = self.pssh(cmd)
+
+                if 'unsupported option "accept-new"' in pr['output']:
+                    if self.vverbose:
+                        eprint('StrictHostKeyChecking=accept-new is not supported. Switched to StrictHostKeyChecking=yes and repeat')
+                    self.ssh_arguments = [a.replace('StrictHostKeyChecking=accept-new', 'StrictHostKeyChecking=yes') for a in self.ssh_arguments]
+                    continue
+                break
 
             if pr == {}:
                 self.eeprint('Unexpected result. Try again with +v or +vv or try ssh before xxh')
@@ -285,7 +302,7 @@ class xxh:
 
             r = pr['output']
         else:
-            [o,e,p] = SC("cat {host_info_sh} | sed 's|_xxh_home_|{host_xxh_home}|' | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T \"bash -s\"".format(
+            [o,e,p] = self.SC("cat {host_info_sh} | sed 's|_xxh_home_|{host_xxh_home}|' | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T \"bash -s\"".format(
                 host_info_sh=A(host_info_sh),
                 host_xxh_home=A(self.host_xxh_home),
                 sshpass=A(self.sshpass),
@@ -335,12 +352,12 @@ class xxh:
     def create_xxh_env(self):
         home = p(self.local_xxh_home)
         if not home.exists():
-            S(f"mkdir -p {home} {home / 'xxh/shells'} {home / 'xxh/plugins'}")
+            self.S(f"mkdir -p {home} {home / 'xxh/shells'} {home / 'xxh/plugins'}")
 
         config_file = p(self.config_file)
         sample_config_file = self.package_dir_path / 'config.xxhc'
         if not config_file.exists() and sample_config_file.exists():
-            S(f'cp {sample_config_file} {config_file}')
+            self.S(f'cp {sample_config_file} {config_file}')
 
     def d2F0Y2ggLW4uMiB4eGggLWg(self):
         try:
@@ -414,7 +431,7 @@ class xxh:
 
             if package_source_type == 'git':
                 self.eprint(f"Git clone {package_source}")
-                [o,e,proc] = SC(f'git clone {arg_q} --depth 1 {package_source} {package_dir} 1>&2')
+                [o,e,proc] = self.SC(f'git clone {arg_q} --depth 1 {package_source} {package_dir} 1>&2')
                 if proc.returncode != 0:
                     self.eeprint(f'Error:\n{o.decode().strip()}\n{e.decode().strip()}')
             elif package_source_type == 'url':
@@ -423,7 +440,7 @@ class xxh:
                 self.eprint(f"Package source path: {package_source}")
                 package_source = p(package_source)
                 if package_source.exists():
-                    S(f'mkdir -p {package_dir} && cp -r {package_source}/* {package_dir}')
+                    self.S(f'mkdir -p {package_dir} && cp -r {package_source}/* {package_dir}')
             else:
                 self.eeprint(f'Unknown source type: {package_source_type}')
 
@@ -432,7 +449,7 @@ class xxh:
             for ext in self.build_file_exts:
                 build_file = package_dir / f'build.{ext}'
                 if build_file.exists():
-                    S(f'{build_file} {arg_q} 1>&2')
+                    self.S(f'{build_file} {arg_q} 1>&2')
                     build_file_found = True
                     break
             if not build_file_found:
@@ -446,7 +463,7 @@ class xxh:
             subdir = self.package_subdir(package) or self.eeprint(f"Unknown package: {package}")
             package_dir = self.local_xxh_home / 'xxh' / subdir / package
             if package_dir.exists():
-                S(f'rm -rf {package_dir}')
+                self.S(f'rm -rf {package_dir}')
                 self.eprint(f"Removed {package_dir}")
 
     def packages_reinstall(self, packages):
@@ -520,7 +537,7 @@ class xxh:
 
         if opt.extract_sourcing_files:
             cdir = p(sys.argv[0]).absolute().parent
-            S(f'cp {self.package_dir_path}/xxh.*sh {cdir}')
+            self.S(f'cp {self.package_dir_path}/xxh.*sh {cdir}')
             print(f'Sourcing files extracted to {cdir}')
             exit(0)
 
@@ -649,7 +666,7 @@ class xxh:
             self.eeprint(f"Paths aren't writable:\n  {local_xxh_home_parent}\n  {self.local_xxh_home}")
 
         local_plugins_dir = self.local_xxh_home / 'xxh/plugins'
-        S("mkdir {ssh_arg_v} -p {local_xxh_home} {local_plugins_dir} {shells_dir}".format(
+        self.S("mkdir {ssh_arg_v} -p {local_xxh_home} {local_plugins_dir} {shells_dir}".format(
             ssh_arg_v=A(self.ssh_arg_v),
             local_xxh_home=self.local_xxh_home,
             local_plugins_dir=local_plugins_dir,
@@ -708,7 +725,7 @@ class xxh:
                 elif choice == 'u':
                     local_time = datetime.datetime.now().isoformat()[:19]
                     self.eprint(f"Move {host}:{host_xxh_home} to {host}:{host_xxh_home}-{local_time}")
-                    S('echo "mv {host_xxh_home} {host_xxh_home}-{local_time}" | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
+                    self.S('echo "mv {host_xxh_home} {host_xxh_home}-{local_time}" | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
                         host_xxh_home=A(host_xxh_home),
                         local_time=A(local_time),
                         sshpass=A(self.sshpass),
@@ -762,7 +779,7 @@ class xxh:
                         build_file = package_dir / f'build.{ext}'
                         if build_file.exists():
                             self.eprint(f"First time build {package_dir}")
-                            S(f'{build_file} {A(arg_q)} 1>&2')
+                            self.S(f'{build_file} {A(arg_q)} 1>&2')
                             build_file_found = True
                             break
                     if not build_file_found:
@@ -772,7 +789,7 @@ class xxh:
 
             if opt.install_force_full:
                 self.eprint(f'Remove {host}:{host_xxh_home}')
-                S('echo "rm -rf {host_xxh_home}" | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
+                self.S('echo "rm -rf {host_xxh_home}" | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
                     host_xxh_home=host_xxh_home,
                     sshpass=A(self.sshpass),
                     ssh=A(self.ssh_command),
@@ -783,7 +800,7 @@ class xxh:
                 ))
             elif opt.install_force:
                 self.eprint(f'Remove {host}:{host_xxh_home}/xxh')
-                S('echo "rm -rf {host_xxh_home}/xxh" | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
+                self.S('echo "rm -rf {host_xxh_home}/xxh" | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
                     host_xxh_home=host_xxh_home,
                     sshpass=A(self.sshpass),
                     ssh=A(self.ssh_command),
@@ -804,7 +821,7 @@ class xxh:
             host_xxh_package_dir = host_xxh_home  / 'xxh/package'
             host_xxh_shell_dir = host_xxh_home / f'xxh/shells/{self.shell}'
             host_xxh_shell_build_dir = host_xxh_shell_dir  / 'build'
-            S('echo "mkdir -p {host_xxh_package_dir} {host_xxh_shell_build_dir} {host_xxh_dirs_str}" | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
+            self.S('echo "mkdir -p {host_xxh_package_dir} {host_xxh_shell_build_dir} {host_xxh_dirs_str}" | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
                 host_xxh_package_dir=host_xxh_package_dir,
                 host_xxh_shell_build_dir=host_xxh_shell_build_dir,
                 host_xxh_dirs_str=host_xxh_dirs_str,
@@ -830,14 +847,14 @@ class xxh:
                     arg_q=A(arg_q),
                     progress=('' if self.quiet or not self.verbose else '--progress')
                 )
-                S("{rsync} {package_dir_path}/settings.py {host}:{host_xxh_package_dir}/ 1>&2".format(
+                self.S("{rsync} {package_dir_path}/settings.py {host}:{host_xxh_package_dir}/ 1>&2".format(
                     rsync=rsync,
                     host=A(host),
                     package_dir_path=self.package_dir_path,
                     host_xxh_package_dir=host_xxh_package_dir
                 ))
 
-                S("{rsync} {shell_build_dir}/ {host}:{host_xxh_shell_build_dir}/ 1>&2".format(
+                self.S("{rsync} {shell_build_dir}/ {host}:{host_xxh_shell_build_dir}/ 1>&2".format(
                     rsync=rsync,
                     host=A(host),
                     shell_build_dir=shell_build_dir,
@@ -846,7 +863,7 @@ class xxh:
                 for local_plugin_dir in local_plugins_dir.glob(f'*-{short_shell_name}-*'):
                     local_plugin_build_dir = local_plugin_dir/'build'
                     local_plugin_name = local_plugin_dir.name
-                    S("{rsync} {local_plugin_build_dir}/* {host}:{host_xxh_plugins_dir}/{local_plugin_name}/build/ 1>&2".format(
+                    self.S("{rsync} {local_plugin_build_dir}/* {host}:{host_xxh_plugins_dir}/{local_plugin_name}/build/ 1>&2".format(
                         rsync=rsync,
                         host=A(host),
                         local_plugin_build_dir=local_plugin_build_dir,
@@ -861,13 +878,13 @@ class xxh:
                     ssh_arguments=A(self.ssh_arguments),
                     arg_q=A(arg_q)
                 )
-                S('{scp} {package_dir_path}/settings.py {host}:{host_xxh_package_dir}/ 1>&2'.format(
+                self.S('{scp} {package_dir_path}/settings.py {host}:{host_xxh_package_dir}/ 1>&2'.format(
                     scp=scp,
                     package_dir_path=self.package_dir_path,
                     host=host,
                     host_xxh_package_dir=host_xxh_package_dir
                 ))
-                S('{scp} {shell_build_dir} {host}:{host_xxh_shell_dir}/ 1>&2'.format(
+                self.S('{scp} {shell_build_dir} {host}:{host_xxh_shell_dir}/ 1>&2'.format(
                     scp=scp,
                     shell_build_dir=shell_build_dir,
                     host=host,
@@ -877,7 +894,7 @@ class xxh:
                 for local_plugin_dir in local_plugins_dir.glob(f'*-{short_shell_name}-*'):
                     local_plugin_build_dir = local_plugin_dir/'build'
                     local_plugin_name = local_plugin_dir.name
-                    S('{scp} {local_plugin_build_dir}/* {host}:{host_xxh_plugins_dir}/{local_plugin_name}/build/ 1>&2'.format(
+                    self.S('{scp} {local_plugin_build_dir}/* {host}:{host_xxh_plugins_dir}/{local_plugin_name}/build/ 1>&2'.format(
                         scp=scp,
                         local_plugin_build_dir=local_plugin_build_dir,
                         host=host,
@@ -908,7 +925,7 @@ class xxh:
         for lc in ['LC_TIME','LC_MONETARY','LC_ADDRESS','LC_IDENTIFICATION','LC_MEASUREMENT','LC_NAME','LC_NUMERIC','LC_PAPER','LC_TELEPHONE']:
             lcs.append(f"{lc}=POSIX")
 
-        S("{lcs} {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -t 'bash {entrypoint} {host_execute_file} {host_execute_command} {host_entrypoint_verbose} {env_args}'".format(
+        self.S("{lcs} {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -t 'bash {entrypoint} {host_execute_file} {host_execute_command} {host_entrypoint_verbose} {env_args}'".format(
             lcs=A(lcs),
             sshpass=A(self.sshpass),
             ssh=A(self.ssh_command),
@@ -925,7 +942,7 @@ class xxh:
         if opt.host_xxh_home_remove:
             if self.verbose:
                 self.eprint(f'Remove {host}:{host_xxh_home}')
-            S('echo "rm -rf {host_xxh_home}" | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
+            self.S('echo "rm -rf {host_xxh_home}" | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
                 host_xxh_home=host_xxh_home,
                 sshpass=A(self.sshpass),
                 ssh=A(self.ssh_command),
