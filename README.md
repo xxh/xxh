@@ -32,6 +32,8 @@ To use with seamless mode run `./xxh ++extract-sourcing-files` to extract `xxh.z
 | **[osquery](https://github.com/xxh/xxh-shell-osquery)**      | beta       |             | |
 | **[Fish](https://github.com/xxh/xxh-shell-fish-appimage)**   | alpha      |             | |
 
+The "zero" status means the shell installed on host will be used.
+
 [Search xxh shell on Github](https://github.com/search?q=xxh-shell&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-shell) or [create your shell entrypoint](https://github.com/xxh/xxh-shell-sample) to use another portable shell.  
 
 ## Usage
