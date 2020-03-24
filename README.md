@@ -11,9 +11,9 @@ If you like the idea of xxh click ⭐ on the repo and spread the word.
 </p>
 
 ## Installation methods
-#### pip
+#### pip (python 3)
 ```shell script
-pip install -U xxh-xxh
+pip3 install -U xxh-xxh
 ```
 #### AppImage
 ```
