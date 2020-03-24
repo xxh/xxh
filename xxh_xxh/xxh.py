@@ -273,7 +273,7 @@ class xxh:
         host_info_sh = self.package_dir_path / 'host_info.sh'
         if self.use_pexpect:
             while 1:
-                cmd = "bash -c 'cat {host_info_sh} | sed \"s|_xxh_home_|{host_xxh_home}|\" | sed \"s|__shell__|{short_shell_name}|\" | sed \"s|_xxh_shell_|{shell}|\" | {ssh} {ssh_v} {ssh_arguments} {host} -T \"bash -s\"'".format(
+                cmd = "bash -c 'cat {host_info_sh} | sed \"s|__xxh_home__|{host_xxh_home}|g\" | sed \"s|__shell__|{short_shell_name}|g\" | sed \"s|__xxh_shell__|{shell}|g\" | {ssh} {ssh_v} {ssh_arguments} {host} -T \"bash -s\"'".format(
                     host_info_sh=host_info_sh,
                     host_xxh_home=self.host_xxh_home,
                     shell=self.shell,
