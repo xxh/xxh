@@ -56,6 +56,7 @@ class xxh:
         current_shell = self.get_current_shell()
         current_shell = self.default_shells_aliases[current_shell] if current_shell in self.default_shells_aliases else current_shell
         self.shell = current_shell
+        self.short_shell_name = self.shell.split('-')[2]
         self.build_file_exts = ['xsh', 'zsh', 'fish', 'sh']
         self.url = None
         self.ssh_arguments = []
@@ -272,10 +273,11 @@ class xxh:
         host_info_sh = self.package_dir_path / 'host_info.sh'
         if self.use_pexpect:
             while 1:
-                cmd = "bash -c 'cat {host_info_sh} | sed \"s|_xxh_home_|{host_xxh_home}|\" | sed \"s|_xxh_shell_|{shell}|\" | {ssh} {ssh_v} {ssh_arguments} {host} -T \"bash -s\"'".format(
+                cmd = "bash -c 'cat {host_info_sh} | sed \"s|_xxh_home_|{host_xxh_home}|\" | sed \"s|__shell__|{short_shell_name}|\" | sed \"s|_xxh_shell_|{shell}|\" | {ssh} {ssh_v} {ssh_arguments} {host} -T \"bash -s\"'".format(
                     host_info_sh=host_info_sh,
                     host_xxh_home=self.host_xxh_home,
                     shell=self.shell,
+                    short_shell_name=self.short_shell_name,
                     ssh=self.ssh_command,
                     ssh_v=('' if not self.ssh_arg_v else '-v'),
                     ssh_arguments=A(self.ssh_arguments),
@@ -609,6 +611,11 @@ class xxh:
 
         self.shell = opt.shell
 
+        if self.shell.startswith('xxh-shell-'):
+            self.short_shell_name = self.shell.split('-')[2]
+        else:
+            self.short_shell_name = self.shell
+
         username = getpass.getuser()
         host = url.hostname
         if not host:
@@ -760,15 +767,9 @@ class xxh:
             self.packages_install([self.shell])
 
             # Build xxh packages
-
-            if self.shell.startswith('xxh-shell-'):
-                short_shell_name = self.shell.split('-')[2]
-            else:
-                short_shell_name = self.shell
-
             base_dir = self.local_xxh_home / 'xxh'
             shell_build_dir = base_dir / 'shells' / self.shell / 'build'
-            build_packages = list([base_dir / 'shells' / self.shell]) + list( (base_dir / 'plugins').glob(f'*-{short_shell_name}-*') )
+            build_packages = list([base_dir / 'shells' / self.shell]) + list( (base_dir / 'plugins').glob(f'*-{self.short_shell_name}-*') )
 
             for package_dir in build_packages:
                 package_name = package_dir.name
@@ -813,7 +814,7 @@ class xxh:
 
             host_xxh_plugins_dir = host_xxh_home / 'xxh/plugins'
             host_xxh_dirs_str = ''
-            for local_plugin_dir in local_plugins_dir.glob(f'*-{short_shell_name}-*'):
+            for local_plugin_dir in local_plugins_dir.glob(f'*-{self.short_shell_name}-*'):
                 local_plugin_build_dir = local_plugin_dir / 'build'
                 host_plugin_build_dir = str(local_plugin_build_dir).replace(str(self.local_xxh_home), str(host_xxh_home))
                 host_xxh_dirs_str += ' ' + host_plugin_build_dir
@@ -860,7 +861,7 @@ class xxh:
                     shell_build_dir=shell_build_dir,
                     host_xxh_shell_build_dir=host_xxh_shell_build_dir
                 ))
-                for local_plugin_dir in local_plugins_dir.glob(f'*-{short_shell_name}-*'):
+                for local_plugin_dir in local_plugins_dir.glob(f'*-{self.short_shell_name}-*'):
                     local_plugin_build_dir = local_plugin_dir/'build'
                     local_plugin_name = local_plugin_dir.name
                     self.S("{rsync} {local_plugin_build_dir}/* {host}:{host_xxh_plugins_dir}/{local_plugin_name}/build/ 1>&2".format(
@@ -891,7 +892,7 @@ class xxh:
                     host_xxh_shell_dir=host_xxh_shell_dir
                 ))
 
-                for local_plugin_dir in local_plugins_dir.glob(f'*-{short_shell_name}-*'):
+                for local_plugin_dir in local_plugins_dir.glob(f'*-{self.short_shell_name}-*'):
                     local_plugin_build_dir = local_plugin_dir/'build'
                     local_plugin_name = local_plugin_dir.name
                     self.S('{scp} {local_plugin_build_dir}/* {host}:{host_xxh_plugins_dir}/{local_plugin_name}/build/ 1>&2'.format(

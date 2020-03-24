@@ -18,3 +18,4 @@ echo xxh_home_writable=`[ -w $xxh_home_realpath ] && echo "1" ||echo "0"`
 echo xxh_parent_home_writable=`[ -w $(dirname $xxh_home_realpath) ] && echo "1" ||echo "0"`
 echo rsync=`command -v rsync`
 echo scp=`command -v scp`
+echo shell=`command -v __shell__`
