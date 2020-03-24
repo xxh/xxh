@@ -24,13 +24,13 @@ chmod +x xxh
 To use with seamless mode run `./xxh ++extract-sourcing-files` to extract `xxh.zsh` and `xxh.zsh` to the current directory then run `source xxh.zsh myhost` command for seamless connecting.
 
 ## Supported shells
-| xxh-shell                                                        | status     | seamless  | plugins |
-|--------------------------------------------------------------|------------|-----------|---------|
-| **[Xonsh](https://github.com/xxh/xxh-shell-xonsh-appimage)** | stable     | `xxh.xsh` | [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner), [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar), [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) | 
-| **[Zsh](https://github.com/xxh/xxh-shell-zsh)**              | prestable  | `xxh.zsh` | [OhMyZsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh), [powerlevel10k](https://github.com/xxh/xxh-plugin-zsh-powerlevel10k) |
-| **[osquery](https://github.com/xxh/xxh-shell-osquery)**      | beta       |           | |
-| **[Fish](https://github.com/xxh/xxh-shell-fish-appimage)**   | alpha      |           | |
-| **[Bash](https://github.com/xxh/xxh-shell-bash-zero)**       | zero       |           | [vim](https://github.com/xxh/xxh-plugin-bash-vim) |
+| xxh-shell                                                    | status     | seamless    | plugins |
+|--------------------------------------------------------------|------------|-------------|---------|
+| **[Xonsh](https://github.com/xxh/xxh-shell-xonsh-appimage)** | stable     | `xxh.xsh`   | [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner), [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar), [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) | 
+| **[Zsh](https://github.com/xxh/xxh-shell-zsh)**              | prestable  | `xxh.zsh`   | [OhMyZsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh), [powerlevel10k](https://github.com/xxh/xxh-plugin-zsh-powerlevel10k) |
+| **[osquery](https://github.com/xxh/xxh-shell-osquery)**      | beta       |             | |
+| **[Fish](https://github.com/xxh/xxh-shell-fish-appimage)**   | alpha      |             | |
+| **[Bash](https://github.com/xxh/xxh-shell-bash-zero)**       | zero       |  `xxh.bash` | [vim](https://github.com/xxh/xxh-plugin-bash-vim) |
 
 [Search xxh shell on Github](https://github.com/search?q=xxh-shell&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-shell) or [create your shell entrypoint](https://github.com/xxh/xxh-shell-sample) to use another portable shell.  
 
