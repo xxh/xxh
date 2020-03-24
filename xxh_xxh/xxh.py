@@ -666,10 +666,10 @@ class xxh:
             self.eeprint(f'Unknown answer from host when getting info')
 
         if 'xxh_home_realpath' not in host_info or host_info['xxh_home_realpath'] == '':
-            self.eeprint(f'Unknown answer from host when getting realpath for directory {host_xxh_home}')
+            self.eeprint(f'Unknown answer from host when getting realpath for directory {self.host_xxh_home}')
 
         if 'xxh_version' not in host_info or host_info['xxh_version'] == '':
-            self.eeprint(f'Unknown answer from host when getting version for directory {host_xxh_home}')
+            self.eeprint(f'Unknown answer from host when getting version for directory {self.host_xxh_home}')
 
         host_xxh_home = host_info['xxh_home_realpath']
         host_xxh_home = p(f"{host_xxh_home}")
