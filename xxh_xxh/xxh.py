@@ -33,23 +33,23 @@ class xxh:
         self.default_shells = {
             'xxh-shell-xonsh-appimage': {
                 'alias': 'xonsh',
-                'source': 'https://github.com/xxh/xxh-shell-xonsh-appimage.git'
+                'source': 'xxh-shell-xonsh-appimage+git+https://github.com/xxh/xxh-shell-xonsh-appimage.git'
             },
             'xxh-shell-zsh': {
                 'alias': 'zsh',
-                'source': 'https://github.com/xxh/xxh-shell-zsh.git'
+                'source': 'xxh-shell-zsh+git+https://github.com/xxh/xxh-shell-zsh.git'
             },
             'xxh-shell-fish-appimage': {
                 'alias': 'fish',
-                'source': 'https://github.com/xxh/xxh-shell-fish-appimage.git'
+                'source': 'xxh-shell-fish-appimage+git+https://github.com/xxh/xxh-shell-fish-appimage.git'
             },
             'xxh-shell-bash-zero': {
                 'alias': 'bash-zero',
-                'source': 'https://github.com/xxh/xxh-shell-bash-zero.git'
+                'source': 'xxh-shell-bash-zero+git+https://github.com/xxh/xxh-shell-bash-zero.git'
             },
             'xxh-shell-osquery': {
                 'alias': 'osquery',
-                'source': 'https://github.com/xxh/xxh-shell-osquery.git'
+                'source': 'xxh-shell-osquery+git+https://github.com/xxh/xxh-shell-osquery.git'
             }
         }
         self.default_shells_aliases = {d['alias']:s for s,d in self.default_shells.items() if 'alias' in d}
@@ -389,6 +389,12 @@ class xxh:
             +f""
 
     def package_parse_name(self, package_name):
+        if package_name in self.default_shells.keys():
+            package_name = self.default_shells[package_name]['source']
+        elif package_name in self.default_shells_aliases.keys():
+            package_name = self.default_shells_aliases[package_name]
+            package_name = self.default_shells[package_name]['source']
+
         g = re.match(f'^({self.package_name_regex})\+({self.supported_source_types_regex})\+(.+)$', package_name)
         if g:
             package_name = g.group(1)
@@ -408,21 +414,7 @@ class xxh:
 
             self.eprint(f'Install {package} to local {package_dir}')
 
-            package_name = package
-            package_source_type = 'git'
-            package_source = f'https://github.com/xxh/{package}'
-
-            parse_source = False
-            if package_name in self.default_shells.keys():
-                package_source = self.default_shells[package_name]['source']
-                parse_source = True
-            elif package_name in self.default_shells_aliases.keys():
-                package_name = self.default_shells_aliases[package_name]
-                package_source = self.default_shells[ package_name ]['source']
-                parse_source = True
-
-            if '+' in package_name or parse_source:
-                package_name, package_source_type, package_source = self.package_parse_name(package_name)
+            package_name, package_source_type, package_source = self.package_parse_name(package)
 
             if not re.match(f'^{self.package_name_regex}$', package_name):
                 self.eeprint(f'Invalid package name: {package_name}\n'
@@ -466,11 +458,10 @@ class xxh:
 
     def packages_remove(self, packages):
         for package_name in packages:
-            self.eprint(f'Remove {package_name}')
-
             if '+' in package_name:
                 package_name, package_source_type, package_source = self.package_parse_name(package_name)
 
+            self.eprint(f'Remove {package_name}')
             subdir = self.package_subdir(package_name) or self.eeprint(f"Unknown package: {package_name}")
             package_dir = self.local_xxh_home / 'xxh' / subdir / package_name
             if package_dir.exists():
