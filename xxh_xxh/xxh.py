@@ -67,6 +67,12 @@ class xxh:
         self._verbose = False
         self._vverbose = False
         self.quiet = False
+        self.supported_xxh_packages = ['shell', 'plugin']
+        self.supported_source_types = ['git', 'path']
+        self.supported_xxh_packages_regex = '|'.join(self.supported_xxh_packages)
+        self.supported_source_types_regex = '|'.join(self.supported_source_types)
+        self.package_name_regex = f'xxh\-({self.supported_xxh_packages_regex})-[a-zA-Z0-9_-]+'
+
 
     def S(self, *args, **kwargs):
         if self.vverbose:
@@ -382,13 +388,16 @@ class xxh:
             +f"{' ' if not t else ''}   /_{t}__________________/\n" \
             +f""
 
+    def package_parse_name(self, package_name):
+        g = re.match(f'^({self.package_name_regex})\+({self.supported_source_types_regex})\+(.+)$', package_name)
+        if g:
+            package_name = g.group(1)
+            package_source_type = g.group(3)
+            package_source = g.group(4)
+        return (package_name, package_source_type, package_source)
+
     def packages_install(self, packages):
         arg_q = '-q' if self.quiet else ''
-        supported_xxh_packages = ['shell', 'plugin']
-        supported_source_types = ['git', 'path']
-        supported_xxh_packages_regex = '|'.join(supported_xxh_packages)
-        supported_source_types_regex = '|'.join(supported_source_types)
-        package_name_regex = f'xxh\-({supported_xxh_packages_regex})-[a-zA-Z0-9_-]+'
         for package in packages:
             subdir = self.package_subdir(package)
             package_dir = self.local_xxh_home / 'xxh' / str(subdir) / package
@@ -413,16 +422,12 @@ class xxh:
                 parse_source = True
 
             if '+' in package_name or parse_source:
-                g = re.match(f'^({package_name_regex})\+({supported_source_types_regex})\+(.+)$', package_name)
-                if g:
-                    package_name = g.group(1)
-                    package_source_type = g.group(3)
-                    package_source = g.group(4)
+                package_name, package_source_type, package_source = self.package_parse_name(package_name)
 
-            if not re.match(f'^{package_name_regex}$', package_name):
+            if not re.match(f'^{self.package_name_regex}$', package_name):
                 self.eeprint(f'Invalid package name: {package_name}\n'
-                             + f'  Package name format: {package_name_regex}\n'
-                             + f'  Package name with source format: xxh-({supported_xxh_packages_regex})-(<package_name>)+({supported_source_types_regex})+(<url>|<path>)')
+                             + f'  Package name format: {self.package_name_regex}\n'
+                             + f'  Package name with source format: xxh-({self.supported_xxh_packages_regex})-(<package_name>)+({self.supported_source_types_regex})+(<url>|<path>)')
 
             subdir = self.package_subdir(package_name) or self.eeprint(f"Unknown package type: {package_name}")
 
@@ -460,10 +465,14 @@ class xxh:
             self.eprint(f"Installed {package_dir}")
 
     def packages_remove(self, packages):
-        for package in packages:
-            self.eprint(f'Remove {package}')
-            subdir = self.package_subdir(package) or self.eeprint(f"Unknown package: {package}")
-            package_dir = self.local_xxh_home / 'xxh' / subdir / package
+        for package_name in packages:
+            self.eprint(f'Remove {package_name}')
+
+            if '+' in package_name:
+                package_name, package_source_type, package_source = self.package_parse_name(package_name)
+
+            subdir = self.package_subdir(package_name) or self.eeprint(f"Unknown package: {package_name}")
+            package_dir = self.local_xxh_home / 'xxh' / subdir / package_name
             if package_dir.exists():
                 self.S(f'rm -rf {package_dir}')
                 self.eprint(f"Removed {package_dir}")
