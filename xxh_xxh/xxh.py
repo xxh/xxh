@@ -603,14 +603,22 @@ class xxh:
         self.verbose = opt.verbose
         self.vverbose = opt.vverbose
 
+        packages_opration = False
         if opt.install_xxh_packages:
             self.packages_install(opt.install_xxh_packages)
+            packages_opration = True
         if opt.reinstall_xxh_packages:
             self.packages_reinstall(opt.reinstall_xxh_packages)
+            packages_opration = True
         if opt.remove_xxh_packages:
             self.packages_remove(opt.remove_xxh_packages)
+            packages_opration = True
         if opt.list_xxh_packages or opt.list_xxh_packages == []:
             self.packages_list(opt.list_xxh_packages)
+            packages_opration = True
+
+        if packages_opration and not self.quiet:
+            eprint('Packages operations done!\n')
 
         if not opt.destination or opt.destination == '`':
             self.eeprint(argp.format_usage()+'\nThe following arguments are required: [user@]host[:port]')
