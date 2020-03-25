@@ -389,6 +389,9 @@ class xxh:
             +f""
 
     def package_parse_name(self, package_name):
+        package_source_type='git'
+        package_source=f'https://github.com/xxh/{package_name}'
+
         if package_name in self.default_shells.keys():
             package_name = self.default_shells[package_name]['source']
         elif package_name in self.default_shells_aliases.keys():
