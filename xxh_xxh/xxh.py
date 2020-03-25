@@ -39,9 +39,9 @@ class xxh:
                 'alias': 'zsh',
                 'source': 'xxh-shell-zsh+git+https://github.com/xxh/xxh-shell-zsh.git'
             },
-            'xxh-shell-fish-appimage': {
+            'xxh-shell-fish': {
                 'alias': 'fish',
-                'source': 'xxh-shell-fish-appimage+git+https://github.com/xxh/xxh-shell-fish-appimage.git'
+                'source': 'xxh-shell-fish+git+https://github.com/xxh/xxh-shell-fish.git'
             },
             'xxh-shell-bash-zero': {
                 'alias': 'bash-zero',
