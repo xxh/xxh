@@ -3,7 +3,6 @@ from shutil import which
 from sys import exit
 from argparse import RawTextHelpFormatter
 from urllib.parse import urlparse
-from random import randint
 from base64 import b64encode
 
 from .shell import *
@@ -19,6 +18,9 @@ def eeprint(*args, **kwargs):
         del kwargs['return_code']
     print(*args, file=sys.stderr, **kwargs)
     exit(return_code)
+
+def randint(a, b):
+    return a+datetime.datetime.now().microsecond%(b-a+1)
 
 class xxh:
     def __init__(self):
