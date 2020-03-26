@@ -278,19 +278,40 @@ class xxh:
             self.eeprint(f'Wrong host xxh home: {self.host_xxh_home}')
 
         host = self.url.hostname
-        host_info_sh = self.package_dir_path / 'host_info.sh'
+        host_info_s = """
+            xxh_home_realpath=$([ ! -x "$(command -v realpath)" ] && dirname {host_xxh_home}/p || realpath -m {host_xxh_home})
+            xxh_version="dir_not_found"
+            if [[ -d $xxh_home_realpath ]]; then
+                xxh_version=$([ "$(ls -A $xxh_home_realpath)" ] && echo "version_not_found" || echo "dir_empty")
+                settings_path=$xxh_home_realpath/xxh/package/settings.py
+                if [[ -f $settings_path ]]; then
+                    xxh_version=$(cat $settings_path | grep XXH_VERSION | sed -e "s/.* //g")
+                fi
+            fi
+            echo xxh_home_realpath=$xxh_home_realpath
+            echo xxh_version=$xxh_version
+            echo xxh_shell_exists=`[ -d $xxh_home_realpath/xxh/shells/{shell} ] && echo "1" ||echo "0"`
+            echo xxh_home_writable=`[ -w $xxh_home_realpath ] && echo "1" ||echo "0"`
+            echo xxh_parent_home_writable=$([ -w $(dirname $xxh_home_realpath) ] && echo "1" ||echo "0")
+            echo rsync=`command -v rsync`
+            echo scp=`command -v scp`
+            echo shell=`command -v {short_shell_name}`
+            echo qwe=`hostname`
+            """.format(
+            host_xxh_home=self.host_xxh_home,
+            shell=self.shell,
+            short_shell_name=self.short_shell_name
+        )
         if self.use_pexpect:
             while 1:
-                cmd = "bash -c 'cat {host_info_sh} | sed \"s|__xxh_home__|{host_xxh_home}|g\" | sed \"s|__shell__|{short_shell_name}|g\" | sed \"s|__xxh_shell__|{shell}|g\" | {ssh} {ssh_v} {ssh_arguments} {host} -T \"bash -s\"'".format(
-                    host_info_sh=host_info_sh,
-                    host_xxh_home=self.host_xxh_home,
-                    shell=self.shell,
-                    short_shell_name=self.short_shell_name,
+                cmd = "bash -c 'echo -e \"{host_info_s}\" | {ssh} {ssh_v} {ssh_arguments} {host} -T \"bash -s\"'".format(
+                    host_info_s=host_info_s.strip().replace('\n','\\n').replace('"','\\"').replace('$','\\$').replace('`','\\`'),
                     ssh=self.ssh_command,
                     ssh_v=('' if not self.ssh_arg_v else '-v'),
                     ssh_arguments=A(self.ssh_arguments),
                     host=host
                 )
+
                 pr = self.pssh(cmd)
 
                 if 'unsupported option "accept-new"' in pr['output']:
@@ -312,7 +333,7 @@ class xxh:
 
             r = pr['output']
         else:
-            [o,e,p] = self.SC("cat {host_info_sh} | sed 's|_xxh_home_|{host_xxh_home}|' | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T \"bash -s\"".format(
+            [o,e,p] = self.SC("bash -c 'echo -e \"{host_info_s}\" | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T \"bash -s\"'".format(
                 host_info_sh=A(host_info_sh),
                 host_xxh_home=A(self.host_xxh_home),
                 sshpass=A(self.sshpass),
@@ -333,6 +354,7 @@ class xxh:
                     + 'Check your connection parameters using the same command but with ssh.')
 
         r = dict([l.split('=') for l in r.replace('\r','').split('\n') if l.strip() != '' and '=' in l])
+        r = {k: (v[1:-1] if v[:1] == "'" and v[-1:] == "'" else v) for k, v in r.items()}
 
         return r
 
