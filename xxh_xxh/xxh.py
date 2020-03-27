@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 from base64 import b64encode
 from .shell import *
 
-XXH_VERSION = '0.6.19'
+XXH_VERSION = '0.6.20'
 
 class xxh:
     def __init__(self):

@@ -35,7 +35,7 @@ def eeprint(*args, **kwargs):
         return_code = kwargs['return_code']
         del kwargs['return_code']
     print(*args, file=sys.stderr, **kwargs)
-    exit(return_code)
+    sys.exit(return_code)
 
 if __name__ == '__main__':
     print('Example')
