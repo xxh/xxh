@@ -314,7 +314,7 @@ class xxh:
 
                 pr = self.pssh(cmd)
 
-                if 'unsupported option "accept-new"' in pr['output']:
+                if 'output' in pr and 'unsupported option "accept-new"' in pr['output']:
                     if self.vverbose:
                         eprint('StrictHostKeyChecking=accept-new is not supported. Switched to StrictHostKeyChecking=yes and repeat')
                     self.ssh_arguments = [a.replace('StrictHostKeyChecking=accept-new', 'StrictHostKeyChecking=yes') for a in self.ssh_arguments]
@@ -322,14 +322,17 @@ class xxh:
                 break
 
             if pr == {}:
-                self.eeprint('Unexpected result. Try again with +v or +vv or try ssh before xxh')
+                self.eeprint('Answer from host is empty. Try again with +v or +vv or try ssh before xxh')
 
             if self.verbose:
                 self.eprint('Pexpect result:')
                 self.eprint(pr)
 
-            if pr['user_host_password'] is not None:
+            if 'user_host_password' in pr and pr['user_host_password'] is not None:
                 self.password = pr['user_host_password']
+
+            if 'output' not in pr:
+                self.eeprint('Unexpected output. Try again with +v or +vv or try ssh before xxh')
 
             r = pr['output']
         else:
@@ -635,8 +638,9 @@ class xxh:
             self.packages_list(opt.list_xxh_packages)
             packages_opration = True
 
-        if packages_opration and not self.quiet:
-            eprint('Packages operations done!\n')
+        if packages_opration and not self.quiet and (not opt.destination or opt.destination == '`'):
+            eprint('Packages operations done!')
+            exit(0)
 
         if not opt.destination or opt.destination == '`':
             self.eeprint(argp.format_usage()+'\nThe following arguments are required: [user@]host[:port]')
@@ -722,13 +726,13 @@ class xxh:
         host_info = self.get_host_info()
 
         if not host_info:
-            self.eeprint(f'Unknown answer from host when getting info')
+            self.eeprint(f'Unknown answer from host when getting info. Try to get more info with +v or +vv arguments.')
 
         if 'xxh_home_realpath' not in host_info or host_info['xxh_home_realpath'] == '':
-            self.eeprint(f'Unknown answer from host when getting realpath for directory {self.host_xxh_home}')
+            self.eeprint(f'Unknown answer from host when getting realpath for directory {self.host_xxh_home}. Try to get more info with +v or +vv arguments.')
 
         if 'xxh_version' not in host_info or host_info['xxh_version'] == '':
-            self.eeprint(f'Unknown answer from host when getting version for directory {self.host_xxh_home}')
+            self.eeprint(f'Unknown answer from host when getting version for directory {self.host_xxh_home}. Try to get more info with +v or +vv arguments.')
 
         host_xxh_home = host_info['xxh_home_realpath']
         host_xxh_home = p(f"{host_xxh_home}")
