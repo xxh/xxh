@@ -40,5 +40,5 @@ xxh = cdir/'xxh'
 if not xxh.exists():
     xxh='xxh'
 
-@(xxh) @($ARGS) +s xonsh @(env_args)
+@(xxh) @($ARGS) +s xonsh-appimage @(env_args)
 

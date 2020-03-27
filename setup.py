@@ -1,12 +1,12 @@
 import setuptools
-from xxh_xxh.settings import global_settings
+from xxh_xxh.xxh import XXH_VERSION
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name="xxh-xxh",
-    version=global_settings['XXH_VERSION'],
+    version=XXH_VERSION,
     description="Bring your favorite shell wherever you go through the ssh",
     long_description=long_description,
     long_description_content_type="text/markdown",

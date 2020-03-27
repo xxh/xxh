@@ -1,4 +1,4 @@
-import os
+import os, sys
 from pathlib import Path
 import subprocess
 
@@ -25,6 +25,17 @@ def A(args, q=0):
 
 def p(path_str):
     return Path(path_str).expanduser()
+
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
+def eeprint(*args, **kwargs):
+    return_code=1
+    if 'return_code' in kwargs:
+        return_code = kwargs['return_code']
+        del kwargs['return_code']
+    print(*args, file=sys.stderr, **kwargs)
+    exit(return_code)
 
 if __name__ == '__main__':
     print('Example')

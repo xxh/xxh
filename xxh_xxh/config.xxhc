@@ -22,6 +22,6 @@
 #
 #  "company-.*":        # for all hosts by regex pattern
 #    +if:                 # don't asking about install (++install-force)
-#    +s: xonsh            # use xonsh shell
+#    +s: xonsh-appimage   # use xonsh shell
 #    +hh: /tmp/.xxh       # use special xxh home directory (++host-xxh-home)
 #    +hhr:                # remove host xxh home after disconnect (++host-xxh-home-remove)

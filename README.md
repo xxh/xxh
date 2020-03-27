@@ -50,7 +50,7 @@ xxh myhost                                          # connect to the host
 xxh -i id_rsa -p 2222 myhost                        # connect using key and port
 xxh myhost +s zsh                                   # connect to the host into zsh shell
 source xxh.zsh myhost +I xxh-plugin-zsh-ohmyzsh     # install zsh plugin then connect into zsh with seamless mode (zsh theme name will be add from local host) 
-xxh myhost +s xonsh +I xxh-plugin-xonsh-theme-bar   # install xonsh plugin before connect into xonsh shell
+xxh myhost +s xonsh-appimage +I xxh-plugin-xonsh-theme-bar   # install xonsh plugin before connect into xonsh shell
 xxh myhost +s bash-zero +I xxh-plugin-bash-vim      # install bash plugin before connect
 xxh myhost +if +q                                   # install without questions in quiet mode
 xxh myhost +hh /tmp/xxh +hhr                        # upload xxh to myhost:/tmp/xxh and remove it after disconnect 
@@ -67,7 +67,7 @@ hosts:
 
   "company-.*":        # for all hosts by regex pattern
     +if:                 # don't asking about install (++install-force)
-    +s: xonsh            # use xonsh shell
+    +s: xonsh-appimage   # use xonsh shell
     +hh: /tmp/.xxh       # use special xxh home directory (++host-xxh-home)
     +hhr:                # remove host xxh home after disconnect (++host-xxh-home-remove)
 ```
@@ -94,7 +94,7 @@ If you add `+I` arguments with appropriate xxh packages (customizations describe
 
 ## Use cases
 ### Python everywhere with xonsh
-When you run `xxh myhost +s xonsh` you'll get portable python, pip and python-powered shell on the host without any system installations on the host. Add plugins: [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) saves time, [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner) manipulates lines and [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar) looks nice. 
+When you run `xxh myhost +s xonsh-appimage` you'll get portable python, pip and python-powered shell on the host without any system installations on the host. Add plugins: [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) saves time, [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner) manipulates lines and [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar) looks nice. 
 
 ### Oh My Zsh seamless SSH ([demo](https://asciinema.org/a/rCiT9hXQ5IdwqOwg6rifyFZzb))
 ```shell script
