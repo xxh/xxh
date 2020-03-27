@@ -1,12 +1,12 @@
 import setuptools
-from xxh_xxh.settings import global_settings
+from xxh_xxh.xxh import XXH_VERSION
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name="xxh-xxh",
-    version=global_settings['XXH_VERSION'],
+    version=XXH_VERSION,
     description="Bring your favorite shell wherever you go through the ssh",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -18,13 +18,12 @@ setuptools.setup(
     },
     python_requires='>=3.6',
     install_requires=[
-        'xonsh >= 0.9.13',
         'pexpect >= 4.8.0',
         'pyyaml'
     ],
     platforms='Unix-like',
-    scripts=['xxh','xxhp','xxh.zsh','xxh.xsh'],
-    package_data={'xxh_xxh':['*.py', '*.sh', '*.xxhc']},
+    scripts=['xxh', 'xxh_xxh/xxh.zsh', 'xxh_xxh/xxh.xsh', 'xxh_xxh/xxh.bash'],
+    package_data={'xxh_xxh': ['*.py', '*.xxhc', 'xxh.*']},
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",

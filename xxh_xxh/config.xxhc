@@ -15,10 +15,13 @@
 #hosts:
 #  myhost:                     # settings for myhost
 #    -p: 2222                    # set special port
-#    +s: xxh-shell-zsh           # set zsh shell
-#    +e: ZSH_THEME="clean"       # set xxh-plugin-zsh-ohmyzsh theme
+#    +s: xxh-shell-zsh           # use zsh shell
+#    +I: xxh-shell-zsh           # install xxh-shell before connect
+#    +I: xxh-plugin-zsh-ohmyzsh  # install xxh-plugin before connect
+#    +e: ZSH_THEME="clean"       # set ohmyzsh theme
 #
 #  "company-.*":        # for all hosts by regex pattern
 #    +if:                 # don't asking about install (++install-force)
+#    +s: xonsh-appimage   # use xonsh shell
 #    +hh: /tmp/.xxh       # use special xxh home directory (++host-xxh-home)
 #    +hhr:                # remove host xxh home after disconnect (++host-xxh-home-remove)

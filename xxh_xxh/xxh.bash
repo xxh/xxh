@@ -8,7 +8,7 @@
 local_xxh_home=~/.xxh
 
 eargs=""
-setopt +o nomatch
+
 for pluginenv_file in $local_xxh_home/xxh/plugins/*-zsh-*/env; do
   if [[ -f $pluginenv_file ]]; then
     plugin_name=$(basename `dirname $pluginenv_file` | tr a-z A-Z | sed 's/-/_/g')
@@ -32,6 +32,7 @@ for pluginenv_file in $local_xxh_home/xxh/plugins/*-zsh-*/env; do
     done
   fi
 done
-setopt -o nomatch
 
-xxh "$@" +s xxh-shell-zsh ${(z)eargs}
+CDIR="$(cd "$(dirname "$0")" && pwd)"
+[ -f $CDIR/xxh ] && xxh=$CDIR/xxh || xxh='xxh'
+$xxh "$@" +s xxh-shell-bash-zero $eargs
