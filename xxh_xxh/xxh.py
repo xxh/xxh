@@ -719,7 +719,7 @@ class xxh:
                                + " f  - [default] Force reinstall xxh. Installed packages (e.g. pip) will be saved.\n"
                                + " ff - Force full reinstall on host. Installed packages (e.g. pip) will be lost.\n"
                                + " i  - Ignore, cross fingers and continue the connection.\n"
-                               + "s/u/F/i? ").lower()
+                               + "s/u/F/ff/i? ").lower()
 
                 if choice == 's':
                     print('Stopped')
