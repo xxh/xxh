@@ -11,10 +11,19 @@ If you like the idea of xxh click ⭐ on the repo and spread the word.
 </p>
 
 ## Installation methods
-#### pip (python 3)
+#### PyPi 3
 ```shell script
 pip3 install -U xxh-xxh
 ```
+
+#### Linux portable binary
+```
+mkdir ~/xxh && cd ~/xxh
+wget https://github.com/xxh/xxh-portable/raw/master/result/xxh-portable-musl-alpine-Linux-x86_64.tar.gz
+tar -xzf xxh-portable-musl-alpine-Linux-x86_64.tar.gz
+./xxh
+```
+
 #### AppImage
 ```
 mkdir ~/xxh && cd ~/xxh
