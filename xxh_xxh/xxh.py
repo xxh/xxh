@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 from base64 import b64encode
 from .shell import *
 
-XXH_VERSION = '0.6.22'
+XXH_VERSION = '0.7.0'
 
 class xxh:
     def __init__(self):
@@ -230,14 +230,14 @@ class xxh:
             xxh_version="dir_not_found"
             if [[ -d $xxh_home_realpath ]]; then
                 xxh_version=$([ "$(ls -A $xxh_home_realpath)" ] && echo "version_not_found" || echo "dir_empty")
-                settings_path=$xxh_home_realpath/xxh/xxh_version
+                settings_path=$xxh_home_realpath/.xxh/xxh_version
                 if [[ -f $settings_path ]]; then
                     xxh_version=$(cat $settings_path)
                 fi
             fi
             echo xxh_home_realpath=$xxh_home_realpath
             echo xxh_version=$xxh_version
-            echo xxh_shell_exists=`[ -d $xxh_home_realpath/xxh/shells/{shell} ] && echo "1" ||echo "0"`
+            echo xxh_shell_exists=`[ -d $xxh_home_realpath/.xxh/shells/{shell} ] && echo "1" ||echo "0"`
             echo xxh_home_writable=`[ -w $xxh_home_realpath ] && echo "1" ||echo "0"`
             echo xxh_parent_home_writable=$([ -w $(dirname $xxh_home_realpath) ] && echo "1" ||echo "0")
             echo rsync=`command -v rsync`
@@ -333,7 +333,7 @@ class xxh:
     def create_xxh_env(self):
         home = p(self.local_xxh_home)
         if not home.exists():
-            self.S(f"mkdir -p {home} {home / 'xxh/shells'} {home / 'xxh/plugins'}")
+            self.S(f"mkdir -p {home} {home / '.xxh/shells'} {home / '.xxh/plugins'}")
 
         config_file = p(self.config_file)
         sample_config_file = self.package_dir_path / 'config.xxhc'
@@ -381,7 +381,7 @@ class xxh:
         packages = list(set(packages))
         for package in packages:
             subdir = self.package_subdir(package)
-            package_dir = self.local_xxh_home / 'xxh' / str(subdir) / package
+            package_dir = self.local_xxh_home / '.xxh' / str(subdir) / package
             if package_dir.exists():
                 if self.vverbose or not self.destination_exists:
                     self.eprint(f'Package exists, skip install: {package_dir}')
@@ -398,7 +398,7 @@ class xxh:
 
             subdir = self.package_subdir(package_name) or self.eeprint(f"Unknown package type: {package_name}")
 
-            package_dir = self.local_xxh_home/'xxh'/subdir/package_name
+            package_dir = self.local_xxh_home/'.xxh'/subdir/package_name
             if package_dir.exists() and len(list(package_dir.glob('*'))) != 0:
                 self.eprint(f'Skip installed package: {package_dir}')
                 continue
@@ -442,7 +442,7 @@ class xxh:
 
             self.eprint(f'Remove {package_name}')
             subdir = self.package_subdir(package_name) or self.eeprint(f"Unknown package: {package_name}")
-            package_dir = self.local_xxh_home / 'xxh' / subdir / package_name
+            package_dir = self.local_xxh_home / '.xxh' / subdir / package_name
             if package_dir.exists():
                 self.S(f'rm -rf {package_dir}')
                 self.eprint(f"Removed {package_dir}")
@@ -454,7 +454,7 @@ class xxh:
         return self.packages_install(packages)
 
     def packages_list(self, packages=None):
-        packages_dir = (self.local_xxh_home / 'xxh').glob('**/xxh-*')
+        packages_dir = (self.local_xxh_home / '.xxh').glob('**/xxh-*')
         found = 0
         for p in sorted(packages_dir):
             if packages:
@@ -486,13 +486,14 @@ class xxh:
         argp.add_argument('destination', nargs='?', metavar='[user@]host[:port]', help="Destination may be specified as [ssh://][user@]host[:port] or host from ~/.ssh/config")
         argp.add_argument('+i','++install', default=False, action='store_true', help="Install xxh to destination host.")
         argp.add_argument('+if','++install-force', default=False, action='store_true', help="Removing the host xxh package and install xxh again.")
-        argp.add_argument('+iff','++install-force-full', default=False, action='store_true', help="Removing the host xxh home and install xxh again. All installed packages on the host (e.g. pip packages) will be lost.")
+        argp.add_argument('+iff','++install-force-full', default=False, action='store_true', help="Removing the host xxh home and install xxh again. WARNING! All your files, configs, packages in xxh home on the host WILL BE LOST.")
         argp.add_argument('+xc','++xxh-config', default=self.config_file, help=f"Xxh config file in yaml. Default: {self.config_file}")
         argp.add_argument('+e','++env', dest='env', metavar='NAME=VAL +e ...', action='append', help="Setting environment variables if supported by shell entrypoint.")
         argp.add_argument('+eb','++envb', dest='envb', metavar='NAME=BASE64 +eb ...', action='append', help="Setting environment variables base64 encoded if supported by shell entrypoint.")
         argp.add_argument('+lh','++local-xxh-home', default=self.local_xxh_home, help=f"Local xxh home path. Default: {self.local_xxh_home}")
         argp.add_argument('+hh','++host-xxh-home', default=self.host_xxh_home, help=f"Host xxh home path. Default: {self.host_xxh_home}")
         argp.add_argument('+hhr','++host-xxh-home-remove', action='store_true', help=f"Remove xxh home on host after disconnect.")
+        argp.add_argument('+hhh','++host-home', default=self.host_xxh_home, help=f"Default $HOME path on host. Could be '~' for default user home. Default: {self.host_xxh_home}")
         argp.add_argument('+hf','++host-execute-file', help=f"Execute script file placed on host and exit. If supported by shell entrypoint.")
         argp.add_argument('+hc','++host-execute-command', help=f"Execute command on host and exit. If supported by shell entrypoint.")
         argp.add_argument('+heb','++host-execute-bash', dest='host_execute_bash', metavar='BASE64 +heb ...', action='append', help="Bash command will be executed before shell entrypoint (base64 encoded) if supported by shell entrypoint.")
@@ -511,13 +512,13 @@ class xxh:
             + "           [-o SSH_OPTION -o ...] [+c SSH_COMMAND] [+P PASSWORD] [+PP]\n" \
             + "           [user@]host[:port]\n" \
             + "           [+i] [+if] [+iff] [+hhr] [+s SHELL] [+e NAME=VAL +e ...] [+v] [+vv] [+q]\n" \
-            + "           [+hh HOST_XXH_HOME] [+hf HOST_EXEC_FILE] [+hc HOST_EXEC_CMD]\n" \
+            + "           [+hh HOST_XXH_HOME] [+hhh HOST_HOME] [+hf HOST_EXEC_FILE] [+hc HOST_EXEC_CMD]\n" \
             + "           [+xc CONFIG_FILE] [+lh LOCAL_XXH_HOME] [-h] [-V]\n" \
             + "usage: xxh [+I xxh-package +I ...] [+L] [+RI xxh-package +RI ...] [+R xxh-package +R ...]\n"
 
         help = argp.format_help().replace('\n  +','\n\nxxh arguments:\n  +',1).replace('optional ', 'common ')\
             .replace('number and exit', 'number and exit\n\nssh arguments:').replace('positional ', 'required ') \
-            .replace('Quiet mode.', 'Quiet mode.\n\nxxh packages:').replace('remove xxh packages.', 'remove xxh packages.\n\nSpecial:')
+            .replace('Quiet mode.', 'Quiet mode.\n\nxxh packages:').replace('remove xxh packages.', 'remove xxh packages.\n\nxxh special:')
         argp.format_help = lambda: help
         opt = argp.parse_args()
 
@@ -666,12 +667,12 @@ class xxh:
         else:
             self.eeprint(f"Paths aren't writable:\n  {local_xxh_home_parent}\n  {self.local_xxh_home}")
 
-        local_plugins_dir = self.local_xxh_home / 'xxh/plugins'
+        local_plugins_dir = self.local_xxh_home / '.xxh/plugins'
         self.S("mkdir {ssh_arg_v} -p {local_xxh_home} {local_plugins_dir} {shells_dir}".format(
             ssh_arg_v=A(self.ssh_arg_v),
             local_xxh_home=self.local_xxh_home,
             local_plugins_dir=local_plugins_dir,
-            shells_dir=(self.local_xxh_home / 'xxh/shells')
+            shells_dir=(self.local_xxh_home / '.xxh/shells')
         ))
 
         if p(opt.host_xxh_home) == p(f'/'):
@@ -748,7 +749,7 @@ class xxh:
                     self.eeprint('Unknown answer')
 
         if (host_xxh_version in ['dir_not_found', 'dir_empty'] or host_info['xxh_shell_exists'] == '0') and opt.install_force == False and opt.install_force_full == False:
-            yn = input(f"{host}:{host_xxh_home}/xxh/shells/{self.shell} not found. Install {self.shell}? [Y/n] ").strip().lower()
+            yn = input(f"{host}:{host_xxh_home}/.xxh/shells/{self.shell} not found. Install {self.shell}? [Y/n] ").strip().lower()
             if yn == 'y' or yn == '':
                 opt.install = True
             else:
@@ -761,7 +762,7 @@ class xxh:
             self.packages_install([self.shell])
 
             # Build xxh packages
-            base_dir = self.local_xxh_home / 'xxh'
+            base_dir = self.local_xxh_home / '.xxh'
             shell_build_dir = base_dir / 'shells' / self.shell / 'build'
             build_packages = list([base_dir / 'shells' / self.shell]) + list( (base_dir / 'plugins').glob(f'*-{self.short_shell_name}-*') )
 
@@ -794,8 +795,8 @@ class xxh:
 
                 ))
             elif opt.install_force:
-                self.eprint(f'Remove {host}:{host_xxh_home}/xxh')
-                self.S('echo "rm -rf {host_xxh_home}/xxh" | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
+                self.eprint(f'Remove {host}:{host_xxh_home}/.xxh')
+                self.S('echo "rm -rf {host_xxh_home}/.xxh" | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
                     host_xxh_home=host_xxh_home,
                     sshpass=A(self.sshpass),
                     ssh=A(self.ssh_command),
@@ -806,16 +807,18 @@ class xxh:
 
             # Create host xxh home directories
 
-            host_xxh_plugins_dir = host_xxh_home / 'xxh/plugins'
+            host_xxh_plugins_dir = host_xxh_home / '.xxh/plugins'
             host_xxh_dirs_str = ''
             for local_plugin_dir in local_plugins_dir.glob(f'*-{self.short_shell_name}-*'):
                 local_plugin_build_dir = local_plugin_dir / 'build'
                 host_plugin_build_dir = str(local_plugin_build_dir).replace(str(self.local_xxh_home), str(host_xxh_home))
                 host_xxh_dirs_str += ' ' + host_plugin_build_dir
 
-            host_xxh_shell_dir = host_xxh_home / f'xxh/shells/{self.shell}'
+            host_xdg_config_dir = host_xxh_home / '.config'
+            host_xxh_shell_dir = host_xxh_home / f'.xxh/shells/{self.shell}'
             host_xxh_shell_build_dir = host_xxh_shell_dir  / 'build'
-            self.S('echo "mkdir -p {host_xxh_shell_build_dir} {host_xxh_dirs_str}" | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
+            self.S('echo "mkdir -p {host_xdg_config_dir} {host_xxh_shell_build_dir} {host_xxh_dirs_str}" | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
+                host_xdg_config_dir=host_xdg_config_dir,
                 host_xxh_shell_build_dir=host_xxh_shell_build_dir,
                 host_xxh_dirs_str=host_xxh_dirs_str,
                 host_xxh_home=host_xxh_home,
@@ -825,7 +828,7 @@ class xxh:
                 ssh_arguments=A(self.ssh_arguments),
                 host=A(host)
             ))
-            self.S('echo "echo {xxh_version} > {host_xxh_home}/xxh/xxh_version" | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
+            self.S('echo "echo {xxh_version} > {host_xxh_home}/.xxh/xxh_version" | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
                 host_xxh_home=host_xxh_home,
                 xxh_version=self.local_xxh_version,
                 sshpass=A(self.sshpass),
@@ -912,22 +915,27 @@ class xxh:
         elif self.verbose:
             host_entrypoint_verbose = ['-v', '1']
 
+        host_home = []
+        if opt.host_home:
+            host_home = f'-H {opt.host_home}'
+
         lcs = []
         for lc in ['LC_TIME','LC_MONETARY','LC_ADDRESS','LC_IDENTIFICATION','LC_MEASUREMENT','LC_NAME','LC_NUMERIC','LC_PAPER','LC_TELEPHONE']:
             lcs.append(f"{lc}=POSIX")
 
-        self.S("{lcs} {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -t 'bash {entrypoint} {host_execute_file} {host_execute_command} {host_entrypoint_verbose} {env_args}'".format(
+        self.S("{lcs} {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -t 'bash {entrypoint} {host_execute_file} {host_execute_command} {host_entrypoint_verbose} {env_args} {host_home}'".format(
             lcs=A(lcs),
             sshpass=A(self.sshpass),
             ssh=A(self.ssh_command),
             ssh_arg_v=A(self.ssh_arg_v),
             ssh_arguments=A(self.ssh_arguments),
             host=A(host),
-            entrypoint=A(str(host_xxh_home/'xxh/shells'/self.shell/'build/entrypoint.sh')),
+            entrypoint=A(str(host_xxh_home/'.xxh/shells'/self.shell/'build/entrypoint.sh')),
             host_execute_file=A(host_execute_file),
             host_execute_command=A(host_execute_command),
             host_entrypoint_verbose=A(host_entrypoint_verbose),
-            env_args=A(env_args)
+            env_args=A(env_args),
+            host_home=A(host_home),
         ))
 
         if opt.host_xxh_home_remove:
