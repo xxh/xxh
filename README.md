@@ -73,6 +73,7 @@ hosts:
     +I: xxh-shell-zsh           # install xxh-shell before connect
     +I: xxh-plugin-zsh-ohmyzsh  # install xxh-plugin before connect
     +e: ZSH_THEME="clean"       # set ohmyzsh theme
+    +hhh: "~"                   # use user default home directory on host (/home/user instead of /home/user/.xxh)
 
   "company-.*":        # for all hosts by regex pattern
     +if:                 # don't asking about install (++install-force)
