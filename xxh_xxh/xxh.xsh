@@ -14,8 +14,8 @@ def b64e(s):
 local_xxh_home = p"~/.xxh"
 
 env_args = []
-local_shell_dir = local_xxh_home / 'xxh/shells/xxh-shell-xonsh-appimage'
-local_plugins_dir = local_xxh_home / 'xxh/plugins'
+local_shell_dir = local_xxh_home / '.xxh/shells/xxh-shell-xonsh-appimage'
+local_plugins_dir = local_xxh_home / '.xxh/plugins'
 for local_package_dir in [local_shell_dir]+sorted(local_plugins_dir.glob(f'*-xonsh-*')):
     plugin_name = local_package_dir.name
     local_package_env = local_package_dir / 'env'

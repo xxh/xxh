@@ -9,7 +9,7 @@ local_xxh_home=~/.xxh
 
 eargs=""
 
-for pluginenv_file in $local_xxh_home/xxh/plugins/*-zsh-*/env; do
+for pluginenv_file in $local_xxh_home/.xxh/plugins/*-zsh-*/env; do
   if [[ -f $pluginenv_file ]]; then
     plugin_name=$(basename `dirname $pluginenv_file` | tr a-z A-Z | sed 's/-/_/g')
 
