@@ -16,7 +16,7 @@ class xxh:
         self.local_xxh_version = XXH_VERSION
         self.ssh_command = 'ssh'
         self.local_xxh_home = p('~/.xxh')
-        self.config_file = self.local_xxh_home / '.xxhc'
+        self.config_file = self.generate_config_filepath()
         self.host_xxh_home = '~/.xxh'
         self.shell = self.get_current_shell()
         self.short_shell_name = self.shell.split('-')[2]
@@ -53,6 +53,13 @@ class xxh:
 
     def eeprint(self, *args, **kwargs):
         eeprint(*args, **kwargs)
+
+    @staticmethod
+    def generate_config_filepath():
+        if os.environ.get('XDG_CONFIG_HOME'):
+            return p(os.environ['XDG_CONFIG_HOME']) / 'xxh' / 'xxhc'
+        else:
+            return p(os.environ['HOME']) / '.config' / 'xxh' / 'xxhc'
 
     def get_current_shell(self):
         if 'SHELL' in os.environ:
