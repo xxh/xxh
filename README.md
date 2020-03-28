@@ -54,7 +54,7 @@ xxh [ssh arguments] [user@]host[:port] [xxh arguments]
 xxh [+I xxh-package ...] [+L] [+RI xxh-package ...] [+R xxh-package ...]
 ```
 Common examples (use `xxh --help` to get info about arguments):
-```shell script
+```yaml
 xxh myhost                                          # connect to the host
 xxh -i id_rsa -p 2222 myhost                        # connect using key and port
 xxh myhost +s zsh                                   # connect to the host into zsh shell
