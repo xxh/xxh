@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 from base64 import b64encode
 from .shell import *
 
-XXH_VERSION = '0.7.3'
+XXH_VERSION = '0.7.4'
 
 class xxh:
     def __init__(self):
@@ -16,7 +16,7 @@ class xxh:
         self.local_xxh_version = XXH_VERSION
         self.ssh_command = 'ssh'
         self.local_xxh_home = p('~/.xxh')
-        self.config_file = self.generate_config_filepath()
+        self.config_file = self.get_config_filepath()
         self.host_xxh_home = '~/.xxh'
         self.shell = self.get_current_shell()
         self.short_shell_name = self.shell.split('-')[2]
@@ -54,12 +54,10 @@ class xxh:
     def eeprint(self, *args, **kwargs):
         eeprint(*args, **kwargs)
 
-    @staticmethod
-    def generate_config_filepath():
+    def get_config_filepath(self):
         if os.environ.get('XDG_CONFIG_HOME'):
-            return p(os.environ['XDG_CONFIG_HOME']) / 'xxh' / 'xxhc'
-        else:
-            return p(os.environ['HOME']) / '.config' / 'xxh' / 'xxhc'
+            return p(os.environ['XDG_CONFIG_HOME']) / 'xxh/config.xxhc'
+        return p(os.environ['HOME']) / '.config/xxh/config.xxhc'
 
     def get_current_shell(self):
         if 'SHELL' in os.environ:
@@ -345,7 +343,9 @@ class xxh:
         config_file = p(self.config_file)
         sample_config_file = self.package_dir_path / 'config.xxhc'
         if not config_file.exists() and sample_config_file.exists():
-            self.S(f'cp {sample_config_file} {config_file}')
+            if not self.quiet:
+                eprint(f'Create sample config file in {config_file}')
+            self.S(f'mkdir -p {config_file.parent} && cp {sample_config_file} {config_file}')
 
     def d2F0Y2ggLW4uMiB4eGggLWg(self):
         def randint(a, b):
@@ -535,15 +535,13 @@ class xxh:
             print(f'Sourcing files extracted to {cdir}')
             exit(0)
 
-        self.local_xxh_home = p(f"{opt.local_xxh_home}")
-        self.config_file = self.local_xxh_home/'.xxhc'
-        self.create_xxh_env()
-        xxh_config_file = p(opt.xxh_config)
 
-        if self.config_file != xxh_config_file and not xxh_config_file.exists():
-            self.eeprint(f'Config does not exist: {xxh_config_file}')
-        else:
-            self.config_file = xxh_config_file
+        opt.xxh_config = p(opt.xxh_config)
+        if self.config_file != opt.xxh_config:
+            if not opt.xxh_config.exists():
+                self.eeprint(f'Config not found in {opt.xxh_config}')
+            else:
+                self.config_file = opt.xxh_config
 
         self.quiet = opt.quiet
         arg_q = ['-q'] if self.quiet else []
@@ -589,19 +587,25 @@ class xxh:
         self.verbose = opt.verbose
         self.vverbose = opt.vverbose
 
-        packages_opration = False
+
+        packages_opration = opt.install_xxh_packages \
+                            or opt.reinstall_xxh_packages \
+                            or opt.remove_xxh_packages \
+                            or opt.list_xxh_packages \
+                            or opt.list_xxh_packages == []
+
+        if packages_opration or self.destination_exists:
+            self.local_xxh_home = p(opt.local_xxh_home)
+            self.create_xxh_env()
+
         if opt.install_xxh_packages:
             installed = self.packages_install(opt.install_xxh_packages)
-            packages_opration = True
         if opt.reinstall_xxh_packages:
             reinstalled = self.packages_reinstall(opt.reinstall_xxh_packages)
-            packages_opration = True
         if opt.remove_xxh_packages:
             removed = self.packages_remove(opt.remove_xxh_packages)
-            packages_opration = True
         if opt.list_xxh_packages or opt.list_xxh_packages == []:
             found = self.packages_list(opt.list_xxh_packages)
-            packages_opration = True
 
         if not self.destination_exists:
             if packages_opration:

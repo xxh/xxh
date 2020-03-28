@@ -64,7 +64,7 @@ xxh myhost +s bash-zero +I xxh-plugin-bash-vim      # install bash plugin before
 xxh myhost +if +q                                   # install without questions in quiet mode
 xxh myhost +hh /tmp/xxh +hhr                        # upload xxh to myhost:/tmp/xxh and remove it after disconnect 
 ```
-To reusing arguments there is `~/.xxh/.xxhc` [yaml](https://en.wikipedia.org/wiki/YAML) config:
+To reusing arguments there is `~/.config/xxh/config.xxhc` (`$XDG_CONFIG_HOME`) [yaml](https://en.wikipedia.org/wiki/YAML) config:
 ```yaml
 hosts:
   myhost:                     # settings for myhost
