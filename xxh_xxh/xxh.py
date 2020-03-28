@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 from base64 import b64encode
 from .shell import *
 
-XXH_VERSION = '0.7.1'
+XXH_VERSION = '0.7.2'
 
 class xxh:
     def __init__(self):
@@ -679,8 +679,10 @@ class xxh:
             self.eeprint("Host xxh home path {host_xxh_home} looks like /. Please check twice!")
 
         if self.host_xxh_home != opt.host_xxh_home:
+            if opt.host_home == self.host_xxh_home:
+                opt.host_home = self.host_xxh_home
             self.host_xxh_home = opt.host_xxh_home
-            opt.host_home = self.host_xxh_home
+
         host_info = self.get_host_info()
 
         if not host_info:
