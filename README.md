@@ -90,7 +90,7 @@ If you add `+I` arguments with appropriate xxh packages (customizations describe
 * **Hermetic**. If you delete `~/.xxh` directory from the remote host then xxh has never been on the host. If files appears outside xxh home directory feel free to report about this cases.
 * **Fork-ready**. Every repo could be forked, customized and used without waiting of package management system, xxh releases or any third party.
 * **Do more**. The xxh packages are not only about shells. Any type of tool or code could be behind "shell entrypoint". If you want to play Super Mario on the remote host just put it as entrypoint.
-* **Open**. Currently supported four shells and the count could be grow by community.
+* **Open**. Currently supported five shells and the count could be grow by community.
 
 ## Q&A
 
