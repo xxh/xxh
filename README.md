@@ -85,12 +85,12 @@ The arguments will be automatically added when you run `xxh myhost` or `xxh comp
 If you add `+I` arguments with appropriate xxh packages (customizations described in development section) you can make your config file complete and simplify the usage command to `xxh myhost`. All xxh packages will be installed automatically.
 
 ## The ideas behind xxh
-* **Avoid building on remote host**. The security and careful about environment on the host are behind it. This could be the optional future feature but not now. 
-* **No blindfold copying** config files from local to remote host. The privacy and repeatability reasons are behind it. Every xxh package, shell or plugin is the bridge that use only what required, no more.
-* **Portable means clean**. If you delete `~/.xxh` directory from the remote host then xxh has never been on the host. Some temporary files of third party tools you use could be in the home directory after usage but we stand for moving them to the xxh home directory. Feel free to report about this cases.
-* **Be fork-ready**. Every repo could be forked, customize and used without affection on package management system, xxh releases or any third party lags.
+* **Portable**. By default building occurs locally and then xxh uploads the result to host. The security and careful about environment on the host are behind it. 
+* **Careful**. No blindfold copying config files from local to remote host. The privacy and repeatability reasons are behind it. Every xxh package, shell or plugin is the bridge that use only what required, no more.
+* **Hermetic**. If you delete `~/.xxh` directory from the remote host then xxh has never been on the host. If files appears outside xxh home directory feel free to report about this cases.
+* **Fork-ready**. Every repo could be forked, customized and used without waiting of package management system, xxh releases or any third party.
 * **Do more**. The xxh packages are not only about shells. Any type of tool or code could be behind "shell entrypoint". If you want to play Super Mario on the remote host just put it as entrypoint.
-* **Be open**. Currently supported four shells and the count could be grow by community.
+* **Open**. Currently supported four shells and the count could be grow by community.
 
 ## Q&A
 
