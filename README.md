@@ -27,7 +27,7 @@ tar -xzf xxh-portable-musl-alpine-Linux-x86_64.tar.gz
 #### AppImage
 ```
 mkdir ~/xxh && cd ~/xxh
-wget -O xxh https://github.com/xxh/linuxdeploy-plugin-python/releases/download/continuous/xxh-release-x86_64.AppImage
+wget -O xxh https://github.com/xxh/xxh-appimage/releases/download/continuous/xxh-release-x86_64.AppImage
 chmod +x xxh && ./xxh
 ```
 To use seamless mode run `./xxh ++extract-sourcing-files` to extract `xxh.*sh` files to the current directory then run `source xxh.zsh myhost` command for seamless connecting.
