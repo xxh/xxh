@@ -729,12 +729,12 @@ class xxh:
 
             if ask:
                 choice = input(f"{ask} What's next? \n"
-                               + " s  - Stop here. You'll try to connect using ordinary ssh for backup current xxh home.\n"
-                               + " u  - Safe update. Host xxh home will be renamed and local xxh version will be installed.\n"
-                               + " f  - [default] Force reinstall xxh. Installed packages (e.g. pip) will be saved.\n"
-                               + " ff - Force full reinstall on host. Installed packages (e.g. pip) will be lost.\n"
-                               + " i  - Ignore, cross fingers and continue the connection.\n"
-                               + "s/u/F/ff/i? ").lower()
+                               + " s   Stop here. You'll try to connect using ordinary ssh for backup current xxh home.\n"
+                               + " u   Safe update. Host xxh home will be renamed and new xxh version will be installed.\n"
+                               + " f   DEFAULT: Force reinstall xxh. All your files in xxh home on the host will be saved.\n"
+                               + " FF  Force full reinstall. WARNING! All your files in xxh home on the host WILL BE LOST.\n"
+                               + " i   Ignore, cross fingers and continue the connection.\n"
+                               + "s/u/(f)/FF/i? ")
 
                 if choice == 's':
                     print('Stopped')
@@ -755,7 +755,7 @@ class xxh:
                 elif choice == 'f' or choice.strip() == '':
                     opt.install = True
                     opt.install_force = True
-                elif choice == 'ff':
+                elif choice == 'FF':
                     opt.install = True
                     opt.install_force_full = True
                 elif choice == 'i':
