@@ -88,7 +88,7 @@ The arguments will be automatically added when you run `xxh myhost` or `xxh comp
 If you add `+I` arguments with appropriate xxh packages (customizations described in development section) you can make your config file complete and simplify the usage command to `xxh myhost`. All xxh packages will be installed automatically.
 
 ## The ideas behind xxh
-* **Portable**. By default building occurs locally and then xxh uploads the result to host. The security and careful about environment on the host are behind it. 
+* **Portable**. By default building occurs locally and then xxh uploads the result to host. No installations or root access on the host required. The security and careful about environment on the host are behind it. 
 * **Careful**. No blindfold copying config files from local to remote host. The privacy and repeatability reasons are behind it. Every xxh package, shell or plugin is the bridge that use only what required, no more.
 * **Hermetic**. If you delete `~/.xxh` directory from the remote host then xxh has never been on the host. If files appears outside xxh home directory feel free to report about this cases.
 * **Fork-ready**. Every repo could be forked, customized and used without waiting of package management system, xxh releases or any third party.
