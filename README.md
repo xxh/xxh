@@ -1,8 +1,6 @@
 <p align="center">You chosen a command shell and spent months to stuffed it with shortcuts and colors. But when you move from local to remote host using ssh you lose it all. The mission of xxh is to bring your favorite shell wherever you go through the ssh.</p>
 <p align="center">  
   <a href="https://pypi.org/project/xxh-xxh/" target="_blank"><img src="https://img.shields.io/pypi/v/xxh-xxh.svg" alt="[release]"></a>
-  <a href="https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7" target="_blank"><img alt="[demo xonsh]" src="https://img.shields.io/badge/demo-xonsh-grass"></a>
-  <a href="https://asciinema.org/a/rCiT9hXQ5IdwqOwg6rifyFZzb" target="_blank"><img alt="[demo zsh]" src="https://img.shields.io/badge/demo-zsh-grass"></a>
   <a href="https://gitter.im/xxh-xxh/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge" target="_blank"><img alt="[gitter chat]" src="https://badges.gitter.im/xxh-xxh/community.svg"></a>
   <img alt="[BSD license]" src="https://img.shields.io/pypi/l/xxh-xxh">
 </p>
@@ -35,12 +33,16 @@ To use seamless mode run `./xxh ++extract-sourcing-files` to extract `xxh.*sh` f
 ## Supported shells
 | xxh-shell-`...`                                                       | status     | seamless    | plugins | demo |
 |-----------------------------------------------------------------------|------------|-------------|---------|------|
-| **[xonsh-appimage](https://github.com/xxh/xxh-shell-xonsh-appimage)** | stable     | `xxh.xsh`   | [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner), [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar), [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) | [demo](https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7) | 
-| **[zsh](https://github.com/xxh/xxh-shell-zsh)**                       | stable     | `xxh.zsh`   | [ohmyzsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh), [p10k](https://github.com/xxh/xxh-plugin-zsh-powerlevel10k) | [demo](https://asciinema.org/a/rCiT9hXQ5IdwqOwg6rifyFZzb) | |
+| **[xonsh-appimage](https://github.com/xxh/xxh-shell-xonsh-appimage)** | stable     | `xxh.xsh`   | [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner), [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar), [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) | <a href="https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7" target="_blank"><img alt="[demo xonsh]" src="https://img.shields.io/badge/demo-xonsh-grass"></a> | 
+| **[zsh](https://github.com/xxh/xxh-shell-zsh)**                       | stable     | `xxh.zsh`   | [ohmyzsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh), [p10k](https://github.com/xxh/xxh-plugin-zsh-powerlevel10k) | <a href="https://asciinema.org/a/rCiT9hXQ5IdwqOwg6rifyFZzb" target="_blank"><img alt="[demo zsh]" src="https://img.shields.io/badge/demo-zsh-grass"></a> |
 | **[fish](https://github.com/xxh/xxh-shell-fish)**                     | prestable  |             | | |
-| **[bash-zero](https://github.com/xxh/xxh-shell-bash-zero)**           | prestable  | `xxh.bash`  | [ohmybash](https://github.com/xxh/xxh-plugin-bash-ohmybash), [vim](https://github.com/xxh/xxh-plugin-bash-vim) | [demo](https://asciinema.org/a/314508) |
+| **[bash-zero](https://github.com/xxh/xxh-shell-bash-zero)**           | prestable  | `xxh.bash`  | [ohmybash](https://github.com/xxh/xxh-plugin-bash-ohmybash), [vim](https://github.com/xxh/xxh-plugin-bash-vim) | <a href="https://asciinema.org/a/314508" target="_blank"><img alt="[demo bash]" src="https://img.shields.io/badge/demo-bash-grass"></a> |
 | **[osquery](https://github.com/xxh/xxh-shell-osquery)**               | beta       |             | | |
 | **[fish-appimage](https://github.com/xxh/xxh-shell-fish-appimage)**   | alpha      |             | | |
+
+
+
+
 
 The "zero" means the shell installed on host will be used.
 
