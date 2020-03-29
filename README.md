@@ -33,14 +33,14 @@ chmod +x xxh && ./xxh
 To use seamless mode run `./xxh ++extract-sourcing-files` to extract `xxh.*sh` files to the current directory then run `source xxh.zsh myhost` command for seamless connecting.
 
 ## Supported shells
-| xxh-shell-`...`                                                       | status     | seamless    | plugins |
-|-----------------------------------------------------------------------|------------|-------------|---------|
-| **[xonsh-appimage](https://github.com/xxh/xxh-shell-xonsh-appimage)** | stable     | `xxh.xsh`   | [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner), [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar), [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) | 
-| **[zsh](https://github.com/xxh/xxh-shell-zsh)**                       | stable     | `xxh.zsh`   | [ohmyzsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh), [p10k](https://github.com/xxh/xxh-plugin-zsh-powerlevel10k) |
-| **[fish](https://github.com/xxh/xxh-shell-fish)**                     | prestable  |             | |
-| **[bash-zero](https://github.com/xxh/xxh-shell-bash-zero)**           | zero       | `xxh.bash`  | [vim](https://github.com/xxh/xxh-plugin-bash-vim) |
-| **[osquery](https://github.com/xxh/xxh-shell-osquery)**               | beta       |             | |
-| **[fish-appimage](https://github.com/xxh/xxh-shell-fish-appimage)**   | alpha      |             | |
+| xxh-shell-`...`                                                       | status     | seamless    | plugins | demo |
+|-----------------------------------------------------------------------|------------|-------------|---------|------|
+| **[xonsh-appimage](https://github.com/xxh/xxh-shell-xonsh-appimage)** | stable     | `xxh.xsh`   | [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner), [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar), [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) | [demo](https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7) | 
+| **[zsh](https://github.com/xxh/xxh-shell-zsh)**                       | stable     | `xxh.zsh`   | [ohmyzsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh), [p10k](https://github.com/xxh/xxh-plugin-zsh-powerlevel10k) | [demo](https://asciinema.org/a/rCiT9hXQ5IdwqOwg6rifyFZzb) | |
+| **[fish](https://github.com/xxh/xxh-shell-fish)**                     | prestable  |             | | |
+| **[bash-zero](https://github.com/xxh/xxh-shell-bash-zero)**           | zero       | `xxh.bash`  | [vim](https://github.com/xxh/xxh-plugin-bash-vim) | |
+| **[osquery](https://github.com/xxh/xxh-shell-osquery)**               | beta       |             | | |
+| **[fish-appimage](https://github.com/xxh/xxh-shell-fish-appimage)**   | alpha      |             | | |
 
 The "zero" status means the shell installed on host will be used.
 
