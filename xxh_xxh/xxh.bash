@@ -2,14 +2,14 @@
 # This entrypoint is to allow xxh getting current environment variables
 # and pass some of them to xxh session to seamless transition to host.
 #
-# Usage in zsh: source xxh.zsh [ordinary xxh arguments]
+# Usage in bash: source xxh.bash [ordinary xxh arguments]
 #
 
 local_xxh_home=~/.xxh
 
 eargs=""
 
-for pluginenv_file in $local_xxh_home/.xxh/plugins/*-zsh-*/env; do
+for pluginenv_file in $local_xxh_home/.xxh/plugins/*-bash-*/env; do
   if [[ -f $pluginenv_file ]]; then
     plugin_name=$(basename `dirname $pluginenv_file` | tr a-z A-Z | sed 's/-/_/g')
 
