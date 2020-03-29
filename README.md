@@ -38,11 +38,11 @@ To use seamless mode run `./xxh ++extract-sourcing-files` to extract `xxh.*sh` f
 | **[xonsh-appimage](https://github.com/xxh/xxh-shell-xonsh-appimage)** | stable     | `xxh.xsh`   | [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner), [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar), [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) | [demo](https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7) | 
 | **[zsh](https://github.com/xxh/xxh-shell-zsh)**                       | stable     | `xxh.zsh`   | [ohmyzsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh), [p10k](https://github.com/xxh/xxh-plugin-zsh-powerlevel10k) | [demo](https://asciinema.org/a/rCiT9hXQ5IdwqOwg6rifyFZzb) | |
 | **[fish](https://github.com/xxh/xxh-shell-fish)**                     | prestable  |             | | |
-| **[bash-zero](https://github.com/xxh/xxh-shell-bash-zero)**           | zero       | `xxh.bash`  | [ohmybash](https://github.com/xxh/xxh-plugin-bash-ohmybash), [vim](https://github.com/xxh/xxh-plugin-bash-vim) | |
+| **[bash-zero](https://github.com/xxh/xxh-shell-bash-zero)**           | prestable  | `xxh.bash`  | [ohmybash](https://github.com/xxh/xxh-plugin-bash-ohmybash), [vim](https://github.com/xxh/xxh-plugin-bash-vim) | |
 | **[osquery](https://github.com/xxh/xxh-shell-osquery)**               | beta       |             | | |
 | **[fish-appimage](https://github.com/xxh/xxh-shell-fish-appimage)**   | alpha      |             | | |
 
-The "zero" status means the shell installed on host will be used.
+The "zero" means the shell installed on host will be used.
 
 [Search xxh shell on Github](https://github.com/search?q=xxh-shell&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-shell) or [create your shell entrypoint](https://github.com/xxh/xxh-shell-sample) to use another portable shell.  
 

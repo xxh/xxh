@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 from base64 import b64encode
 from .shell import *
 
-XXH_VERSION = '0.7.4'
+XXH_VERSION = '0.7.5'
 
 class xxh:
     def __init__(self):
@@ -387,16 +387,16 @@ class xxh:
         installed = 0
         packages = list(set(packages))
         for package in packages:
-            subdir = self.package_subdir(package)
-            package_dir = self.local_xxh_home / '.xxh' / str(subdir) / package
+            package_name, package_source_type, package_source = self.package_parse_name(package)
+
+            subdir = self.package_subdir(package_name)
+            package_dir = self.local_xxh_home / '.xxh' / str(subdir) / package_name
             if package_dir.exists():
                 if self.vverbose or not self.destination_exists:
                     self.eprint(f'Package exists, skip install: {package_dir}')
                 continue
 
             self.eprint(f'Install {package} to local {package_dir}')
-
-            package_name, package_source_type, package_source = self.package_parse_name(package)
 
             if not re.match(f'^{self.package_name_regex}$', package_name):
                 self.eeprint(f'Invalid package name: {package_name}\n'

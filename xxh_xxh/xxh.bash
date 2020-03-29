@@ -33,6 +33,8 @@ for pluginenv_file in $local_xxh_home/.xxh/plugins/*-bash-*/env; do
   fi
 done
 
-CDIR="$(cd "$(dirname "$0")" && pwd)"
+
+CDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 [ -f $CDIR/xxh ] && xxh=$CDIR/xxh || xxh='xxh'
+[ -f $CDIR/../xxh ] && xxh=$CDIR/../xxh || xxh='xxh'
 $xxh "$@" +s xxh-shell-bash-zero $eargs
