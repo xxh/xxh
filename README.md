@@ -1,5 +1,5 @@
 <p align="center">You chosen a command shell and spent months to stuffed it with shortcuts and colors. But when you move from local to remote host using ssh you lose it all. The mission of xxh is to bring your favorite shell wherever you go through the ssh.</p>
-<p align="center">No installations or root access or any affection on the host required.</p>
+<p align="center">No installations or root access on the host required.</p>
 <p align="center">  
   <a href="https://pypi.org/project/xxh-xxh/" target="_blank"><img src="https://img.shields.io/pypi/v/xxh-xxh.svg" alt="[release]"></a>
   <a href="https://gitter.im/xxh-xxh/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge" target="_blank"><img alt="[gitter chat]" src="https://badges.gitter.im/xxh-xxh/community.svg"></a>
