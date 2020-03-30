@@ -60,7 +60,7 @@ xxh myhost +s zsh                                   # set the shell
 xxh myhost +s xonsh-appimage +hhh "~"               # set /home/user as home directory (read Q&A)
 xxh myhost +s bash-zero +I xxh-plugin-bash-vim      # preinstall the plugin
 xxh myhost +if +q                                   # install without questions in quiet mode
-xxh myhost +hh /tmp/xxh +hhr                        # upload xxh to host /tmp/xxh and remove when disconnect 
+xxh myhost +hh /tmp/xxh +hhr                        # upload xxh to /tmp/xxh and remove when disconnect 
 source xxh.zsh myhost +I xxh-plugin-zsh-ohmyzsh     # connect in seamless mode with ohmyzsh plugin
 ```
 To reusing arguments there is `~/.config/xxh/config.xxhc` config file in [YAML](https://en.wikipedia.org/wiki/YAML) format:
