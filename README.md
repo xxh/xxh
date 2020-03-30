@@ -113,9 +113,9 @@ The first connection takes time for downloading and uploading portable shell. It
  
 Add `ProxyCommand` or `ProxyJump` to your ssh config [as described](https://superuser.com/questions/96489/an-ssh-tunnel-via-multiple-hops#answer-170592) and then do ordinary `xxh host_internal`.
 
-### What is plugin? 
+### What is xxh plugin? 
 
-It is the set of scripts which will be run on the host when you go using xxh. It could be shell settings, environment variables, plugins, color themes and everything you need. You can find the links to plugins on [xxh-shells repos](https://github.com/search?q=xxh%2Fxxh-shell&type=Repositories). Feel free to fork it.
+It is the set of scripts which will be run on the host when you go using xxh. It could be shell settings, aliases, environment variables, frameworks, extensions, color themes and everything you need. You can find the links to plugins on [xxh-shells repos](https://github.com/search?q=xxh%2Fxxh-shell&type=Repositories). Feel free to fork it.
 
 ## Use cases
 ### Python everywhere with xonsh
