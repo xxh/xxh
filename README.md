@@ -63,25 +63,29 @@ xxh myhost +s bash-zero +I xxh-plugin-bash-vim      # install bash plugin before
 xxh myhost +if +q                                   # install without questions in quiet mode
 xxh myhost +hh /tmp/xxh +hhr                        # upload xxh to myhost:/tmp/xxh and remove it after disconnect 
 ```
-To reusing arguments there is `~/.config/xxh/config.xxhc` (`$XDG_CONFIG_HOME`) [yaml](https://en.wikipedia.org/wiki/YAML) config:
+To reusing arguments there is `~/.config/xxh/config.xxhc` config file in [YAML](https://en.wikipedia.org/wiki/YAML) format:
 ```yaml
 hosts:
+  ".*":                       # for all hosts
+    +s: xxh-shell-fish          # use fish shell
+
   myhost:                     # settings for myhost
     -p: 2222                    # set special port
     +s: xxh-shell-zsh           # use zsh shell                         
-    +I: xxh-shell-zsh           # install xxh-shell before connect
-    +I: xxh-plugin-zsh-ohmyzsh  # install xxh-plugin before connect
+    +I: xxh-shell-zsh           # install xxh-shell if needed
+    +I: xxh-plugin-zsh-ohmyzsh  # install xxh-plugin if needed
     +e: ZSH_THEME="clean"       # set ohmyzsh theme
-    +hhh: "~"                   # use user default home directory on host (/home/user instead of /home/user/.xxh)
+    +hhh: "~"                   # set /home/user as home directory
 
-  "company-.*":        # for all hosts by regex pattern
-    +if:                 # don't asking about install (++install-force)
-    +s: xonsh-appimage   # use xonsh shell
-    +hh: /tmp/.xxh       # use special xxh home directory (++host-xxh-home)
-    +hhr:                # remove host xxh home after disconnect (++host-xxh-home-remove)
+  "company-.*":               # for all hosts by regex pattern
+    +if:                        # don't asking about install
+    +s: xonsh-appimage          # use xonsh shell
+    +hh: /tmp/.xxh              # use special xxh home directory
+    +hhr:                       # remove host xxh home after disconnect
 ```
 The arguments will be automatically added when you run `xxh myhost` or `xxh company-server1`. 
-If you add `+I` arguments with appropriate xxh packages (customizations described in development section) you can make your config file complete and simplify the usage command to `xxh myhost`. All xxh packages will be installed automatically.
+
+If you add `+I` arguments with appropriate xxh packages you can make your config file complete and simplify the usage command to `xxh myhost`.
 
 ## The ideas behind xxh
 **Portable**. By default building occurs locally and then xxh uploads the result to host. No installations or root access on the host required. The security and careful about environment on the host are behind it. 
