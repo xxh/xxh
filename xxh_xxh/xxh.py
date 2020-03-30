@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 from base64 import b64encode
 from .shell import *
 
-XXH_VERSION = '0.7.5'
+XXH_VERSION = '0.7.6'
 
 class xxh:
     def __init__(self):
@@ -500,7 +500,8 @@ class xxh:
         argp.add_argument('+lh','++local-xxh-home', default=self.local_xxh_home, help=f"Local xxh home path. Default: {self.local_xxh_home}")
         argp.add_argument('+hh','++host-xxh-home', default=self.host_xxh_home, help=f"Host xxh home path. Default: {self.host_xxh_home}")
         argp.add_argument('+hhr','++host-xxh-home-remove', action='store_true', help=f"Remove xxh home on host after disconnect.")
-        argp.add_argument('+hhh','++host-home', default=self.host_xxh_home, help=f"Default $HOME path on host. Could be '~' for default user home. Default: {self.host_xxh_home}")
+        argp.add_argument('+hhh','++host-home', help=f"Default HOME path on host. Could be '~' for default user home. Default: {self.host_xxh_home}")
+        argp.add_argument('+hhx','++host-home-xdg', help=f"Default XDG path on host. Could be '~' for default user home. Default: {self.host_xxh_home}")
         argp.add_argument('+hf','++host-execute-file', help=f"Execute script file placed on host and exit. If supported by shell entrypoint.")
         argp.add_argument('+hc','++host-execute-command', help=f"Execute command on host and exit. If supported by shell entrypoint.")
         argp.add_argument('+heb','++host-execute-bash', dest='host_execute_bash', metavar='BASE64 +heb ...', action='append', help="Bash command will be executed before shell entrypoint (base64 encoded) if supported by shell entrypoint.")
@@ -690,8 +691,6 @@ class xxh:
             self.eeprint("Host xxh home path {host_xxh_home} looks like /. Please check twice!")
 
         if self.host_xxh_home != opt.host_xxh_home:
-            if opt.host_home == self.host_xxh_home:
-                opt.host_home = self.host_xxh_home
             self.host_xxh_home = opt.host_xxh_home
 
         host_info = self.get_host_info()
@@ -934,11 +933,15 @@ class xxh:
         if opt.host_home:
             host_home = f'-H {opt.host_home}'
 
+        host_home_xdg = []
+        if opt.host_home_xdg:
+            host_home_xdg = f'-X {opt.host_home_xdg}'
+
         lcs = []
         for lc in ['LC_TIME','LC_MONETARY','LC_ADDRESS','LC_IDENTIFICATION','LC_MEASUREMENT','LC_NAME','LC_NUMERIC','LC_PAPER','LC_TELEPHONE']:
             lcs.append(f"{lc}=POSIX")
 
-        self.S("{lcs} {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -t 'bash {entrypoint} {host_execute_file} {host_execute_command} {host_entrypoint_verbose} {env_args} {host_home}'".format(
+        self.S("{lcs} {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -t 'bash {entrypoint} {host_execute_file} {host_execute_command} {host_entrypoint_verbose} {env_args} {host_home} {host_home_xdg}'".format(
             lcs=A(lcs),
             sshpass=A(self.sshpass),
             ssh=A(self.ssh_command),
@@ -951,6 +954,7 @@ class xxh:
             host_entrypoint_verbose=A(host_entrypoint_verbose),
             env_args=A(env_args),
             host_home=A(host_home),
+            host_home_xdg=A(host_home_xdg)
         ))
 
         if opt.host_xxh_home_remove:
