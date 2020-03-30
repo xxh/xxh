@@ -101,7 +101,7 @@ When you run `xxh myhost` command xxh download portable shell and store locally 
 
 Add `+hhh '~'` argument to the command or to `config.xxhc`. 
 
-By default xxh uses hermetic environment where `$HOME` is `~/.xxh`. When you use `+hhh '~''` argument you set `$HOME` to your orinary user home directory. But [XDG](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) still in `~/.xxh`. This is semihermetic because any tools you use during xxh session that aren't support XDG can write to your home directory. 
+By default xxh uses hermetic environment where `$HOME` is `~/.xxh`. When you add `+hhh '~'` argument you set `$HOME` to your orinary user home directory. But [XDG](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) still in `~/.xxh`. This is semihermetic because any tools you use during xxh session that aren't support XDG can write to your home directory. 
 
 Finally when you add  `+hhx '~'` you also redirect [XDG](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) to user home directory.   
 
