@@ -108,7 +108,7 @@ that aren't support XDG can write to your home directory.
 
 Finally when you add  `+hhx '~'` you also redirect [XDG](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) 
 to user home directory and any tools you use during ssh session and xxh session has the same data, configs and cache. 
-This is very useful when you don't need hermetisation and you want just use xxh like ssh with saving all your configs, 
+This is very useful when you don't need hermetization and you want just use xxh like ssh with saving all your configs, 
 data and cache in your home directory.
 
 ### What about speed?
