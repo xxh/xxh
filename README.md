@@ -41,10 +41,6 @@ To use seamless mode run `./xxh ++extract-sourcing-files` to extract `xxh.*sh` f
 | **[osquery](https://github.com/xxh/xxh-shell-osquery)**               | beta       |             | | |
 | **[fish-appimage](https://github.com/xxh/xxh-shell-fish-appimage)**   | alpha      |             | | |
 
-
-
-
-
 The "zero" means the shell installed on host will be used.
 
 [Search xxh shell on Github](https://github.com/search?q=xxh-shell&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-shell) or [create your shell entrypoint](https://github.com/xxh/xxh-shell-sample) to use another portable shell.  
@@ -97,13 +93,29 @@ If you add `+I` arguments with appropriate xxh packages (customizations describe
 
 ## Q&A
 
-**What is plugin?** It is the set of scripts which will be run on the host when you go using xxh. It could be shell settings, environment variables, plugins, color themes and everything you need. You can find the links to plugins on [xxh-shells repos](https://github.com/search?q=xxh%2Fxxh-shell&type=Repositories). Feel free to fork it.
+#### How it works?
 
-**How it works?** When you run `xxh myhost` command xxh download portable shell and store locally to future use. Then if it needed xxh upload the portable shell, init scripts and plugins to the host. Finally xxh make ssh connection to the host and run portable shell without any system installs and affection on the target host.
+When you run `xxh myhost` command xxh download portable shell and store locally to future use. Then if it needed xxh upload the portable shell, init scripts and plugins to the host. Finally xxh make ssh connection to the host and run portable shell without any system installs, root access and affection on the target host.
 
-**What about speed?** The first connection takes time for downloading and uploading portable shell. It depends on portable shell size and channel speed. But when xxh is installed on the host and you do just `xxh myhost` then it works as ordinary ssh connection speed plus speed of initializing the shell you used. You could monitor all process using `+vv` argument.
+#### How to use `/home/me` as home instead of `/home/me/.xxh`? 
 
-**What if my `host_internal` can be reached only from my `host_external`?** Add `ProxyCommand` or `ProxyJump` to your ssh config [as described](https://superuser.com/questions/96489/an-ssh-tunnel-via-multiple-hops#answer-170592) and then do ordinary `xxh host_internal`.
+Add `+hhh '~'` argument to the command or to `config.xxhc`. 
+
+By default xxh uses hermetic environment where `$HOME` is `~/.xxh`. When you use `+hhh '~''` argument you set `$HOME` to your orinary user home directory. But [XDG](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) still in `~/.xxh`. This is semihermetic because any tools you use during xxh session that aren't support XDG can write to your home directory. 
+
+Finally when you add  `+hhx '~'` you also redirect [XDG](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) to user home directory.   
+
+#### What about speed?
+
+The first connection takes time for downloading and uploading portable shell. It depends on portable shell size and channel speed. But when xxh is installed on the host and you do just `xxh myhost` then it works as ordinary ssh connection speed plus speed of initializing the shell you used. You could monitor all process using `+vv` argument.
+
+#### What if my `host_internal` can be reached only from my `host_external`?
+ 
+Add `ProxyCommand` or `ProxyJump` to your ssh config [as described](https://superuser.com/questions/96489/an-ssh-tunnel-via-multiple-hops#answer-170592) and then do ordinary `xxh host_internal`.
+
+#### What is plugin? 
+
+It is the set of scripts which will be run on the host when you go using xxh. It could be shell settings, environment variables, plugins, color themes and everything you need. You can find the links to plugins on [xxh-shells repos](https://github.com/search?q=xxh%2Fxxh-shell&type=Repositories). Feel free to fork it.
 
 ## Use cases
 ### Python everywhere with xonsh
