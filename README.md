@@ -103,7 +103,7 @@ Add `+hhh '~'` argument to the command or to `config.xxhc`.
 
 By default xxh uses hermetic environment where `$HOME` is `~/.xxh`. When you add `+hhh '~'` argument you set `$HOME` to your orinary user home directory. But [XDG](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) still in `~/.xxh`. This is semihermetic because any tools you use during xxh session that aren't support XDG can write to your home directory. 
 
-Finally when you add  `+hhx '~'` you also redirect [XDG](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) to user home directory.   
+Finally when you add  `+hhx '~'` you also redirect [XDG](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) to user home directory and any tools you use during ssh session and xxh session has the same data, configs and cache. This is very useful when you don't need hermetisation and you want just use xxh like ssh with saving all your configs, data and cache in your home directory.
 
 ### What about speed?
 
