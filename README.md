@@ -54,14 +54,14 @@ xxh [+I xxh-package ...] [+L] [+RI xxh-package ...] [+R xxh-package ...]
 ```
 Common examples (use `xxh --help` to get info about arguments):
 ```yaml
-xxh myhost                                          # connect to the host
-xxh -i id_rsa -p 2222 myhost                        # using ssh arguments: port and key
-xxh myhost +s zsh                                   # set the shell
-xxh myhost +s xonsh-appimage +hhh "~"               # set /home/user as home directory (read Q&A)
-xxh myhost +s bash-zero +I xxh-plugin-bash-vim      # preinstall the plugin
-xxh myhost +if +q                                   # install without questions in quiet mode
-xxh myhost +hh /tmp/xxh +hhr                        # upload xxh to /tmp/xxh and remove when disconnect 
-source xxh.zsh myhost +I xxh-plugin-zsh-ohmyzsh     # connect in seamless mode with ohmyzsh plugin
+xxh myhost                                       # connect to the host
+xxh -i id_rsa -p 2222 myhost                     # using ssh arguments: port and key
+xxh myhost +s zsh                                # set the shell
+xxh myhost +s xonsh-appimage +hhh "~"            # set /home/user as home directory (read Q&A)
+xxh myhost +s bash-zero +I xxh-plugin-bash-vim   # preinstall the plugin
+xxh myhost +if +q                                # install without questions in quiet mode
+xxh myhost +hh /tmp/xxh +hhr                     # upload xxh to /tmp/xxh and remove when disconnect 
+source xxh.zsh myhost +I xxh-plugin-zsh-ohmyzsh  # connect in seamless mode with ohmyzsh plugin
 ```
 To reusing arguments there is `~/.config/xxh/config.xxhc` config file in [YAML](https://en.wikipedia.org/wiki/YAML) format:
 ```yaml
@@ -119,6 +119,12 @@ Finally when you add  `+hhx '~'` you also redirect [XDG](https://specifications.
 to user home directory and any tools you use during ssh session and xxh session has the same data, configs and cache. 
 This is very useful when you don't need hermetization and you want just use xxh like ssh with saving all your configs, 
 data and cache in your home directory.
+
+### What is seamless mode?
+
+When you run `source xxh.**** myhost` the script get the environment variables and 
+bring it to the xxh session. For example if you are in Oh My Zsh with `agnoster` theme with `(git docker ubuntu)` 
+plugins then command `xxh +I xxh-plugin-zsh-ohmyzsh && source xxh.zsh myhost` brings you to `myhost` with appropriate theme and plugins.
 
 ### What about speed?
 
