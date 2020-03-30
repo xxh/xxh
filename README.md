@@ -97,7 +97,7 @@ If you add `+I` arguments with appropriate xxh packages (customizations describe
 
 When you run `xxh myhost` command xxh download portable shell and store locally to future use. Then if it needed xxh upload the portable shell, init scripts and plugins to the host. Finally xxh make ssh connection to the host and run portable shell without any system installs, root access and affection on the target host.
 
-### How to use `/home/user` as home instead of `/home/user/.xxh`? 
+### How to set `/home/user` as home instead of `/home/user/.xxh`? 
 
 Add `+hhh '~'` argument to the command or to `config.xxhc`. 
 
