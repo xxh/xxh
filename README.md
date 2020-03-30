@@ -55,13 +55,13 @@ xxh [+I xxh-package ...] [+L] [+RI xxh-package ...] [+R xxh-package ...]
 Common examples (use `xxh --help` to get info about arguments):
 ```yaml
 xxh myhost                                          # connect to the host
-xxh -i id_rsa -p 2222 myhost                        # connect using key and port
-xxh myhost +s zsh                                   # connect to the host into zsh shell
-source xxh.zsh myhost +I xxh-plugin-zsh-ohmyzsh     # install zsh plugin then connect into zsh with seamless mode (zsh theme name will be add from local host) 
-xxh myhost +s xonsh-appimage +I xxh-plugin-xonsh-theme-bar   # install xonsh plugin before connect into xonsh shell
-xxh myhost +s bash-zero +I xxh-plugin-bash-vim      # install bash plugin before connect
+xxh -i id_rsa -p 2222 myhost                        # using ssh arguments: port and key
+xxh myhost +s zsh                                   # set the shell
+xxh myhost +s xonsh-appimage +hhh "~"               # set /home/user as home directory (read Q&A)
+xxh myhost +s bash-zero +I xxh-plugin-bash-vim      # preinstall the plugin
 xxh myhost +if +q                                   # install without questions in quiet mode
-xxh myhost +hh /tmp/xxh +hhr                        # upload xxh to myhost:/tmp/xxh and remove it after disconnect 
+xxh myhost +hh /tmp/xxh +hhr                        # upload xxh to host /tmp/xxh and remove when disconnect 
+source xxh.zsh myhost +I xxh-plugin-zsh-ohmyzsh     # connect in seamless mode with ohmyzsh plugin
 ```
 To reusing arguments there is `~/.config/xxh/config.xxhc` config file in [YAML](https://en.wikipedia.org/wiki/YAML) format:
 ```yaml
