@@ -413,8 +413,14 @@ class xxh:
                 continue
 
             if package_source_type == 'git':
-                self.eprint(f"Git clone {package_source}")
-                [o,e,proc] = self.SC(f'git clone {arg_q} --depth 1 {package_source} {package_dir} 1>&2')
+                if '//github.com/' in package_source and '/tree/' in package_source:
+                    github_url = package_source.split('/tree/')[0]
+                    github_branch = package_source.split('/tree/')[1]
+                    self.eprint(f"Git clone {github_url} from branch '{github_branch}'")
+                    [o, e, proc] = self.SC(f"git clone {arg_q} --depth 1 -b '{github_branch}' {github_url} {package_dir} 1>&2")
+                else:
+                    self.eprint(f"Git clone {package_source}")
+                    [o,e,proc] = self.SC(f'git clone {arg_q} --depth 1 {package_source} {package_dir} 1>&2')
                 if proc.returncode != 0:
                     self.eeprint(f'Error:\n{o.decode().strip()}\n{e.decode().strip()}')
             elif package_source_type == 'url':
