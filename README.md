@@ -40,7 +40,6 @@ To use seamless mode run `./xxh ++extract-sourcing-files` to extract `xxh.*sh` f
 | **[bash-zero](https://github.com/xxh/xxh-shell-bash-zero)**           | prestable  | `xxh.bash`  | [ohmybash](https://github.com/xxh/xxh-plugin-bash-ohmybash), [example](https://github.com/xxh/xxh-plugin-bash-vim) | <a href="https://asciinema.org/a/314508" target="_blank"><img alt="[demo bash]" src="https://img.shields.io/badge/demo-bash-grass"></a> |
 | **[osquery](https://github.com/xxh/xxh-shell-osquery)**               | beta       |             | | |
 | **[fish-appimage](https://github.com/xxh/xxh-shell-fish-appimage)**   | alpha      |             | | |
-
 The "zero" means the shell installed on host will be used.
 
 [Search xxh shell on Github](https://github.com/search?q=xxh-shell&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-shell) or [create your shell entrypoint](https://github.com/xxh/xxh-shell-example) to use another portable shell.  
@@ -127,7 +126,7 @@ plugins then command `xxh +I xxh-plugin-zsh-ohmyzsh && source xxh.zsh myhost` br
 
 ### What about speed?
 
-The first connection takes time for downloading and uploading portable shell. It depends on portable shell size and channel speed. But when xxh is installed on the host and you do just `xxh myhost` then it works as ordinary ssh connection speed plus speed of initializing the shell you used. You could monitor all process using `+vv` argument.
+The first connection takes time for downloading, building and uploading portable shell. It depends on portable shell size and channel speed. But when xxh is installed on the host and you do just `xxh myhost` then it works as ordinary ssh connection speed plus speed of initializing the shell you used. You could monitor all process using `+vv` argument.
 
 ### What if my `host_internal` can be reached only from my `host_external`?
  
@@ -168,6 +167,7 @@ In the [xxh-dev](https://github.com/xxh/xxh-dev) repo there is full [docker](htt
 Use custom source to install your version of xxh packages:
 ```shell script
 xxh +I xxh-shell-example+git+https://github.com/xxh/xxh-shell-example
+xxh +I xxh-shell-example+git+https://github.com/xxh/xxh-shell-example/tree/mybranch
 xxh +I xxh-shell-example+path+/home/user/my-xxh-dev/xxh-shell-example
 xxh myhost +s xxh-shell-example
 ``` 
