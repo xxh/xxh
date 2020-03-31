@@ -248,6 +248,8 @@ class xxh:
             echo rsync=`command -v rsync`
             echo scp=`command -v scp`
             echo shell=`command -v {short_shell_name}`
+            echo kernel=`uname -s`
+            echo arch=`uname -m`            
             """.format(
                 host_xxh_home=self.host_xxh_home,
                 shell=self.shell,
