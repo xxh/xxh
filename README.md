@@ -115,7 +115,7 @@ you set `$HOME` to your orinary user home directory. But [XDG](https://specifica
 still in `/home/user/.xxh`. This is semihermetic because any tools you use during xxh session 
 that aren't support XDG can write to your home directory. 
 
-Finally when you add  `+hhx '~'` you also redirect [XDG](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) 
+Finally when you add two arguments  `+hhh '~' +hhx '~'` you also redirect [XDG](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) 
 to user home directory and any tools you use during ssh session and xxh session has the same data, configs and cache. 
 This is very useful when you don't need hermetization and you want just use xxh like ssh with saving all your configs, 
 data and cache in your home directory.
@@ -169,7 +169,7 @@ In the [xxh-dev](https://github.com/xxh/xxh-dev) repo there is full [docker](htt
 Use custom source to install your version of xxh packages:
 ```shell script
 xxh +I xxh-shell-sample+git+https://github.com/xxh/xxh-shell-sample
-xxh +I xxh-shell-sample+path+/home/user/xxh/xxh-shell-sample
+xxh +I xxh-shell-sample+path+/home/user/my-xxh-dev/xxh-shell-sample
 xxh myhost +s xxh-shell-sample
 ``` 
 
