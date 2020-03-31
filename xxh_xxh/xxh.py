@@ -384,7 +384,18 @@ class xxh:
             package_source = g.group(4)
         return (package_name, package_source_type, package_source)
 
-    def packages_install(self, packages):
+    def packages_install(self, packages, kernel=None, arch=None):
+        if not kernel and not arch:
+            kernel, _, _ = SC('uname -s')
+            kernel = kernel.decode().strip().lower()
+            arch, _, _ = SC('uname -m')
+            arch = arch.decode().strip().lower()
+
+        if kernel and not arch:
+            self.eeprint(f'Unknown arch for kernel {kernel}')
+        elif not kernel and arch:
+            self.eeprint(f'Unknown kernel for arch {arch}')
+
         arg_q = '-q' if self.quiet else ''
         installed = 0
         packages = list(set(packages))
@@ -434,11 +445,23 @@ class xxh:
                 self.eeprint(f'Unknown source type: {package_source_type}')
 
             self.eprint(f"Build {package_name}")
+            host_system_prefix = kernel + '-' + arch
+            build_dir_name = 'build_' + host_system_prefix
+
             build_file_found = False
             for ext in self.build_file_exts:
                 build_file = package_dir / f'build.{ext}'
                 if build_file.exists():
-                    self.S(f'{build_file} {arg_q} 1>&2')
+                    if not which(ext):
+                        if self.vverbose:
+                            self.eprint(f"Not found executor for {build_file}")
+                        continue
+
+                    kernel_arg = f"-K '{kernel}'" if kernel else ''
+                    arch_arg = f"-A '{arch}'" if arch else ''
+
+                    self.S(f'{build_file} {arg_q} {kernel_arg} {arch_arg} 1>&2')
+
                     build_file_found = True
                     break
             if not build_file_found:
@@ -780,31 +803,12 @@ class xxh:
         if opt.install:
             self.eprint(f"Install {self.shell} to {host}:{host_xxh_home}" )
 
-            # Download xxh shell
-            self.packages_install([self.shell])
-
             # Build xxh packages
-            base_dir = self.local_xxh_home / '.xxh'
-            shell_build_dir = base_dir / 'shells' / self.shell / 'build'
-            build_packages = list([base_dir / 'shells' / self.shell]) + list( (base_dir / 'plugins').glob(f'*-{self.short_shell_name}-*') )
-
-            for package_dir in build_packages:
-                package_name = package_dir.name
-                build_dir = package_dir / 'build'
-                if not build_dir.exists():
-                    build_file_found = False
-                    for ext in self.build_file_exts:
-                        build_file = package_dir / f'build.{ext}'
-                        if build_file.exists():
-                            self.eprint(f"First time build {package_dir}")
-                            self.S(f'{build_file} {A(arg_q)} 1>&2')
-                            build_file_found = True
-                            break
-                    if not build_file_found:
-                        self.eeprint(f"Build file not found in {package_dir}")
+            shell_build_dir = self.local_xxh_home / '.xxh/shells' / self.shell / 'build'
+            build_plugins = [p.name for p in (self.local_xxh_home / '.xxh/plugins').glob(f'*-{self.short_shell_name}-*') ]
+            self.packages_install([self.shell] + build_plugins)
 
             # Remove xxh home directories
-
             if opt.install_force_full:
                 self.eprint(f'Remove {host}:{host_xxh_home}')
                 self.S('echo "rm -rf {host_xxh_home}" | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
@@ -813,9 +817,9 @@ class xxh:
                     ssh=A(self.ssh_command),
                     ssh_arg_v=A(self.ssh_arg_v),
                     ssh_arguments=A(self.ssh_arguments),
-                    host=A(host),
-
+                    host=A(host)
                 ))
+
             elif opt.install_force:
                 self.eprint(f'Remove {host}:{host_xxh_home}/.xxh')
                 self.S('echo "rm -rf {host_xxh_home}/.xxh" | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
