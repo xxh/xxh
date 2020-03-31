@@ -34,16 +34,16 @@ To use seamless mode run `./xxh ++extract-sourcing-files` to extract `xxh.*sh` f
 ## Supported shells
 | xxh-shell-`...`                                                       | status     | seamless    | plugins | demo |
 |-----------------------------------------------------------------------|------------|-------------|---------|------|
-| **[xonsh-appimage](https://github.com/xxh/xxh-shell-xonsh-appimage)** | stable     | `xxh.xsh`   | [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner), [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar), [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump), [sample](https://github.com/xxh/xxh-plugin-xonsh-sample) | <a href="https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7" target="_blank"><img alt="[demo xonsh]" src="https://img.shields.io/badge/demo-xonsh-grass"></a> | 
-| **[zsh](https://github.com/xxh/xxh-shell-zsh)**                       | stable     | `xxh.zsh`   | [ohmyzsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh), [p10k](https://github.com/xxh/xxh-plugin-zsh-powerlevel10k), [sample](https://github.com/xxh/xxh-plugin-zsh-sample) | <a href="https://asciinema.org/a/rCiT9hXQ5IdwqOwg6rifyFZzb" target="_blank"><img alt="[demo zsh]" src="https://img.shields.io/badge/demo-zsh-grass"></a> |
-| **[fish](https://github.com/xxh/xxh-shell-fish)**                     | prestable  |             | [sample](https://github.com/xxh/xxh-plugin-fish-sample) | |
-| **[bash-zero](https://github.com/xxh/xxh-shell-bash-zero)**           | prestable  | `xxh.bash`  | [ohmybash](https://github.com/xxh/xxh-plugin-bash-ohmybash), [vim sample](https://github.com/xxh/xxh-plugin-bash-vim) | <a href="https://asciinema.org/a/314508" target="_blank"><img alt="[demo bash]" src="https://img.shields.io/badge/demo-bash-grass"></a> |
+| **[xonsh-appimage](https://github.com/xxh/xxh-shell-xonsh-appimage)** | stable     | `xxh.xsh`   | [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner), [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar), [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump), [sample](https://github.com/xxh/xxh-plugin-xonsh-example) | <a href="https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7" target="_blank"><img alt="[demo xonsh]" src="https://img.shields.io/badge/demo-xonsh-grass"></a> | 
+| **[zsh](https://github.com/xxh/xxh-shell-zsh)**                       | stable     | `xxh.zsh`   | [ohmyzsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh), [p10k](https://github.com/xxh/xxh-plugin-zsh-powerlevel10k), [example](https://github.com/xxh/xxh-plugin-zsh-example) | <a href="https://asciinema.org/a/rCiT9hXQ5IdwqOwg6rifyFZzb" target="_blank"><img alt="[demo zsh]" src="https://img.shields.io/badge/demo-zsh-grass"></a> |
+| **[fish](https://github.com/xxh/xxh-shell-fish)**                     | prestable  |             | [example](https://github.com/xxh/xxh-plugin-fish-example) | |
+| **[bash-zero](https://github.com/xxh/xxh-shell-bash-zero)**           | prestable  | `xxh.bash`  | [ohmybash](https://github.com/xxh/xxh-plugin-bash-ohmybash), [example](https://github.com/xxh/xxh-plugin-bash-vim) | <a href="https://asciinema.org/a/314508" target="_blank"><img alt="[demo bash]" src="https://img.shields.io/badge/demo-bash-grass"></a> |
 | **[osquery](https://github.com/xxh/xxh-shell-osquery)**               | beta       |             | | |
 | **[fish-appimage](https://github.com/xxh/xxh-shell-fish-appimage)**   | alpha      |             | | |
 
 The "zero" means the shell installed on host will be used.
 
-[Search xxh shell on Github](https://github.com/search?q=xxh-shell&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-shell) or [create your shell entrypoint](https://github.com/xxh/xxh-shell-sample) to use another portable shell.  
+[Search xxh shell on Github](https://github.com/search?q=xxh-shell&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-shell) or [create your shell entrypoint](https://github.com/xxh/xxh-shell-example) to use another portable shell.  
 
 ## Usage
 Use `xxh` as replace `ssh` to connecting to the host without changing ssh arguments:
@@ -167,9 +167,9 @@ In the [xxh-dev](https://github.com/xxh/xxh-dev) repo there is full [docker](htt
 
 Use custom source to install your version of xxh packages:
 ```shell script
-xxh +I xxh-shell-sample+git+https://github.com/xxh/xxh-shell-sample
-xxh +I xxh-shell-sample+path+/home/user/my-xxh-dev/xxh-shell-sample
-xxh myhost +s xxh-shell-sample
+xxh +I xxh-shell-example+git+https://github.com/xxh/xxh-shell-example
+xxh +I xxh-shell-example+path+/home/user/my-xxh-dev/xxh-shell-example
+xxh myhost +s xxh-shell-example
 ``` 
 
 **We have teams.** If you're in team it does not oblige to do something. The main goal of teams is to create group of passionate people who could help or support in complex questions. Some people could be expert in one shell and newbie in another shell and mutual assistance is the key to xxh evolution. [Ask join.](https://github.com/xxh/xxh/issues/50)
