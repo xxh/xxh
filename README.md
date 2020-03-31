@@ -111,13 +111,13 @@ When you run `xxh myhost` command xxh download portable shell and store locally 
 Add `+hhh '~'` argument to the command or to `config.xxhc`. 
 
 By default xxh uses hermetic environment where `$HOME` is `/home/user/.xxh`. When you add `+hhh '~'` argument 
-you set `$HOME` to your orinary user home directory. But [XDG](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) 
-still in `/home/user/.xxh`. This is semihermetic because any tools you use during xxh session 
+you set `$HOME` to your orinary user home directory. Note that [XDG](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) 
+directories are still in `/home/user/.xxh`. This is semihermetic because any tools you use during xxh session 
 that aren't support XDG can write to your home directory. 
 
-Finally when you add two arguments  `+hhh '~' +hhx '~'` you also point the [XDG](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) 
-directories to user home directory and any tools you use during ssh and xxh will have the same data, configs and cache. 
-This is very useful when you don't need hermetization and you want to use xxh like ssh.
+Finally when you don't need hermetization and you want to use xxh like ssh just add two arguments:  `+hhh '~' +hhx '~'`.
+By this way you set the [XDG](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) 
+directories to user home and any tools you use during ssh and xxh will have the same data, configs and cache. 
 
 ### What is seamless mode?
 
