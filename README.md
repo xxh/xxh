@@ -115,10 +115,9 @@ you set `$HOME` to your orinary user home directory. But [XDG](https://specifica
 still in `/home/user/.xxh`. This is semihermetic because any tools you use during xxh session 
 that aren't support XDG can write to your home directory. 
 
-Finally when you add two arguments  `+hhh '~' +hhx '~'` you also redirect [XDG](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) 
-to user home directory and any tools you use during ssh session and xxh session has the same data, configs and cache. 
-This is very useful when you don't need hermetization and you want just use xxh like ssh with saving all your configs, 
-data and cache in your home directory.
+Finally when you add two arguments  `+hhh '~' +hhx '~'` you also point the [XDG](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) 
+directories to user home directory and any tools you use during ssh and xxh will have the same data, configs and cache. 
+This is very useful when you don't need hermetization and you want to use xxh like ssh.
 
 ### What is seamless mode?
 
