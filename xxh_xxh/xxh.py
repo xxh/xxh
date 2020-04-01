@@ -442,9 +442,6 @@ class xxh:
                 self.eeprint(f'Unknown source type: {package_source_type}')
 
             self.eprint(f"Build {package_name}")
-            host_system_prefix = kernel + '-' + arch
-            build_dir_name = 'build_' + host_system_prefix
-
             build_file_found = False
             for ext in self.build_file_exts:
                 build_file = package_dir / f'build.{ext}'

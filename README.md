@@ -32,7 +32,7 @@ chmod +x xxh && ./xxh
 To use seamless mode run `./xxh ++extract-sourcing-files` to extract `xxh.*sh` files to the current directory then run `source xxh.zsh myhost` command for seamless connecting.
 
 ## Supported shells
-| xxh-shell-`...`                                                       | status     | seamless    | plugins | demo |
+| xxh-shell                                                             | status     | [seamless](https://github.com/xxh/xxh#what-is-seamless-mode)    | [plugins](https://github.com/xxh/xxh#what-is-xxh-plugin) | demo |
 |-----------------------------------------------------------------------|------------|-------------|---------|------|
 | **[xonsh-appimage](https://github.com/xxh/xxh-shell-xonsh-appimage)** | stable     | `xxh.xsh`   | [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner), [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar), [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump), [example](https://github.com/xxh/xxh-plugin-xonsh-example) | <a href="https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7" target="_blank"><img alt="[demo xonsh]" src="https://img.shields.io/badge/demo-xonsh-grass"></a> | 
 | **[zsh](https://github.com/xxh/xxh-shell-zsh)**                       | stable     | `xxh.zsh`   | [ohmyzsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh), [p10k](https://github.com/xxh/xxh-plugin-zsh-powerlevel10k), [example](https://github.com/xxh/xxh-plugin-zsh-example) | <a href="https://asciinema.org/a/rCiT9hXQ5IdwqOwg6rifyFZzb" target="_blank"><img alt="[demo zsh]" src="https://img.shields.io/badge/demo-zsh-grass"></a> |
@@ -40,8 +40,6 @@ To use seamless mode run `./xxh ++extract-sourcing-files` to extract `xxh.*sh` f
 | **[bash-zero](https://github.com/xxh/xxh-shell-bash-zero)**           | prestable  | `xxh.bash`  | [ohmybash](https://github.com/xxh/xxh-plugin-bash-ohmybash), [example](https://github.com/xxh/xxh-plugin-bash-vim) | <a href="https://asciinema.org/a/314508" target="_blank"><img alt="[demo bash]" src="https://img.shields.io/badge/demo-bash-grass"></a> |
 | **[osquery](https://github.com/xxh/xxh-shell-osquery)**               | beta       |             | | |
 | **[fish-appimage](https://github.com/xxh/xxh-shell-fish-appimage)**   | alpha      |             | | |
-
-The "zero" means the shell installed on host will be used.
 
 [Search xxh shell on Github](https://github.com/search?q=xxh-shell&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-shell) or [create your shell entrypoint](https://github.com/xxh/xxh-shell-example) to use another portable shell.  
 
