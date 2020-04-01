@@ -36,4 +36,4 @@ setopt -o nomatch
 
 CDIR="$(cd "$(dirname "$0")" && pwd)"
 [ -f $CDIR/xxh ] && xxh=$CDIR/xxh || xxh='xxh'
-$xxh "$@" +s xxh-shell-zsh ${(z)eargs}
+$xxh +s xxh-shell-zsh ${(z)eargs} "$@"
