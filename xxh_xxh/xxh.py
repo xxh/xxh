@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 from base64 import b64encode
 from .shell import *
 
-XXH_VERSION = '0.7.7'
+XXH_VERSION = '0.7.8'
 
 class xxh:
     def __init__(self):
@@ -386,15 +386,8 @@ class xxh:
 
     def packages_install(self, packages, kernel=None, arch=None):
         if not kernel and not arch:
-            kernel, _, _ = SC('uname -s')
-            kernel = kernel.decode().strip().lower()
-            arch, _, _ = SC('uname -m')
-            arch = arch.decode().strip().lower()
-
-        if kernel and not arch:
-            self.eeprint(f'Unknown arch for kernel {kernel}')
-        elif not kernel and arch:
-            self.eeprint(f'Unknown kernel for arch {arch}')
+            kernel = 'linux'
+            arch = 'x86_64'
 
         arg_q = '-q' if self.quiet else ''
         installed = 0
@@ -870,7 +863,7 @@ class xxh:
             if which('rsync') and host_info['rsync']:
                 self.eprint('First time upload using rsync (this will be omitted on the next connections)')
 
-                rsync = "rsync {ssh_arg_v} -e \"{sshpass} {ssh} {ssh_arg_v} {ssh_arguments}\" {arg_q} -az {progress} --cvs-exclude".format(
+                rsync = "rsync {ssh_arg_v} -e \"{sshpass} {ssh} {ssh_arg_v} {ssh_arguments}\" {arg_q} -az {progress} --cvs-exclude --include core ".format(
                     host_xxh_home=host_xxh_home,
                     sshpass=A(self.sshpass),
                     ssh=A(self.ssh_command),
