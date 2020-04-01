@@ -31,7 +31,10 @@ chmod +x xxh && ./xxh
 ```
 To use seamless mode run `./xxh ++extract-sourcing-files` to extract `xxh.*sh` files to the current directory then run `source xxh.zsh myhost` command for seamless connecting.
 
-## Supported shells
+## Shells
+
+Currently supported OS is Linux on x86_64.
+
 | xxh-shell                                                             | status     | [seamless](https://github.com/xxh/xxh#what-is-seamless-mode)    | [plugins](https://github.com/xxh/xxh#what-is-xxh-plugin) | demo |
 |-----------------------------------------------------------------------|------------|-------------|---------|------|
 | **[xonsh-appimage](https://github.com/xxh/xxh-shell-xonsh-appimage)** | stable     | `xxh.xsh`   | [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner), [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar), [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump), [example](https://github.com/xxh/xxh-plugin-xonsh-example) | <a href="https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7" target="_blank"><img alt="[demo xonsh]" src="https://img.shields.io/badge/demo-xonsh-grass"></a> | 
