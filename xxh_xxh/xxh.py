@@ -4,9 +4,13 @@ from sys import exit
 from argparse import RawTextHelpFormatter
 from urllib.parse import urlparse
 from base64 import b64encode
+from signal import signal, SIGINT
 from .shell import *
 
-XXH_VERSION = '0.7.8'
+XXH_VERSION = '0.7.9'
+
+def sigint_handler(signal_received, frame):
+    sys.exit(0)
 
 class xxh:
     def __init__(self):
@@ -573,6 +577,9 @@ class xxh:
         if not self.quiet:
             self.verbose = opt.verbose
             self.vverbose = opt.vverbose
+
+        if not self.verbose:
+            signal(SIGINT, sigint_handler)
 
         if not opt.destination:
             opt.destination = '`'
