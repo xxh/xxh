@@ -489,7 +489,9 @@ class xxh:
         return self.packages_install(packages)
 
     def packages_list(self, packages=None):
-        packages_dir = (self.local_xxh_home / '.xxh').glob('**/xxh-*')
+        packages_dir = []
+        for p in self.supported_xxh_packages:
+            packages_dir += (self.local_xxh_home / '.xxh' / (p+'s')).glob('xxh-*')
         found = 0
         for p in sorted(packages_dir):
             if packages:
