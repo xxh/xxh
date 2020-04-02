@@ -101,7 +101,7 @@ If you add `+I` arguments with appropriate xxh packages you can make your config
 
 **Be open**. Currently supported five shells and the count could be grow by community.
 
-## Q&A
+## [Q&A](https://github.com/xxh/xxh/wiki)
 
 ### How it works?
 
@@ -137,6 +137,10 @@ Add `ProxyCommand` or `ProxyJump` to your ssh config [as described](https://supe
 ### What is xxh plugin? 
 
 It is the set of scripts which will be run on the host when you go using xxh. It could be shell settings, aliases, environment variables, frameworks, extensions, color themes and everything you need. You can find the links to plugins on [xxh-shells repos](https://github.com/search?q=xxh%2Fxxh-shell&type=Repositories). Feel free to fork it.
+
+### I have a new question!
+
+First of all review the [wiki](https://github.com/xxh/xxh/wiki) and if there is no answer [ask the question](https://github.com/xxh/xxh/issues/75).
 
 ## Use cases
 ### Python everywhere with xonsh
