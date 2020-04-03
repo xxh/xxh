@@ -75,7 +75,9 @@ hosts:
     +s: xxh-shell-zsh           # use zsh shell                         
     +I: xxh-shell-zsh           # install xxh-shell if needed
     +I: xxh-plugin-zsh-ohmyzsh  # install xxh-plugin if needed
-    +e: ZSH_THEME="clean"       # set ohmyzsh theme
+    +e:                         # simple environment variables
+      - ZSH_THEME="clean"       # set ohmyzsh theme
+      - MYENV="hello world"     # another environment variable
     +hhh: "~"                   # set /home/user as home directory
 
   "company-.*":               # for all hosts by regex pattern

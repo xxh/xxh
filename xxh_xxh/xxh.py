@@ -7,7 +7,7 @@ from base64 import b64encode
 from signal import signal, SIGINT
 from .shell import *
 
-XXH_VERSION = '0.7.9'
+XXH_VERSION = '0.7.10'
 
 def sigint_handler(signal_received, frame):
     sys.exit(0)
@@ -603,7 +603,13 @@ class xxh:
                             self.eprint('Load xxh config for host ' + h)
                         if hc and len(hc) > 0:
                             for k, v in hc.items():
-                                conf_args += [k, v] if v is not None else [k]
+                                if type(v) == list:
+                                    for vv in v:
+                                        if vv:
+                                            conf_args += [k, vv]
+                                else:
+                                    conf_args += [k, v] if v is not None else [k]
+
                                 if k in ['+P', '++password']:
                                     current_user = getpass.getuser()
                                     current_mode = oct(self.config_file.stat().st_mode)[-4:]
