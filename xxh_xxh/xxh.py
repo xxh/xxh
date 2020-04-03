@@ -325,8 +325,8 @@ class xxh:
                 el = e.split('=', 1)
                 if len(el) != 2:
                     self.eeprint(f'Wrong environment (expected NAME=VAL): {e}')
-                if not re.match('^[a-zA-Z_]+$', el[0]):
-                    self.eeprint(f'Wrong environment NAME (expected [a-zA-Z-]): {el[0]}')
+                if not re.match('^[a-zA-Z0-9_]+$', el[0]):
+                    self.eeprint(f'Wrong environment NAME (expected [a-zA-Z0-9-]): {el[0]}')
 
                 val = el[1]
                 if (val.startswith("'") and val.endswith("'")) or (val.startswith('"') and val.endswith('"')):
