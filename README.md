@@ -86,6 +86,7 @@ hosts:
     +s: xonsh-appimage          # use xonsh shell
     +hh: /tmp/.xxh              # use special xxh home directory
     +hhr:                       # remove host xxh home after disconnect
+    +I: xxh-plugin-prerun-mc    # midnight commander (mc) config as prerun xxh plugin
 ```
 The arguments will be automatically added when you run `xxh myhost` or `xxh company-server1`. 
 

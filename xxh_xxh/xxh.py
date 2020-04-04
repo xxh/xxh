@@ -7,7 +7,7 @@ from base64 import b64encode
 from signal import signal, SIGINT
 from .shell import *
 
-XXH_VERSION = '0.7.10'
+XXH_VERSION = '0.7.11'
 
 def sigint_handler(signal_received, frame):
     sys.exit(0)
@@ -810,8 +810,9 @@ class xxh:
 
             # Build xxh packages
             shell_build_dir = self.local_xxh_home / '.xxh/shells' / self.shell / 'build'
-            build_plugins = [p.name for p in (self.local_xxh_home / '.xxh/plugins').glob(f'*-{self.short_shell_name}-*') ]
-            self.packages_install([self.shell] + build_plugins)
+            build_any_plugins = [p.name for p in (self.local_xxh_home / '.xxh/plugins').glob(f'xxh-plugin-prerun-*') ]
+            build_shell_plugins = [p.name for p in (self.local_xxh_home / '.xxh/plugins').glob(f'xxh-plugin-{self.short_shell_name}-*') ]
+            self.packages_install([self.shell] + build_any_plugins + build_shell_plugins)
 
             # Remove xxh home directories
             if opt.install_force_full:
@@ -840,7 +841,7 @@ class xxh:
 
             host_xxh_plugins_dir = host_xxh_home / '.xxh/plugins'
             host_xxh_dirs_str = ''
-            for local_plugin_dir in local_plugins_dir.glob(f'*-{self.short_shell_name}-*'):
+            for local_plugin_dir in list(local_plugins_dir.glob(f'xxh-plugin-prerun-*')) + list(local_plugins_dir.glob(f'xxh-plugin-{self.short_shell_name}-*')):
                 local_plugin_build_dir = local_plugin_dir / 'build'
                 host_plugin_build_dir = str(local_plugin_build_dir).replace(str(self.local_xxh_home), str(host_xxh_home))
                 host_xxh_dirs_str += ' ' + host_plugin_build_dir
@@ -891,7 +892,7 @@ class xxh:
                     shell_build_dir=shell_build_dir,
                     host_xxh_shell_build_dir=host_xxh_shell_build_dir
                 ))
-                for local_plugin_dir in local_plugins_dir.glob(f'*-{self.short_shell_name}-*'):
+                for local_plugin_dir in list(local_plugins_dir.glob(f'xxh-plugin-prerun-*')) + list(local_plugins_dir.glob(f'xxh-plugin-{self.short_shell_name}-*')):
                     local_plugin_build_dir = local_plugin_dir/'build'
                     local_plugin_name = local_plugin_dir.name
                     self.S("{rsync} {local_plugin_build_dir}/* {host}:{host_xxh_plugins_dir}/{local_plugin_name}/build/ 1>&2".format(
@@ -916,7 +917,7 @@ class xxh:
                     host_xxh_shell_dir=host_xxh_shell_dir
                 ))
 
-                for local_plugin_dir in local_plugins_dir.glob(f'*-{self.short_shell_name}-*'):
+                for local_plugin_dir in list(local_plugins_dir.glob(f'xxh-plugin-{self.short_shell_name}-*')) + list(local_plugins_dir.glob(f'xxh-plugin-{self.short_shell_name}-*')):
                     local_plugin_build_dir = local_plugin_dir/'build'
                     local_plugin_name = local_plugin_dir.name
                     self.S('{scp} {local_plugin_build_dir}/* {host}:{host_xxh_plugins_dir}/{local_plugin_name}/build/ 1>&2'.format(
