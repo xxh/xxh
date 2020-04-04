@@ -73,11 +73,12 @@ hosts:
   myhost:                     # settings for myhost
     -p: 2222                    # set special port
     +s: xxh-shell-zsh           # use zsh shell                         
-    +I: xxh-shell-zsh           # install xxh-shell if needed
-    +I: xxh-plugin-zsh-ohmyzsh  # install xxh-plugin if needed
-    +e:                         # simple environment variables
-      - ZSH_THEME="clean"       # set ohmyzsh theme
-      - MYENV="hello world"     # another environment variable
+    +I:                         # install xxh packages (if not installed)
+      - xxh-shell-zsh             # install xxh-shell
+      - xxh-plugin-zsh-ohmyzsh    # install xxh-plugin
+    +e:                         # set simple environment variables
+      - ZSH_THEME="clean"         # set ohmyzsh theme
+      - MYENV="hello world"       # another environment variable
     +hhh: "~"                   # set /home/user as home directory
 
   "company-.*":               # for all hosts by regex pattern
