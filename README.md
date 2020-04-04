@@ -90,18 +90,16 @@ hosts:
     +hhr:                       # remove host xxh home after disconnect
     +I: xxh-plugin-prerun-mc    # midnight commander (mc) config as prerun xxh plugin
 ```
-The arguments will be automatically added when you run `xxh myhost` or `xxh company-server1`. 
-
-If you add `+I` arguments with appropriate xxh packages you can make your config file complete and simplify the usage 
-command to `xxh myhost`.
+The arguments will be automatically added when you run `xxh myhost` or `xxh company-server1`. If you add `+I` arguments 
+with appropriate xxh packages you can make your config file complete and simplify the usage command to `xxh myhost`.
 
 ### Install xxh packages
 ```
 xxh [+I xxh-package ...] [+L] [+RI xxh-package ...] [+R xxh-package ...]
 ```
-Different ways to set the xxh package source and install:
+Different ways to set the xxh package source:
 ```
-xxh +I xxh-shell-example                                         # install from https://gihub.com/xxh
+xxh +I xxh-shell-example                                         # install from https://github.com/xxh
 xxh +I https://github.com/xxh/xxh-shell-example                  # short url for github only, for other sources use examples below or add support
 xxh +I https://github.com/xxh/xxh-shell-example/tree/mybranch    # short url for github only, for other sources use examples below or add support
 xxh +I xxh-shell-example+git+https://github.com/xxh/xxh-shell-example                 # install from any git repo
