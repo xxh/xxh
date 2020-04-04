@@ -68,14 +68,14 @@ To reusing arguments there is `~/.config/xxh/config.xxhc` config file in [YAML](
 ```yaml
 hosts:
   ".*":                       # for all hosts
-    +s: xxh-shell-fish          # use fish shell
+    +s: fish                    # use Fish shell
 
   myhost:                     # settings for myhost
     -p: 2222                    # set special port
-    +s: xxh-shell-zsh           # use zsh shell                         
+    +s: zsh                     # use zsh shell                         
     +I:                         # install xxh packages (if not installed)
-      - xxh-shell-zsh             # install xxh-shell
-      - xxh-plugin-zsh-ohmyzsh    # install xxh-plugin
+      - xxh-shell-zsh             # install portable Zsh
+      - xxh-plugin-zsh-ohmyzsh    # install Oh My Zsh plugin for xxh
     +e:                         # set simple environment variables
       - ZSH_THEME="clean"         # set ohmyzsh theme
       - MYENV="hello world"       # another environment variable
