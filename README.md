@@ -106,8 +106,8 @@ xxh +I xxh-shell-example+path+/home/user/my-xxh-dev/xxh-shell-example           
 ```
 
 ## The ideas behind xxh
-**Portable**. By default building occurs locally and then xxh uploads the result to host. No installations or root access 
-on the host required. The security and careful about environment on the host are behind it. 
+**Portable**. Preparing portable shells and plugins occurs locally and then xxh uploads the result to host. 
+No installations or root access on the host required. The security and careful about environment on the host are behind it. 
 
 **Careful**. No blindfold copying config files from local to remote host. Following the privacy and repeatability 
 reasons the better way is to fork the xxh plugin or shell example and pack your config to it.
