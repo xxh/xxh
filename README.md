@@ -93,7 +93,7 @@ with appropriate xxh packages you can make your config file complete and simplif
 
 ### Install xxh packages
 ```
-xxh [+I xxh-package ...] [+L] [+RI xxh-package ...] [+R xxh-package ...]
+xxh [+I xxh-package +I ...] [+L] [+RI xxh-package +RI ...] [+R xxh-package +R ...]
 ```
 Different ways to set the xxh package source:
 ```
