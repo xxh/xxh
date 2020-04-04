@@ -29,7 +29,8 @@ mkdir ~/xxh && cd ~/xxh
 wget -O xxh https://github.com/xxh/xxh-appimage/releases/download/continuous/xxh-release-x86_64.AppImage
 chmod +x xxh && ./xxh
 ```
-To use [seamless mode](https://github.com/xxh/xxh/wiki#what-is-seamless-mode) run `./xxh ++extract-sourcing-files` to extract `xxh.*sh` files to the current directory then run `source xxh.zsh myhost` command for seamless connecting.
+To use [seamless mode](https://github.com/xxh/xxh/wiki#what-is-seamless-mode) run `./xxh ++extract-sourcing-files` 
+to extract `xxh.*sh` files to the current directory then run `source xxh.zsh myhost` command for seamless connecting.
 
 ## Shells
 
@@ -90,26 +91,70 @@ hosts:
 ```
 The arguments will be automatically added when you run `xxh myhost` or `xxh company-server1`. 
 
-If you add `+I` arguments with appropriate xxh packages you can make your config file complete and simplify the usage command to `xxh myhost`.
+If you add `+I` arguments with appropriate xxh packages you can make your config file complete and simplify the usage 
+command to `xxh myhost`.
 
 ## The ideas behind xxh
-**Portable**. By default building occurs locally and then xxh uploads the result to host. No installations or root access on the host required. The security and careful about environment on the host are behind it. 
+**Portable**. By default building occurs locally and then xxh uploads the result to host. No installations or root access 
+on the host required. The security and careful about environment on the host are behind it. 
 
-**Careful**. No blindfold copying config files from local to remote host. The privacy and repeatability reasons are behind it. Every xxh package, shell or plugin is the bridge that use only what required, no more.
+**Careful**. No blindfold copying config files from local to remote host. The privacy and repeatability reasons 
+are behind it. Every xxh package, shell or plugin is the bridge that use only what required, no more.
 
-**Hermetic**. If you delete `~/.xxh` directory from the remote host then xxh has never been on the host. If files appears outside xxh home directory feel free to report about this cases.
+**Hermetic**. If you delete `~/.xxh` directory from the remote host then xxh has never been on the host. 
+If files appears outside xxh home directory feel free to report about this cases.
 
-**Fork-ready**. Every repo could be forked, customized and used without waiting of package management system, xxh releases or any third party.
+**Fork-ready**. Every repo could be forked, customized and used without waiting of package management system, 
+xxh releases or any third party.
 
-**Do more**. The xxh packages are not only about shells. Any type of tool or code could be behind "shell entrypoint". If you want to play Super Mario on the remote host just put it as entrypoint.
+**Do more**. The xxh packages are not only about shells. Any type of tool or code could be behind "shell entrypoint". 
+If you want to play Super Mario on the remote host just put it as entrypoint.
 
 **Be open**. Currently supported five shells and the count could be grow by community.
+
+## Use cases
+### Python everywhere with xonsh
+When you run `xxh myhost +s xonsh-appimage` you'll get portable python, pip and python-powered shell on the host without
+any system installations on the host. Add plugins: [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) 
+saves time, [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner) manipulates lines 
+and [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar) looks nice. 
+
+### Put the cozy configs to xxh session
+
+For example there is [xxh-plugin-prerun-mc](https://github.com/xxh/xxh-plugin-prerun-mc) which creates
+[Midnight Commander](https://en.wikipedia.org/wiki/Midnight_Commander) (mc) config when you go to the host using xxh. 
+You can fork it and create your cozy settings for mc once and forever.
+
+### Oh My Zsh seamless SSH ([demo](https://asciinema.org/a/rCiT9hXQ5IdwqOwg6rifyFZzb))
+```shell script
+source xxh.zsh myhost +I xxh-plugin-zsh-ohmyzsh +if +q 
+```
+This command brings your current Oh My Zsh session theme to the xxh session. If you need more complex settings just fork 
+the [xxh-plugin-zsh-ohmyzsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh) and hack it.
+
+### Read host as a table with osquery
+```
+$ xxh myhost +s osquery
+osquery> SELECT * FROM users WHERE username='news';
++-----+-----+----------+-------------+-----------------+-------------------+
+| uid | gid | username | description | directory       | shell             |
++-----+-----+----------+-------------+-----------------+-------------------+
+| 9   | 9   | news     | news        | /var/spool/news | /usr/sbin/nologin |
++-----+-----+----------+-------------+-----------------+-------------------+
+```   
+
+### All in one portable home
+The xxh is very agile. You can create your own `xxh-shell` (shell word means it has entrypoint) which has any portable tools
+that you could help you on the host. [Bash-zero](https://github.com/xxh/xxh-shell-bash-zero) xxh-shell is one of this 
+platforms that could be forked and stuffed.
 
 ## [Q&A](https://github.com/xxh/xxh/wiki)
 
 ### How it works?
 
-When you run `xxh myhost` command xxh download portable shell and store locally to future use. Then if it needed xxh upload the portable shell, init scripts and plugins to the host. Finally xxh make ssh connection to the host and run portable shell without any system installs, root access and affection on the target host.
+When you run `xxh myhost` command xxh download portable shell and store locally to future use. Then if it needed xxh 
+upload the portable shell, init scripts and plugins to the host. Finally xxh make ssh connection to the host and run 
+portable shell without any system installs, root access and affection on the target host.
 
 ### How to set `/home/user` as home instead of `/home/user/.xxh`? 
 
@@ -128,11 +173,15 @@ directories to user home and any tools you use during ssh and xxh will have the 
 
 When you run `source xxh.**** myhost` the script get the environment variables and 
 bring it to the xxh session. For example if you are in Oh My Zsh with `agnoster` theme with `(git docker ubuntu)` 
-plugins then command `xxh +I xxh-plugin-zsh-ohmyzsh && source xxh.zsh myhost` brings you to `myhost` with appropriate theme and plugins.
+plugins then command `xxh +I xxh-plugin-zsh-ohmyzsh && source xxh.zsh myhost` brings you to `myhost` with appropriate 
+theme and plugins.
 
 ### What about speed?
 
-The first connection takes time for downloading, building and uploading portable shell. It depends on portable shell size and channel speed. But when xxh is installed on the host and you do just `xxh myhost` then it works as ordinary ssh connection speed plus speed of initializing the shell you used. You could monitor all process using `+vv` argument.
+The first connection takes time for downloading, building and uploading portable shell. It depends on portable 
+shell size and channel speed. But when xxh is installed on the host and you do just `xxh myhost` then it works 
+as ordinary ssh connection speed plus speed of initializing the shell you used. You could monitor all process 
+using `+vv` argument.
 
 ### What if my `host_internal` can be reached only from my `host_external`?
  
@@ -140,39 +189,18 @@ Add `ProxyCommand` or `ProxyJump` to your ssh config [as described](https://supe
 
 ### What is xxh plugin? 
 
-It is the set of scripts which will be run on the host when you go using xxh. It could be shell settings, aliases, environment variables, frameworks, extensions, color themes and everything you need. You can find the links to plugins on [xxh-shells repos](https://github.com/search?q=xxh%2Fxxh-shell&type=Repositories). Feel free to fork it.
+It is the set of scripts which will be run on the host when you go using xxh. It could be shell settings, aliases, 
+environment variables, frameworks, extensions, color themes and everything you need. You can find the links to plugins 
+on [xxh-shells repos](https://github.com/search?q=xxh%2Fxxh-shell&type=Repositories). Feel free to fork it.
 
 ### I have a new question!
 
 First of all review the [wiki](https://github.com/xxh/xxh/wiki) and if there is no answer [ask the question](https://github.com/xxh/xxh/issues/75).
 
-## Use cases
-### Python everywhere with xonsh
-When you run `xxh myhost +s xonsh-appimage` you'll get portable python, pip and python-powered shell on the host without any system installations on the host. Add plugins: [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) saves time, [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner) manipulates lines and [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar) looks nice. 
-
-### Oh My Zsh seamless SSH ([demo](https://asciinema.org/a/rCiT9hXQ5IdwqOwg6rifyFZzb))
-```shell script
-source xxh.zsh myhost +I xxh-plugin-zsh-ohmyzsh +if +q 
-```
-This command brings your current Oh My Zsh session theme to the xxh session. If you need more complex settings just fork the [xxh-plugin-zsh-ohmyzsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh) and hack it.
-
-### Read host as a table with osquery
-```
-$ xxh myhost +s osquery
-osquery> SELECT * FROM users WHERE username='news';
-+-----+-----+----------+-------------+-----------------+-------------------+
-| uid | gid | username | description | directory       | shell             |
-+-----+-----+----------+-------------+-----------------+-------------------+
-| 9   | 9   | news     | news        | /var/spool/news | /usr/sbin/nologin |
-+-----+-----+----------+-------------+-----------------+-------------------+
-```   
-
-### All in one portable home
-The xxh is very agile. You can create your own `xxh-shell` (shell word means it has entrypoint) which has any portable tools
-that you could help you on the host. [Bash-zero](https://github.com/xxh/xxh-shell-bash-zero) xxh-shell is one of this platforms that could be forked and stuffed.
-
 ## Development
-In the [xxh-dev](https://github.com/xxh/xxh-dev) repo there is full [docker](https://www.docker.com/)ised environment for development, testing and contribution. The process of testing and development is orchestrated by `xde` tool and as easy as possible.
+In the [xxh-dev](https://github.com/xxh/xxh-dev) repo there is full [docker](https://www.docker.com/)ised environment 
+for development, testing and contribution. The process of testing and development is orchestrated by `xde` tool and as 
+easy as possible.
 
 Use custom source to install your version of xxh packages:
 ```shell script
@@ -182,7 +210,9 @@ xxh +I xxh-shell-example+path+/home/user/my-xxh-dev/xxh-shell-example
 xxh myhost +s xxh-shell-example
 ``` 
 
-**We have teams.** If you're in team it does not oblige to do something. The main goal of teams is to create group of passionate people who could help or support in complex questions. Some people could be expert in one shell and newbie in another shell and mutual assistance is the key to xxh evolution. [Ask join.](https://github.com/xxh/xxh/issues/50)
+**We have teams.** If you're in team it does not oblige to do something. The main goal of teams is to create group 
+of passionate people who could help or support in complex questions. Some people could be expert in one shell and 
+newbie in another shell and mutual assistance is the key to xxh evolution. [Ask join.](https://github.com/xxh/xxh/issues/50)
 
 ## Thanks
 * **niess** for great [linuxdeploy-plugin-python](https://github.com/niess/linuxdeploy-plugin-python/) 
