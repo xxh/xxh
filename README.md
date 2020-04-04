@@ -109,11 +109,11 @@ xxh +I xxh-shell-example+path+/home/user/my-xxh-dev/xxh-shell-example           
 **Portable**. By default building occurs locally and then xxh uploads the result to host. No installations or root access 
 on the host required. The security and careful about environment on the host are behind it. 
 
-**Careful**. No blindfold copying config files from local to remote host. The privacy and repeatability reasons 
-are behind it. Every xxh package, shell or plugin is the bridge that use only what required, no more.
+**Careful**. No blindfold copying config files from local to remote host. Following the privacy and repeatability 
+reasons the better way is to fork the xxh plugin or shell example and pack your config to it.
 
-**Hermetic**. If you delete `~/.xxh` directory from the remote host then xxh has never been on the host. 
-If files appears outside xxh home directory feel free to report about this cases.
+**Hermetic**. If you delete `~/.xxh` directory from the remote host then xxh has never been on the host. By default your
+home is `.xxh` directory and you can [choose the hermetic level of your xxh session](https://github.com/xxh/xxh/wiki#how-to-set-homeuser-as-home-instead-of-homeuserxxh).
 
 **Be open and fork-ready**. Every repo could be forked, customized and reused without waiting for package management system, 
 xxh releases or any third party. Currently supported five shells and the count could be grow by community.
