@@ -100,8 +100,8 @@ Different ways to set the xxh package source:
 xxh +I xxh-shell-example                                         # install from https://github.com/xxh
 xxh +I https://github.com/xxh/xxh-shell-example                  # short url for github only, for other sources use examples below or add support
 xxh +I https://github.com/xxh/xxh-shell-example/tree/mybranch    # short url for github only, for other sources use examples below or add support
-xxh +I xxh-shell-example+git+https://github.com/xxh/xxh-shell-example                 # install from any git repo
-xxh +I xxh-shell-example+git+https://github.com/xxh/xxh-shell-example/tree/mybranch   # install from git branch
+xxh +I xxh-shell-example+git+https://github.com/xxh/xxh-shell-example                 # long url for any git repo
+xxh +I xxh-shell-example+git+https://github.com/xxh/xxh-shell-example/tree/mybranch   # github only branch support
 xxh +I xxh-shell-example+path+/home/user/my-xxh-dev/xxh-shell-example                 # install from local path
 ```
 
