@@ -204,6 +204,7 @@ easy as possible.
 
 Use custom source to install your version of xxh packages:
 ```shell script
+xxh +I https://github.com/xxh/xxh-shell-example    # short url for github only, for other sources use examples below
 xxh +I xxh-shell-example+git+https://github.com/xxh/xxh-shell-example
 xxh +I xxh-shell-example+git+https://github.com/xxh/xxh-shell-example/tree/mybranch
 xxh +I xxh-shell-example+path+/home/user/my-xxh-dev/xxh-shell-example

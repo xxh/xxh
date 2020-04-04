@@ -7,7 +7,7 @@ from base64 import b64encode
 from signal import signal, SIGINT
 from .shell import *
 
-XXH_VERSION = '0.7.11'
+XXH_VERSION = '0.7.12'
 
 def sigint_handler(signal_received, frame):
     sys.exit(0)
@@ -386,6 +386,13 @@ class xxh:
             package_name = g.group(1)
             package_source_type = g.group(3)
             package_source = g.group(4)
+        else:
+            g = re.match(f'.*//github.com/(.+?)/({self.package_name_regex})(/|$)', package_name)
+            if g:
+                package_source = package_name
+                package_name = g.group(2)
+                package_source_type = 'git'
+
         return (package_name, package_source_type, package_source)
 
     def packages_install(self, packages, kernel=None, arch=None):
@@ -469,9 +476,7 @@ class xxh:
         removed = 0
         packages = list(set(packages))
         for package_name in packages:
-            if '+' in package_name:
-                package_name, package_source_type, package_source = self.package_parse_name(package_name)
-
+            package_name, package_source_type, package_source = self.package_parse_name(package_name)
             self.eprint(f'Remove {package_name}')
             subdir = self.package_subdir(package_name) or self.eeprint(f"Unknown package: {package_name}")
             package_dir = self.local_xxh_home / '.xxh' / subdir / package_name
