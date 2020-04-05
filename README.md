@@ -163,7 +163,7 @@ platforms that could be forked and stuffed.
   * [How it works?](https://github.com/xxh/xxh/wiki#how-it-works)
     + [Simple answer](https://github.com/xxh/xxh/wiki#simple-answer)
     + [Detailed workflow with code](https://github.com/xxh/xxh/wiki#detailed-workflow-with-code)
-  * [How to set `/home/user` as home instead of `/home/user/.xxh`?](https://github.com/xxh/xxh/wiki#how-to-set-home-user-as-home-instead-of-home-user-xxh)
+  * [How to set `/home/user` as home instead of `/home/user/.xxh`?](https://github.com/xxh/xxh/wiki#how-to-set-homeuser-as-home-instead-of-homeuserxxh)
   * [What about speed?](https://github.com/xxh/xxh/wiki#what-about-speed)
   * [What is seamless mode?](https://github.com/xxh/xxh/wiki#what-is-seamless-mode)
 - [Packages for xxh](https://github.com/xxh/xxh/wiki#packages-for-xxh)
