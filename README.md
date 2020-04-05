@@ -147,7 +147,7 @@ source xxh.zsh myhost +I xxh-plugin-zsh-ohmyzsh +if +q
 This command brings your current Oh My Zsh session theme to the xxh session. If you need more complex settings just fork 
 the [xxh-plugin-zsh-ohmyzsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh) and hack it.
 
-### Read host as a table with osquery
+### Read host as a table with [osquery](https://github.com/xxh/xxh-shell-osquery)
 ```
 $ xxh myhost +s osquery
 osquery> SELECT * FROM users WHERE username='news';
