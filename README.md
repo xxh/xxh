@@ -55,7 +55,6 @@ Currently supported OS is Linux on x86_64.
 [Search xxh shell on Github](https://github.com/search?q=xxh-shell&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-shell) or [create your shell entrypoint](https://github.com/xxh/xxh-shell-example) to use another portable shell.  
 
 ## Usage
-### xxh
 Use `xxh` as replace `ssh` to connecting to the host without changing ssh arguments:
 ```
 xxh <host from ~/.ssh/config>
