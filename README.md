@@ -9,6 +9,9 @@
 If you like the idea of xxh click ⭐ on the repo and spread the word.
 </p>
 
+## Demo
+<img alt='[xxh demo]' src='https://raw.githubusercontent.com/xxh/static/master/xxh-demo.png'>
+
 ## Installation methods
 #### PyPi 3
 ```shell script
