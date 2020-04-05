@@ -159,8 +159,24 @@ platforms that could be forked and stuffed.
 
 ## [Questions and answers](https://github.com/xxh/xxh/wiki)
 
-If you have a question first of all review the [wiki](https://github.com/xxh/xxh/wiki) and if there is no answer
-[ask the question](https://github.com/xxh/xxh/issues/75).
+- [Start](https://github.com/xxh/xxh/wiki#start)
+  * [How it works?](https://github.com/xxh/xxh/wiki#how-it-works)
+    + [Simple answer](https://github.com/xxh/xxh/wiki#simple-answer)
+    + [Detailed workflow with code](https://github.com/xxh/xxh/wiki#detailed-workflow-with-code)
+  * [How to set `/home/user` as home instead of `/home/user/.xxh`?](https://github.com/xxh/xxh/wiki#how-to-set-home-user-as-home-instead-of-home-user-xxh)
+  * [What about speed?](https://github.com/xxh/xxh/wiki#what-about-speed)
+  * [What is seamless mode?](https://github.com/xxh/xxh/wiki#what-is-seamless-mode)
+- [Packages for xxh](https://github.com/xxh/xxh/wiki#packages-for-xxh)
+  * [How I can install xxh packages (shells or plugins)?](https://github.com/xxh/xxh/wiki#how-i-can-install-xxh-packages-shells-or-plugins)
+  * [What is xxh plugin?](https://github.com/xxh/xxh/wiki#what-is-xxh-plugin)
+  * [What is xxh prerun plugin?](https://github.com/xxh/xxh/wiki#what-is-xxh-prerun-plugin)
+  * [How to change `pluginrc` run order to run some plugin before others?](https://github.com/xxh/xxh/wiki#how-to-change-pluginrc-run-order-to-run-some-plugin-before-others)
+- [Advanced questions](https://github.com/xxh/xxh/wiki#advanced-questions)
+  * [What if my `host_internal` can be reached only from my `host_external`?](https://github.com/xxh/xxh/wiki#what-if-my-host_internal-can-be-reached-only-from-my-host_external)
+  * [How to add environment variables list?](https://github.com/xxh/xxh/wiki#how-to-add-environment-variables-list)
+- [Development and contribution](https://github.com/xxh/xxh/wiki#development-and-contribution)
+  * [What is the easiest way to debug shell and plugins?](https://github.com/xxh/xxh/wiki#what-is-the-easiest-way-to-debug-shell-and-plugins)
+- [I have a new question!](https://github.com/xxh/xxh/wiki#i-have-a-new-question)
 
 ## Development
 In the [xxh-dev](https://github.com/xxh/xxh-dev) repo there is full [docker](https://www.docker.com/)ised environment 
