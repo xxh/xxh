@@ -12,7 +12,12 @@ If you like the idea of xxh click ⭐ on the repo and spread the word.
 ## Installation methods
 #### PyPi 3
 ```shell script
-pip3 install -U xxh-xxh
+pip3 install xxh-xxh
+```
+
+#### [Homebrew](https://brew.sh/)
+```shell script
+brew install python3 && pip3 install xxh-xxh
 ```
 
 #### Linux portable binary
