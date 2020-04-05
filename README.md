@@ -193,3 +193,4 @@ newbie in another shell and mutual assistance is the key to xxh evolution. [Ask 
 * **probonopd** and **TheAssassin** for hard-working [AppImage](https://github.com/AppImage)
 * **Roman Perepelitsa** for incredible [statically-linked, hermetic, relocatable Zsh](https://github.com/romkatv/zsh-bin) 
 * **Anthony Scopatz**, **Gil Forsyth**, **Jamie Bliss**, **David Strobach**, **Morten Enemark Lund** and **@xore** for amazing [xonsh](https://github.com/xonsh/xonsh) shell
+* **Johannes Altmanninger** and **Fabian Homborg** for extensive and portable [fish shell](https://github.com/fish-shell/fish-shell)
