@@ -21,7 +21,7 @@ brew install python3 && pip3 install xxh-xxh
 ```
 
 #### Linux portable binary
-```
+```shell script
 mkdir ~/xxh && cd ~/xxh
 wget https://github.com/xxh/xxh-portable/raw/master/result/xxh-portable-musl-alpine-Linux-x86_64.tar.gz
 tar -xzf xxh-portable-musl-alpine-Linux-x86_64.tar.gz
@@ -29,7 +29,7 @@ tar -xzf xxh-portable-musl-alpine-Linux-x86_64.tar.gz
 ```
 
 #### [AppImage](https://appimage.org/)
-```
+```shell script
 mkdir ~/xxh && cd ~/xxh
 wget -O xxh https://github.com/xxh/xxh-appimage/releases/download/continuous/xxh-release-x86_64.AppImage
 chmod +x xxh && ./xxh
