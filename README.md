@@ -42,7 +42,7 @@ Currently supported OS is Linux on x86_64.
 | **[bash-zero](https://github.com/xxh/xxh-shell-bash-zero)**           | prestable  | `xxh.bash`  | [ohmybash](https://github.com/xxh/xxh-plugin-bash-ohmybash), [[+]](https://github.com/xxh/xxh-plugin-bash-example) | <a href="https://asciinema.org/a/314508" target="_blank"><img alt="[demo bash]" src="https://img.shields.io/badge/demo-bash-grass"></a> |
 | **[osquery](https://github.com/xxh/xxh-shell-osquery)**               | beta       |             | | |
 | **[fish-appimage](https://github.com/xxh/xxh-shell-fish-appimage)**   | alpha      |             | | |
-| [prerun](https://github.com/xxh/xxh/wiki#what-is-xxh-prerun-plugin)   | stable     |             | [xxh](https://github.com/xxh/xxh-plugin-prerun-xxh), [mc](https://github.com/xxh/xxh-plugin-prerun-mc) | | | 
+| [prerun](https://github.com/xxh/xxh/wiki#what-is-xxh-prerun-plugin)   | stable     |             | [xxh](https://github.com/xxh/xxh-plugin-prerun-xxh), [vim](https://github.com/xxh/xxh-plugin-prerun-vim), [mc](https://github.com/xxh/xxh-plugin-prerun-mc) | | | 
 
 [Search xxh shell on Github](https://github.com/search?q=xxh-shell&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-shell) or [create your shell entrypoint](https://github.com/xxh/xxh-shell-example) to use another portable shell.  
 
