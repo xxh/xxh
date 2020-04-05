@@ -10,7 +10,7 @@ If you like the idea of xxh click ⭐ on the repo and spread the word.
 </p>
 
 ## Demo
-<img alt='[xxh demo]' src='https://raw.githubusercontent.com/xxh/static/master/xxh-demo.png'>
+<a href='https://github.com/xxh/xxh#installation-methods'><img alt='[xxh demo]' src='https://raw.githubusercontent.com/xxh/static/master/xxh-demo.png'></a>
 
 ## Installation methods
 #### PyPi 3
