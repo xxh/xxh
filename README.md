@@ -12,7 +12,7 @@ If you like the idea of xxh click ⭐ on the repo or ☕️ <a href="https://www
 <a href='https://github.com/xxh/xxh#installation-methods'><img alt='[xxh demo]' src='https://raw.githubusercontent.com/xxh/static/master/xxh-demo.gif'></a>
 
 ## Installation methods
-#### PyPi 3
+#### [PyPi 3](https://pypi.org/project/xxh-xxh/) 
 ```shell script
 pip3 install xxh-xxh
 ```
