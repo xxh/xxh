@@ -5,7 +5,7 @@
   <img alt="[BSD license]" src="https://img.shields.io/pypi/l/xxh-xxh">
 </p>
 <p align="center">  
-If you like the idea of xxh click ⭐ on the repo or ☕️  [buy me coffee](https://www.buymeacoffee.com/xxh).
+If you like the idea of xxh click ⭐ on the repo or ☕️ <a href="https://www.buymeacoffee.com/xxh">buy me coffee</a>.
 </p>
 
 ## Demo
