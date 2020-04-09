@@ -71,32 +71,7 @@ xxh myhost +if +q                                # install without questions in 
 xxh myhost +hh /tmp/xxh +hhr                     # upload xxh to /tmp/xxh and remove when disconnect 
 source xxh.zsh myhost +I xxh-plugin-zsh-ohmyzsh  # connect in seamless mode with ohmyzsh plugin
 ```
-To reusing arguments there is `~/.config/xxh/config.xxhc` config file in [YAML](https://en.wikipedia.org/wiki/YAML) format:
-```yaml
-hosts:
-  ".*":                       # for all hosts
-    +s: fish                    # use Fish shell
-
-  myhost:                     # settings for myhost
-    -p: 2222                    # set special port
-    +s: zsh                     # use zsh shell                         
-    +I:                         # install xxh packages (if not installed)
-      - xxh-shell-zsh             # install portable Zsh
-      - xxh-plugin-zsh-ohmyzsh    # install Oh My Zsh plugin for xxh
-    +e:                         # set simple environment variables
-      - ZSH_THEME="clean"         # set ohmyzsh theme
-      - MYENV="hello world"       # another environment variable
-    +hhh: "~"                   # set /home/user as home directory
-
-  "company-.*":               # for all hosts by regex pattern
-    +if:                        # don't asking about install
-    +s: xonsh-appimage          # use xonsh shell
-    +hh: /tmp/.xxh              # use special xxh home directory
-    +hhr:                       # remove host xxh home after disconnect
-    +I: xxh-plugin-prerun-mc    # midnight commander (mc) config as prerun xxh plugin
-```
-The arguments will be automatically added when you run `xxh myhost` or `xxh company-server1`. If you add `+I` arguments 
-with appropriate xxh packages you can make your config file complete and simplify the usage command to `xxh myhost`.
+To reusing arguments and simplifying xxh usage to `xxh myhost` there is [config file](https://github.com/xxh/xxh/wiki#what-is-config-file).
 
 ### Install xxh packages
 ```
@@ -173,6 +148,7 @@ platforms that could be forked and stuffed.
   * [How to set `/home/user` as home instead of `/home/user/.xxh`?](https://github.com/xxh/xxh/wiki#how-to-set-homeuser-as-home-instead-of-homeuserxxh)
   * [What about speed?](https://github.com/xxh/xxh/wiki#what-about-speed)
   * [What is seamless mode?](https://github.com/xxh/xxh/wiki#what-is-seamless-mode)
+  * [What is config file?](https://github.com/xxh/xxh/wiki#what-is-config-file)
 - [Packages for xxh](https://github.com/xxh/xxh/wiki#packages-for-xxh)
   * [How I can install xxh packages (shells or plugins)?](https://github.com/xxh/xxh/wiki#how-i-can-install-xxh-packages-shells-or-plugins)
   * [What is xxh plugin?](https://github.com/xxh/xxh/wiki#what-is-xxh-plugin)
