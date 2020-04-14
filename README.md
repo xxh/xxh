@@ -52,8 +52,8 @@ Currently supported OS is Linux on x86_64.
 
 [Search xxh shell on Github](https://github.com/search?q=xxh-shell&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-shell) or [create your shell entrypoint](https://github.com/xxh/xxh-shell-example) to use another portable shell.  
 
-### [Prerun plugins](https://github.com/xxh/xxh/wiki#what-is-xxh-prerun-plugin)
-Prerun plugins allow to bring any portable tools, dotfiles, aliases to xxh session before running shell. 
+### Prerun plugins
+[Prerun plugins](https://github.com/xxh/xxh/wiki#what-is-xxh-prerun-plugin) allow to bring any portable tools, dotfiles, aliases to xxh session before running shell. 
 
 Pinned plugins: [mc](https://github.com/xxh/xxh-plugin-prerun-mc), [docker](https://github.com/xxh/xxh-plugin-prerun-docker), [python](https://github.com/xxh/xxh-plugin-prerun-python), [vim](https://github.com/xxh/xxh-plugin-prerun-vim), [xxh](https://github.com/xxh/xxh-plugin-prerun-xxh). 
 
