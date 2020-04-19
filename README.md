@@ -53,7 +53,7 @@ Currently supported OS is Linux on x86_64.
 [Search xxh shell on Github](https://github.com/search?q=xxh-shell&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-shell) or [create your shell entrypoint](https://github.com/xxh/xxh-shell-example) to use another portable shell.  
 
 ### Prerun plugins
-[Prerun plugins](https://github.com/xxh/xxh/wiki#what-is-xxh-prerun-plugin) allow to bring any portable tools, dotfiles, aliases to xxh session before running shell. 
+[Prerun plugins](https://github.com/xxh/xxh/wiki#plugins) allow to bring any portable tools, dotfiles, aliases to xxh session before running shell. 
 
 Pinned plugins: [sudo](https://github.com/xxh/xxh-plugin-prerun-sudo), [mc](https://github.com/xxh/xxh-plugin-prerun-mc), [docker](https://github.com/xxh/xxh-plugin-prerun-docker), [python](https://github.com/xxh/xxh-plugin-prerun-python), [vim](https://github.com/xxh/xxh-plugin-prerun-vim), [xxh](https://github.com/xxh/xxh-plugin-prerun-xxh). 
 
@@ -75,7 +75,7 @@ xxh myhost +if +q                                # install without questions in 
 xxh myhost +hh /tmp/xxh +hhr                     # upload xxh to /tmp/xxh and remove when disconnect 
 source xxh.zsh myhost +I xxh-plugin-zsh-ohmyzsh  # connect in seamless mode with ohmyzsh plugin
 ```
-To reusing arguments and simplifying xxh usage to `xxh myhost` there is [config file](https://github.com/xxh/xxh/wiki#what-is-config-file).
+To reusing arguments and simplifying xxh usage to `xxh myhost` there is [config file](https://github.com/xxh/xxh/wiki#config-file).
 
 ### Install xxh packages
 ```
@@ -99,7 +99,7 @@ No installations or root access on the host required. The security and careful a
 reasons the better way is to fork the xxh plugin or shell example and pack your config to it.
 
 **Hermetic**. If you delete `~/.xxh` directory from the remote host then xxh has never been on the host. By default your
-home is `.xxh` directory and you can [choose the hermetic level of your xxh session](https://github.com/xxh/xxh/wiki#how-to-set-homeuser-as-home-instead-of-homeuserxxh).
+home is `.xxh` directory and you can [choose the hermetic level of your xxh session](https://github.com/xxh/xxh/wiki#how-to-set-homeuser-as-home-on-host).
 
 **Be open and fork-ready**. Every repo could be forked, customized and reused without waiting for package management system, 
 xxh releases or any third party. Currently supported five shells and the count could be grow by community.
