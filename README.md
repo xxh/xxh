@@ -55,7 +55,7 @@ Currently supported OS is Linux on x86_64.
 ### Prerun plugins
 [Prerun plugins](https://github.com/xxh/xxh/wiki#plugins) allow to bring any portable tools, dotfiles, aliases to xxh session before running shell. 
 
-Pinned plugins: **[sudo](https://github.com/xxh/xxh-plugin-prerun-sudo), [dotfiles](https://github.com/xxh/xxh-plugin-prerun-dotfiles), [docker](https://github.com/xxh/xxh-plugin-prerun-docker), [python](https://github.com/xxh/xxh-plugin-prerun-python), [xxh](https://github.com/xxh/xxh-plugin-prerun-xxh), [vim](https://github.com/xxh/xxh-plugin-prerun-vim), [mc](https://github.com/xxh/xxh-plugin-prerun-mc)**. 
+Pinned plugins: **[sudo](https://github.com/xxh/xxh-plugin-prerun-sudo), [dotfiles](https://github.com/xxh/xxh-plugin-prerun-dotfiles), [docker](https://github.com/xxh/xxh-plugin-prerun-docker), [python](https://github.com/xxh/xxh-plugin-prerun-python), [xxh](https://github.com/xxh/xxh-plugin-prerun-xxh), [vim](https://github.com/xxh/xxh-plugin-prerun-vim)**. 
 
 ## Usage
 Use `xxh` as replace `ssh` to connecting to the host without changing ssh arguments:
