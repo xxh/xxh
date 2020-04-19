@@ -109,7 +109,7 @@ If you want to play Super Mario on the remote host just put it as entrypoint.
 
 ## Examples of use cases
 ### Python with pip everywhere without installation
-#### Using xonsh
+#### Way 1. Using xonsh
 ```
 xxh myhost +s xonsh-appimage
 
@@ -119,7 +119,7 @@ Python 3.8.2
 You'll get python-powered [xonsh](https://xon.sh) shell with portable python and pip on the host without any system installations on the host. 
 Add plugins: [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) saves time, [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner) manipulates lines 
 and [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar) looks nice. 
-#### Using portable python on any xxh shell
+#### Way 2. Using portable python on any xxh shell
 ```
 xxh +RI xxh-plugin-prerun-python
 xxh myhost
