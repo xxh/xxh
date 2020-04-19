@@ -108,11 +108,43 @@ xxh releases or any third party. Currently supported five shells and the count c
 If you want to play Super Mario on the remote host just put it as entrypoint.
 
 ## Examples of use cases
-### Python everywhere with xonsh
-When you run `xxh myhost +s xonsh-appimage` you'll get portable python, pip and python-powered shell on the host without
-any system installations on the host. Add plugins: [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) 
-saves time, [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner) manipulates lines 
+### Python with pip everywhere without installation
+#### Using xonsh
+```
+xxh myhost +s xonsh-appimage
+
+myhost> python --version
+Python 3.8.2
+```
+You'll get python-powered [xonsh](https://xon.sh) shell with portable python and pip on the host without any system installations on the host. 
+Add plugins: [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) saves time, [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner) manipulates lines 
 and [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar) looks nice. 
+#### Using portable python on any xxh shell
+```
+xxh +RI xxh-plugin-prerun-python
+xxh myhost
+
+myhost> python --version
+Python 3.8.2
+myhost> pip install pandas
+```
+Using [xxh-plugin-prerun-python](https://github.com/xxh/xxh-plugin-prerun-python) you'll get portable 
+Python AppImage which can be used on host without python and with any xxh shell.
+
+### Using docker on host without root access
+
+Try [xxh-plugin-prerun-docker](https://github.com/xxh/xxh-plugin-prerun-docker):
+```
+xxh +RI xxh-plugin-prerun-docker
+xxh myhost +if
+
+myhost> xxh-docker-run
+myhost> docker ps                                                                                                                                                                                                                            
+CONTAINER ID        IMAGE               COMMAND
+myhost> docker run --rm hello-world | grep Hello
+Hello from Docker!
+myhost> xxh-docker-stop
+```
 
 ### Put the cozy configs to xxh session
 
