@@ -55,7 +55,7 @@ Currently supported OS is Linux on x86_64.
 ### Prerun plugins
 [Prerun plugins](https://github.com/xxh/xxh/wiki#plugins) allow to bring any portable tools, dotfiles, aliases to xxh session before running shell. 
 
-Pinned plugins: [sudo](https://github.com/xxh/xxh-plugin-prerun-sudo), [mc](https://github.com/xxh/xxh-plugin-prerun-mc), [docker](https://github.com/xxh/xxh-plugin-prerun-docker), [python](https://github.com/xxh/xxh-plugin-prerun-python), [vim](https://github.com/xxh/xxh-plugin-prerun-vim), [xxh](https://github.com/xxh/xxh-plugin-prerun-xxh). 
+Pinned plugins: [sudo](https://github.com/xxh/xxh-plugin-prerun-sudo), [dotfiles](https://github.com/xxh/xxh-plugin-prerun-dotfiles), [docker](https://github.com/xxh/xxh-plugin-prerun-docker), [python](https://github.com/xxh/xxh-plugin-prerun-python), [xxh](https://github.com/xxh/xxh-plugin-prerun-xxh), [vim](https://github.com/xxh/xxh-plugin-prerun-vim), [mc](https://github.com/xxh/xxh-plugin-prerun-mc). 
 
 ## Usage
 Use `xxh` as replace `ssh` to connecting to the host without changing ssh arguments:
@@ -147,13 +147,12 @@ Hello from Docker!
 myhost> xxh-docker-stop
 ```
 
-### Put the cozy configs to xxh session
+### Bring dotfiles to xxh session
 
-For example there is [xxh-plugin-prerun-mc](https://github.com/xxh/xxh-plugin-prerun-mc) which creates
-[Midnight Commander](https://en.wikipedia.org/wiki/Midnight_Commander) (mc) config when you go to the host using xxh. 
-You can fork it and create your cozy settings for mc once and forever.
+There is [xxh-plugin-prerun-dotfiles](https://github.com/xxh/xxh-plugin-prerun-dotfiles) which creates config files 
+when you go to the host using xxh. You can fork it and create your cozy settings once and forever.
 
-### Oh My Zsh seamless SSH ([demo](https://asciinema.org/a/rCiT9hXQ5IdwqOwg6rifyFZzb))
+### Seamless Oh My Zsh ([demo](https://asciinema.org/a/rCiT9hXQ5IdwqOwg6rifyFZzb))
 ```shell script
 source xxh.zsh myhost +I xxh-plugin-zsh-ohmyzsh +if +q 
 ```

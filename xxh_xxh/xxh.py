@@ -7,7 +7,7 @@ from base64 import b64encode
 from signal import signal, SIGINT
 from .shell import *
 
-XXH_VERSION = '0.7.12'
+XXH_VERSION = '0.7.13'
 
 def sigint_handler(signal_received, frame):
     sys.exit(0)
@@ -877,7 +877,8 @@ class xxh:
 
 
             # Upload files
-
+            bash_wrap_begin = "bash -c 'shopt -s dotglob && "
+            bash_wrap_end = "'"
             if which('rsync') and host_info['rsync']:
                 self.eprint('First time upload using rsync (this will be omitted on the next connections)')
 
@@ -891,7 +892,9 @@ class xxh:
                     progress=('' if self.quiet or not self.verbose else '--progress')
                 )
 
-                self.S("{rsync} {shell_build_dir}/ {host}:{host_xxh_shell_build_dir}/ 1>&2".format(
+                self.S("{bb}{rsync} {shell_build_dir}/ {host}:{host_xxh_shell_build_dir}/ 1>&2{be}".format(
+                    bb=bash_wrap_begin,
+                    be=bash_wrap_end,
                     rsync=rsync,
                     host=A(host),
                     shell_build_dir=shell_build_dir,
@@ -900,7 +903,9 @@ class xxh:
                 for local_plugin_dir in list(local_plugins_dir.glob(f'xxh-plugin-prerun-*')) + list(local_plugins_dir.glob(f'xxh-plugin-{self.short_shell_name}-*')):
                     local_plugin_build_dir = local_plugin_dir/'build'
                     local_plugin_name = local_plugin_dir.name
-                    self.S("{rsync} {local_plugin_build_dir}/* {host}:{host_xxh_plugins_dir}/{local_plugin_name}/build/ 1>&2".format(
+                    self.S("{bb}{rsync} {local_plugin_build_dir}/* {host}:{host_xxh_plugins_dir}/{local_plugin_name}/build/ 1>&2{be}".format(
+                        bb=bash_wrap_begin,
+                        be=bash_wrap_end,
                         rsync=rsync,
                         host=A(host),
                         local_plugin_build_dir=local_plugin_build_dir,
@@ -915,7 +920,9 @@ class xxh:
                     ssh_arguments=A(self.ssh_arguments),
                     arg_q=A(arg_q)
                 )
-                self.S('{scp} {shell_build_dir} {host}:{host_xxh_shell_dir}/ 1>&2'.format(
+                self.S('{bb}{scp} {shell_build_dir} {host}:{host_xxh_shell_dir}/ 1>&2{be}'.format(
+                    bb=bash_wrap_begin,
+                    be=bash_wrap_end,
                     scp=scp,
                     shell_build_dir=shell_build_dir,
                     host=host,
@@ -925,7 +932,9 @@ class xxh:
                 for local_plugin_dir in list(local_plugins_dir.glob(f'xxh-plugin-{self.short_shell_name}-*')) + list(local_plugins_dir.glob(f'xxh-plugin-{self.short_shell_name}-*')):
                     local_plugin_build_dir = local_plugin_dir/'build'
                     local_plugin_name = local_plugin_dir.name
-                    self.S('{scp} {local_plugin_build_dir}/* {host}:{host_xxh_plugins_dir}/{local_plugin_name}/build/ 1>&2'.format(
+                    self.S('{bb}{scp} {local_plugin_build_dir}/* {host}:{host_xxh_plugins_dir}/{local_plugin_name}/build/ 1>&2{be}'.format(
+                        bb=bash_wrap_begin,
+                        be=bash_wrap_end,
                         scp=scp,
                         local_plugin_build_dir=local_plugin_build_dir,
                         host=host,
