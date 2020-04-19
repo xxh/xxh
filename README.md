@@ -119,10 +119,11 @@ Python 3.8.2
 You'll get python-powered [xonsh](https://xon.sh) shell with portable python and pip on the host without any system installations on the host. 
 Add plugins: [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump) saves time, [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner) manipulates lines 
 and [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar) looks nice. 
+
 #### Way 2. Using portable python on any xxh shell
 ```
 xxh +RI xxh-plugin-prerun-python
-xxh myhost
+xxh myhost +s fish
 
 myhost> python --version
 Python 3.8.2
