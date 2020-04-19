@@ -123,7 +123,7 @@ and [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar) looks nice.
 #### Way 2. Using portable python on any xxh shell
 ```
 xxh +RI xxh-plugin-prerun-python
-xxh myhost +s zsh
+xxh myhost +s fish
 
 myhost> python --version
 Python 3.8.2
