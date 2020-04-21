@@ -46,7 +46,7 @@ Currently supported OS is Linux on x86_64.
 | **[xonsh](https://github.com/xxh/xxh-shell-xonsh)**                   | stable     | `xxh.xsh`   | [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner), [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar), [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump), [[+]](https://github.com/xxh/xxh-plugin-xonsh-example) | <a href="https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7" target="_blank"><img alt="[demo xonsh]" src="https://img.shields.io/badge/demo-xonsh-grass"></a> | 
 | **[zsh](https://github.com/xxh/xxh-shell-zsh)**                       | stable     | `xxh.zsh`   | [ohmyzsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh), [p10k](https://github.com/xxh/xxh-plugin-zsh-powerlevel10k), [[+]](https://github.com/xxh/xxh-plugin-zsh-example) | <a href="https://asciinema.org/a/rCiT9hXQ5IdwqOwg6rifyFZzb" target="_blank"><img alt="[demo zsh]" src="https://img.shields.io/badge/demo-zsh-grass"></a> |
 | **[fish](https://github.com/xxh/xxh-shell-fish)**                     | stable     |  [todo](https://github.com/xxh/xxh/issues/74)           | [ohmyfish](https://github.com/xxh/xxh-plugin-fish-ohmyfish), [fisher](https://github.com/xxh/xxh-plugin-fish-fisher), [userconfig](https://github.com/xxh/xxh-plugin-fish-userconfig), [[+]](https://github.com/xxh/xxh-plugin-fish-example) | |
-| **[bash-zero](https://github.com/xxh/xxh-shell-bash-zero)**           | stable     | `xxh.bash`  | [ohmybash](https://github.com/xxh/xxh-plugin-bash-ohmybash), [[+]](https://github.com/xxh/xxh-plugin-bash-example) | <a href="https://asciinema.org/a/314508" target="_blank"><img alt="[demo bash]" src="https://img.shields.io/badge/demo-bash-grass"></a> |
+| **[bash](https://github.com/xxh/xxh-shell-bash)**                     | stable     | `xxh.bash`  | [ohmybash](https://github.com/xxh/xxh-plugin-bash-ohmybash), [[+]](https://github.com/xxh/xxh-plugin-bash-example) | <a href="https://asciinema.org/a/314508" target="_blank"><img alt="[demo bash]" src="https://img.shields.io/badge/demo-bash-grass"></a> |
 | **[osquery](https://github.com/xxh/xxh-shell-osquery)**               | beta       |             | | |
 | **[fish-appimage](https://github.com/xxh/xxh-shell-fish-appimage)**   | alpha      |             | | |
 
@@ -70,7 +70,7 @@ xxh myhost                                       # connect to the host
 xxh -i id_rsa -p 2222 myhost                     # using ssh arguments: port and key
 xxh myhost +s zsh                                # set the shell
 xxh myhost +s xonsh +hhh "~"                     # set /home/user as home directory (read Q&A)
-xxh myhost +s bash-zero +I xxh-plugin-bash-vim   # preinstall the plugin
+xxh myhost +s bash +I xxh-plugin-bash-vim        # preinstall the plugin
 xxh myhost +if +q                                # install without questions in quiet mode
 xxh myhost +hh /tmp/xxh +hhr                     # upload xxh to /tmp/xxh and remove when disconnect 
 source xxh.zsh myhost +I xxh-plugin-zsh-ohmyzsh  # connect in seamless mode with ohmyzsh plugin
@@ -172,7 +172,7 @@ osquery> SELECT * FROM users WHERE username='news';
 
 ### All in one portable home
 The xxh is very agile. You can create your own `xxh-shell` (shell word means it has entrypoint) which has any portable tools
-that you could help you on the host. [Bash-zero](https://github.com/xxh/xxh-shell-bash-zero) xxh-shell is one of this 
+that you could help you on the host. [Bash](https://github.com/xxh/xxh-shell-bash) xxh-shell is one of this 
 platforms that could be forked and stuffed.
 
 ## [Questions and answers](https://github.com/xxh/xxh/wiki)
