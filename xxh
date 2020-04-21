@@ -5,8 +5,6 @@ from shutil import which
 from xxh_xxh.xxh import xxh, eeprint
 
 if __name__ == '__main__':
-    if os.name == 'nt':
-        eeprint(f"Windows is not supported. WSL1 is not recommended also. WSL2 is not tested yet.")
     if not which('ssh'):
         eeprint('Install OpenSSH client before using xxh: https://duckduckgo.com/?q=how+to+install+openssh+client+in+linux')
 

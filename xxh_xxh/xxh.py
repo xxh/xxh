@@ -7,7 +7,7 @@ from base64 import b64encode
 from signal import signal, SIGINT
 from .shell import *
 
-XXH_VERSION = '0.7.13'
+XXH_VERSION = '0.7.14'
 
 def sigint_handler(signal_received, frame):
     sys.exit(0)
