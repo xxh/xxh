@@ -14,7 +14,7 @@ def b64e(s):
 local_xxh_home = p"~/.xxh"
 
 env_args = []
-local_shell_dir = local_xxh_home / '.xxh/shells/xxh-shell-xonsh-appimage'
+local_shell_dir = local_xxh_home / '.xxh/shells/xxh-shell-xonsh'
 local_plugins_dir = local_xxh_home / '.xxh/plugins'
 for local_package_dir in [local_shell_dir]+sorted(local_plugins_dir.glob(f'*-xonsh-*')):
     plugin_name = local_package_dir.name
@@ -40,5 +40,5 @@ xxh = cdir/'xxh'
 if not xxh.exists():
     xxh='xxh'
 
-@(xxh) +s xonsh-appimage @(env_args) @($ARGS)
+@(xxh) +s xonsh @(env_args) @($ARGS)
 

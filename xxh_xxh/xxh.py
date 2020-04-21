@@ -69,7 +69,7 @@ class xxh:
                 return 'xxh-shell-zsh'
             if os.environ['SHELL'].endswith('fish'):
                 return 'xxh-shell-fish'
-        return 'xxh-shell-xonsh-appimage'
+        return 'xxh-shell-xonsh'
 
     def stripunquote(self, s):
         s = s.strip()

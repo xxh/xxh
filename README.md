@@ -43,7 +43,7 @@ Currently supported OS is Linux on x86_64.
 
 | xxh-shell                                                             | status     | [seamless](https://github.com/xxh/xxh#what-is-seamless-mode)    | [plugins](https://github.com/xxh/xxh#what-is-xxh-plugin) | demo |
 |-----------------------------------------------------------------------|------------|-------------|---------|------|
-| **[xonsh-appimage](https://github.com/xxh/xxh-shell-xonsh-appimage)** | stable     | `xxh.xsh`   | [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner), [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar), [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump), [[+]](https://github.com/xxh/xxh-plugin-xonsh-example) | <a href="https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7" target="_blank"><img alt="[demo xonsh]" src="https://img.shields.io/badge/demo-xonsh-grass"></a> | 
+| **[xonsh](https://github.com/xxh/xxh-shell-xonsh)**                   | stable     | `xxh.xsh`   | [pipeliner](https://github.com/xxh/xxh-plugin-xonsh-pipe-liner), [bar](https://github.com/xxh/xxh-plugin-xonsh-theme-bar), [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump), [[+]](https://github.com/xxh/xxh-plugin-xonsh-example) | <a href="https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7" target="_blank"><img alt="[demo xonsh]" src="https://img.shields.io/badge/demo-xonsh-grass"></a> | 
 | **[zsh](https://github.com/xxh/xxh-shell-zsh)**                       | stable     | `xxh.zsh`   | [ohmyzsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh), [p10k](https://github.com/xxh/xxh-plugin-zsh-powerlevel10k), [[+]](https://github.com/xxh/xxh-plugin-zsh-example) | <a href="https://asciinema.org/a/rCiT9hXQ5IdwqOwg6rifyFZzb" target="_blank"><img alt="[demo zsh]" src="https://img.shields.io/badge/demo-zsh-grass"></a> |
 | **[fish](https://github.com/xxh/xxh-shell-fish)**                     | stable     |  [todo](https://github.com/xxh/xxh/issues/74)           | [ohmyfish](https://github.com/xxh/xxh-plugin-fish-ohmyfish), [fisher](https://github.com/xxh/xxh-plugin-fish-fisher), [userconfig](https://github.com/xxh/xxh-plugin-fish-userconfig), [[+]](https://github.com/xxh/xxh-plugin-fish-example) | |
 | **[bash-zero](https://github.com/xxh/xxh-shell-bash-zero)**           | stable     | `xxh.bash`  | [ohmybash](https://github.com/xxh/xxh-plugin-bash-ohmybash), [[+]](https://github.com/xxh/xxh-plugin-bash-example) | <a href="https://asciinema.org/a/314508" target="_blank"><img alt="[demo bash]" src="https://img.shields.io/badge/demo-bash-grass"></a> |
@@ -69,7 +69,7 @@ Common examples (use `xxh --help` to get info about arguments):
 xxh myhost                                       # connect to the host
 xxh -i id_rsa -p 2222 myhost                     # using ssh arguments: port and key
 xxh myhost +s zsh                                # set the shell
-xxh myhost +s xonsh-appimage +hhh "~"            # set /home/user as home directory (read Q&A)
+xxh myhost +s xonsh +hhh "~"                     # set /home/user as home directory (read Q&A)
 xxh myhost +s bash-zero +I xxh-plugin-bash-vim   # preinstall the plugin
 xxh myhost +if +q                                # install without questions in quiet mode
 xxh myhost +hh /tmp/xxh +hhr                     # upload xxh to /tmp/xxh and remove when disconnect 
@@ -111,7 +111,7 @@ If you want to play Super Mario on the remote host just put it as entrypoint.
 ### Python with pip everywhere without installation
 #### Way 1. Using xonsh
 ```
-xxh myhost +s xonsh-appimage
+xxh myhost +s xonsh
 
 myhost> python --version
 Python 3.8.2
