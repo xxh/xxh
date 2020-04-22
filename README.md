@@ -5,7 +5,7 @@
   <img alt="[BSD license]" src="https://img.shields.io/pypi/l/xxh-xxh">
 </p>
 <p align="center">  
-If you like the idea of xxh click ⭐ on the repo.
+If you like the idea of xxh click ⭐ on the repo and stay tuned.
 </p>
 
 <a href='https://github.com/xxh/xxh#installation-methods'><img alt='[xxh demo]' src='https://raw.githubusercontent.com/xxh/static/master/xxh-demo2.gif'></a>
