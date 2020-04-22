@@ -6,10 +6,18 @@ If you like the idea of xxh click ⭐ on the repo and stay tuned.
 
 <a href='https://github.com/xxh/xxh#installation-methods'><img alt='[xxh demo]' src='https://raw.githubusercontent.com/xxh/static/master/xxh-demo2.gif'></a>
 
-|     |     |     |
-| --- | --- | --- |
-| **Portable**. Preparing portable shells and plugins occurs locally and then xxh uploads the result to host. No installations or root access on the host required. The security and careful about environment on the host are behind it. | **Hermetic**. If you delete `~/.xxh` directory from the remote host then xxh has never been on the host. By default your home is `.xxh` directory and you can [choose the hermetic level of your xxh session](https://github.com/xxh/xxh/wiki#how-to-set-homeuser-as-home-on-host). |  **Careful**. No blindfold copying config files from local to remote host. Following the privacy and repeatability reasons the better way is to fork the xxh plugin or shell example and pack your configs to it.   |
-| **Be open and fork-ready**. Every xxh repo could be forked, customized and reused without waiting for package management system, xxh releases or any third party. Currently supported five shells and the count could be increased by community. | **Do more**. The xxh packages are not only about shells. Any type of tool or code could be behind entrypoint. If you want to play Super Mario on the remote host just put it as entrypoint in xxh-shell. | **Chameleon**. Switching the shells as easy as possible and not really needed to use only one shell. Choose you current shell along with task you want to solve: `xxh myhost +s xonsh` for python environment, `osquery` for simple querying, `fish` for modern features or time-tasted `zsh` and `bash`. |   
+<table>
+<tr>
+<td valign="top"><b>Portable</b>. Preparing portable shells and plugins occurs locally and then xxh uploads the result to host. No installations or root access on the host required. The security and careful about environment on the host are behind it.</td>
+<td valign="top"><b>Hermetic</b>. If you delete <code>~/.xxh</code> directory from the remote host then xxh has never been on the host. By default your home is <code>.xxh</code> directory and you can <a href="https://github.com/xxh/xxh/wiki#how-to-set-homeuser-as-home-on-host">choose the hermetic level of your xxh session</a>.</td>
+<td valign="top"><b>Careful</b>. No blindfold copying config files from local to remote host. Following the privacy and repeatability reasons the better way is to fork the xxh plugin or shell example and pack your configs to it. </td>
+</tr>
+<tr>
+<td valign="top"><b>Be open and fork-ready</b>. Every xxh repo could be forked, customized and reused without waiting for package management system, xxh releases or any third party. Currently supported five shells and the count could be increased by community.</td>
+<td valign="top"><b>Do more</b>. The xxh packages are not only about shells. Any type of tool or code could be behind entrypoint. If you want to play Super Mario on the remote host just put it as entrypoint in xxh-shell.</td>
+<td valign="top"><b>Chameleon</b>. Switching the shells as easy as possible and not really needed to use only one shell. Choose you current shell along with task you want to solve: <code>xxh myhost +s xonsh</code> for python environment, osquery for simple querying, fish for modern features or time-tasted zsh and bash. </td>   
+</tr>
+</table>
  
 ## Installation methods
 #### [PyPi 3](https://pypi.org/project/xxh-xxh/) 
