@@ -1,9 +1,5 @@
 <p align="center">You stuffed command shell with aliases, tools and colors but you lose it all when using ssh. The mission of xxh is to bring your favorite shell wherever you go through the ssh without root access and system installations.</p>
-<p align="center">  
-  <a href="https://pypi.org/project/xxh-xxh/" target="_blank"><img src="https://img.shields.io/pypi/v/xxh-xxh.svg" alt="[release]"></a>
-  <a href="https://gitter.im/xxh-xxh/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge" target="_blank"><img alt="[gitter chat]" src="https://badges.gitter.im/xxh-xxh/community.svg"></a>
-  <img alt="[BSD license]" src="https://img.shields.io/pypi/l/xxh-xxh">
-</p>
+
 <p align="center">  
 If you like the idea of xxh click ⭐ on the repo and stay tuned.
 </p>
