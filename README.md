@@ -15,7 +15,7 @@ If you like the idea of xxh click ⭐ on the repo and stay tuned.
 <tr>
 <td valign="top"><b>Be open and fork-ready</b>. Every xxh repo could be forked, customized and reused without waiting for package management system, xxh releases or any third party. Currently supported five shells and the count could be increased by community.</td>
 <td valign="top"><b>Do more</b>. The xxh packages are not only about shells. Any type of tool or code could be behind entrypoint. If you want to play Super Mario on the remote host just put it as entrypoint in xxh-shell.</td>
-<td valign="top"><b>Chameleon</b>. Switching the shells as easy as possible and not really needed to use only one shell. Choose you current shell along with task you want to solve: <code>xxh myhost +s xonsh</code> for python environment, osquery for simple querying, fish for modern features or time-tasted zsh and bash. </td>   
+<td valign="top"><b>Chameleon</b>. Switching the shells as easy as possible and not really needed to use only one shell. Choose your current shell along with task you want to solve: <code>xxh myhost +s xonsh</code> for python environment, osquery for simple querying, fish for modern features or time-tasted zsh and bash. </td>   
 </tr>
 </table>
  
