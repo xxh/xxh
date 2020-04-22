@@ -8,7 +8,6 @@
 If you like the idea of xxh click ⭐ on the repo.
 </p>
 
-## Demo
 <a href='https://github.com/xxh/xxh#installation-methods'><img alt='[xxh demo]' src='https://raw.githubusercontent.com/xxh/static/master/xxh-demo2.gif'></a>
 
 ## Installation methods
