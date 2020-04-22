@@ -11,15 +11,15 @@ If you like the idea of xxh click ⭐ on the repo and stay tuned.
 <col style="width:33%">
 <col style="width:33%">
 <tbody>
-<tr>
-<td valign="top"><b>Portable</b>. Preparing portable shells and plugins occurs locally and then xxh uploads the result to host. No installations or root access on the host required. The security and careful about environment on the host are behind it.</td>
-<td valign="top"><b>Hermetic</b>. If you delete <code>~/.xxh</code> directory from the remote host then xxh has never been on the host. By default your home is <code>.xxh</code> directory and you can <a href="https://github.com/xxh/xxh/wiki#how-to-set-homeuser-as-home-on-host">choose the hermetic level of your xxh session</a>.</td>
-<td valign="top"><b>Careful</b>. No blindfold copying config files from local to remote host. Following the privacy and repeatability reasons the better way is to fork the xxh plugin or shell example and pack your configs to it. </td>
+<tr style="border: 0px;">
+<td valign="top" style="border: 0px;"><b>Portable</b>. Preparing portable shells and plugins occurs locally and then xxh uploads the result to host. No installations or root access on the host required. The security and careful about environment on the host are behind it.</td>
+<td valign="top" style="border: 0px;"><b>Hermetic</b>. If you delete <code>~/.xxh</code> directory from the remote host then xxh has never been on the host. By default your home is <code>.xxh</code> directory and you can <a href="https://github.com/xxh/xxh/wiki#how-to-set-homeuser-as-home-on-host">choose the hermetic level of your xxh session</a>.</td>
+<td valign="top" style="border: 0px;"><b>Careful</b>. No blindfold copying config files from local to remote host. Following the privacy and repeatability reasons the better way is to fork the xxh plugin or shell example and pack your configs to it. </td>
 </tr>
-<tr>
-<td valign="top"><b>Be open and fork-ready</b>. Every xxh repo could be forked, customized and reused without waiting for package management system, xxh releases or any third party. Currently supported five shells and the count could be increased by community.</td>
-<td valign="top"><b>Do more</b>. The xxh packages are not only about shells. Any type of tool or code could be behind entrypoint. If you want to play Super Mario on the remote host just put it as entrypoint in xxh-shell.</td>
-<td valign="top"><b>Chameleon</b>. Switching the shells as easy as possible and not really needed to use only one shell. Choose your current shell along with task you want to solve: <code>xxh myhost +s xonsh</code> for python environment, osquery for simple querying, fish for modern features or time-tasted zsh and bash. </td>   
+<tr style="border: 0px;">
+<td valign="top" style="border: 0px;"><b>Be open and fork-ready</b>. Every xxh repo could be forked, customized and reused without waiting for package management system, xxh releases or any third party. Currently supported five shells and the count could be increased by community.</td>
+<td valign="top" style="border: 0px;"><b>Do more</b>. The xxh packages are not only about shells. Any type of tool or code could be behind entrypoint. If you want to play Super Mario on the remote host just put it as entrypoint in xxh-shell.</td>
+<td valign="top" style="border: 0px;"><b>Chameleon</b>. Switching the shells as easy as possible and not really needed to use only one shell. Choose your current shell along with task you want to solve: <code>xxh myhost +s xonsh</code> for python environment, osquery for simple querying, fish for modern features or time-tasted zsh and bash. </td>   
 </tr>
 </tbody>
 </table>
