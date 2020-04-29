@@ -7,7 +7,7 @@ from base64 import b64encode
 from signal import signal, SIGINT
 from .shell import *
 
-XXH_VERSION = '0.7.14'
+XXH_VERSION = '0.8.0'
 
 def sigint_handler(signal_received, frame):
     sys.exit(0)
@@ -40,6 +40,7 @@ class xxh:
         self.supported_source_types_regex = '|'.join(self.supported_source_types)
         self.package_name_regex = f'xxh\-({self.supported_xxh_packages_regex})-[a-zA-Z0-9_-]+'
         self.destination_exists = False
+        self.local = False
 
     def S(self, *args, **kwargs):
         if self.vverbose:
@@ -259,7 +260,18 @@ class xxh:
                 shell=self.shell,
                 short_shell_name=self.short_shell_name
             )
-        if self.use_pexpect:
+
+        if self.local:
+            cmd = "bash -c 'echo -e \"{host_info_s}\" | bash'".format(
+                host_info_s=host_info_s.strip().replace('\n', '\\n').replace('"', '\\"').replace('$', '\\$').replace(
+                    '`', '\\`')
+            )
+            o, e, proc = self.SC(cmd)
+            r = o.decode().strip()
+            if not r:
+                self.eeprint('Answer from localhost is empty. Try again with +v or +vv')
+
+        elif self.use_pexpect:
             while 1:
                 cmd = "bash -c 'echo -e \"{host_info_s}\" | {ssh} {ssh_v} {ssh_arguments} {host} -T \"bash -s\"'".format(
                     host_info_s=host_info_s.strip().replace('\n','\\n').replace('"','\\"').replace('$','\\$').replace('`','\\`'),
@@ -345,6 +357,7 @@ class xxh:
         home = p(self.local_xxh_home)
         if not home.exists():
             self.S(f"mkdir -p {home} {home / '.xxh/shells'} {home / '.xxh/plugins'}")
+            self.S(f"echo {XXH_VERSION} > {home / '.xxh/xxh_version'}")
 
         config_file = p(self.config_file)
         sample_config_file = self.package_dir_path / 'config.xxhc'
@@ -406,9 +419,10 @@ class xxh:
         for package in packages:
             package_name, package_source_type, package_source = self.package_parse_name(package)
 
-            subdir = self.package_subdir(package_name)
+            subdir = self.package_subdir(package_name) or self.eeprint(f"Unknown package type: {package_name}")
             package_dir = self.local_xxh_home / '.xxh' / str(subdir) / package_name
-            if package_dir.exists():
+            build_dir = package_dir / 'build'
+            if build_dir.exists() and len(list(build_dir.glob('*'))) > 0:
                 if self.vverbose or not self.destination_exists:
                     self.eprint(f'Package exists, skip install: {package_dir}')
                 continue
@@ -419,13 +433,6 @@ class xxh:
                 self.eeprint(f'Invalid package name: {package_name}\n'
                              + f'  Package name format: {self.package_name_regex}\n'
                              + f'  Package name with source format: xxh-({self.supported_xxh_packages_regex})-(<package_name>)+({self.supported_source_types_regex})+(<url>|<path>)')
-
-            subdir = self.package_subdir(package_name) or self.eeprint(f"Unknown package type: {package_name}")
-
-            package_dir = self.local_xxh_home/'.xxh'/subdir/package_name
-            if package_dir.exists() and len(list(package_dir.glob('*'))) != 0:
-                self.eprint(f'Skip installed package: {package_dir}')
-                continue
 
             if package_source_type == 'git':
                 if '//github.com/' in package_source and '/tree/' in package_source:
@@ -520,34 +527,35 @@ class xxh:
         argp.add_argument('-i', dest='ssh_private_key', help="File from which the identity (private key) for public key authentication is read.")
         argp.add_argument('-o', dest='ssh_options', metavar='SSH_OPTION -o ...', action='append', help="SSH options are described in ssh man page. Example: -o Port=22 -o User=snail")
         argp.add_argument('+c', dest='ssh_command', default=self.ssh_command, help="Command to execute instead of 'ssh'.")
-        argp.add_argument('+P','++password', help="Password for ssh auth.")
-        argp.add_argument('+PP','++password-prompt', default=False, action='store_true', help="Enter password manually using prompt.")
+        argp.add_argument('+P', '++password', help="Password for ssh auth.")
+        argp.add_argument('+PP', '++password-prompt', default=False, action='store_true', help="Enter password manually using prompt.")
         argp.add_argument('destination', nargs='?', metavar='[user@]host[:port]', help="Destination may be specified as [ssh://][user@]host[:port] or host from ~/.ssh/config")
-        argp.add_argument('+i','++install', default=False, action='store_true', help="Install xxh to destination host.")
-        argp.add_argument('+if','++install-force', default=False, action='store_true', help="Removing the host xxh package and install xxh again.")
-        argp.add_argument('+iff','++install-force-full', default=False, action='store_true', help="Removing the host xxh home and install xxh again. WARNING! All your files, configs, packages in xxh home on the host WILL BE LOST.")
-        argp.add_argument('+xc','++xxh-config', default=self.config_file, help=f"Xxh config file in yaml. Default: {self.config_file}")
-        argp.add_argument('+e','++env', dest='env', metavar='NAME=VAL +e ...', action='append', help="Setting environment variables if supported by shell entrypoint.")
-        argp.add_argument('+eb','++envb', dest='envb', metavar='NAME=BASE64 +eb ...', action='append', help="Setting environment variables base64 encoded if supported by shell entrypoint.")
-        argp.add_argument('+lh','++local-xxh-home', default=self.local_xxh_home, help=f"Local xxh home path. Default: {self.local_xxh_home}")
-        argp.add_argument('+hh','++host-xxh-home', default=self.host_xxh_home, help=f"Host xxh home path. Default: {self.host_xxh_home}")
-        argp.add_argument('+hhr','++host-xxh-home-remove', action='store_true', help=f"Remove xxh home on host after disconnect.")
-        argp.add_argument('+hhh','++host-home', help=f"Default HOME path on host. Could be '~' for default user home. Default: {self.host_xxh_home}")
-        argp.add_argument('+hhx','++host-home-xdg', help=f"Default XDG path on host. Could be '~' for default user home. Default: {self.host_xxh_home}")
-        argp.add_argument('+hf','++host-execute-file', help=f"Execute script file placed on host and exit. If supported by shell entrypoint.")
-        argp.add_argument('+hc','++host-execute-command', help=f"Execute command on host and exit. If supported by shell entrypoint.")
-        argp.add_argument('+heb','++host-execute-bash', dest='host_execute_bash', metavar='BASE64 +heb ...', action='append', help="Bash command will be executed before shell entrypoint (base64 encoded) if supported by shell entrypoint.")
-        argp.add_argument('+s','++shell', default=self.shell, help="xxh shell")
-        argp.add_argument('+v','++verbose', default=False, action='store_true', help="Verbose mode.")
-        argp.add_argument('+vv','++vverbose', default=False, action='store_true', help="Super verbose mode.")
-        argp.add_argument('+q','++quiet', default=False, action='store_true', help="Quiet mode.")
-        argp.add_argument('+I','++install-xxh-packages', action='append', metavar='xxh-package', dest='install_xxh_packages', help="Local install xxh packages.")
-        argp.add_argument('+L','++list-xxh-packages', nargs='*', metavar='xxh-package', dest='list_xxh_packages', help="List local xxh packages.")
-        argp.add_argument('+RI','++reinstall-xxh-packages', action='append', metavar='xxh-package', dest='reinstall_xxh_packages', help="Local reinstall xxh packages.")
-        argp.add_argument('+R','++remove-xxh-packages', action='append', metavar='xxh-package', dest='remove_xxh_packages', help="Local remove xxh packages.")
-        argp.add_argument('+ES','++extract-sourcing-files', action='store_true', dest='extract_sourcing_files', help="Used for AppImage. Extract seamless mode files.")
+        argp.add_argument('+i', '++install', default=False, action='store_true', help="Install xxh to destination host.")
+        argp.add_argument('+if', '++install-force', default=False, action='store_true', help="Removing the host xxh package and install xxh again.")
+        argp.add_argument('+iff', '++install-force-full', default=False, action='store_true', help="Removing the host xxh home and install xxh again. WARNING! All your files, configs, packages in xxh home on the host WILL BE LOST.")
+        argp.add_argument('+xc', '++xxh-config', default=self.config_file, help=f"Xxh config file in yaml. Default: {self.config_file}")
+        argp.add_argument('+e', '++env', dest='env', metavar='NAME=VAL +e ...', action='append', help="Setting environment variables if supported by shell entrypoint.")
+        argp.add_argument('+eb', '++envb', dest='envb', metavar='NAME=BASE64 +eb ...', action='append', help="Setting environment variables base64 encoded if supported by shell entrypoint.")
+        argp.add_argument('+lh', '++local-xxh-home', default=self.local_xxh_home, help=f"Local xxh home path. Default: {self.local_xxh_home}")
+        argp.add_argument('+hh', '++host-xxh-home', default=self.host_xxh_home, help=f"Host xxh home path. Default: {self.host_xxh_home}")
+        argp.add_argument('+hhr', '++host-xxh-home-remove', action='store_true', help=f"Remove xxh home on host after disconnect.")
+        argp.add_argument('+hhh', '++host-home', help=f"Default HOME path on host. Could be '~' for default user home. Default: {self.host_xxh_home}")
+        argp.add_argument('+hhx', '++host-home-xdg', help=f"Default XDG path on host. Could be '~' for default user home. Default: {self.host_xxh_home}")
+        argp.add_argument('+hf', '++host-execute-file', help=f"Execute script file placed on host and exit. If supported by shell entrypoint.")
+        argp.add_argument('+hc', '++host-execute-command', help=f"Execute command on host and exit. If supported by shell entrypoint.")
+        argp.add_argument('+heb', '++host-execute-bash', dest='host_execute_bash', metavar='BASE64 +heb ...', action='append', help="Bash command will be executed before shell entrypoint (base64 encoded) if supported by shell entrypoint.")
+        argp.add_argument('+s', '++shell', default=self.shell, help="xxh shell")
+        argp.add_argument('+v', '++verbose', default=False, action='store_true', help="Verbose mode.")
+        argp.add_argument('+vv', '++vverbose', default=False, action='store_true', help="Super verbose mode.")
+        argp.add_argument('+q', '++quiet', default=False, action='store_true', help="Quiet mode.")
+        argp.add_argument('+I', '++install-xxh-packages', action='append', metavar='xxh-package', dest='install_xxh_packages', help="Local install xxh packages.")
+        argp.add_argument('+L', '++list-xxh-packages', nargs='*', metavar='xxh-package', dest='list_xxh_packages', help="List local xxh packages.")
+        argp.add_argument('+RI', '++reinstall-xxh-packages', action='append', metavar='xxh-package', dest='reinstall_xxh_packages', help="Local reinstall xxh packages.")
+        argp.add_argument('+R', '++remove-xxh-packages', action='append', metavar='xxh-package', dest='remove_xxh_packages', help="Local remove xxh packages.")
+        argp.add_argument('+ES', '++extract-sourcing-files', action='store_true', dest='extract_sourcing_files', help="Used for AppImage. Extract seamless mode files.")
         argp.usage = "xxh <host from ~/.ssh/config>\n" \
             + "usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]\n" \
+            + "usage: xxh here [xxh arguments]\n" \
             + "usage: xxh [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY]\n" \
             + "           [-o SSH_OPTION -o ...] [+c SSH_COMMAND] [+P PASSWORD] [+PP]\n" \
             + "           [user@]host[:port]\n" \
@@ -568,6 +576,10 @@ class xxh:
             print(f'Sourcing files extracted to {cdir}')
             exit(0)
 
+        if opt.destination == 'local':
+            self.local = True
+            if p(self.local_xxh_home).absolute() == p(self.host_xxh_home).absolute():
+                opt.local_xxh_home = str(p(opt.local_xxh_home) / '.xxh_local')
 
         opt.xxh_config = p(opt.xxh_config)
         if self.config_file != opt.xxh_config:
@@ -757,14 +769,25 @@ class xxh:
         if host_info['scp'] == '' and host_info['rsync'] == '':
             self.eeprint(f"There are no rsync or scp on target host. Sad but files can't be uploaded.")
 
-        if opt.install_force == False and opt.install_force_full == False:
+        if self.local:
+            ssh_pipe_command = 'bash'
+        else:
+            ssh_pipe_command = '{sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
+                sshpass=A(self.sshpass),
+                ssh=A(self.ssh_command),
+                ssh_arg_v=A(self.ssh_arg_v),
+                ssh_arguments=A(self.ssh_arguments),
+                host=A(host)
+            )
+
+        if opt.install_force is False and opt.install_force_full is False:
 
             # Check version
 
             ask = False
             if host_xxh_version == 'version_not_found':
                 ask = f'Host xxh home is not empty but something went wrong while getting host xxh version.'
-            elif host_xxh_version not in ['dir_not_found','dir_empty'] and host_xxh_version != self.local_xxh_version:
+            elif host_xxh_version not in ['dir_not_found', 'dir_empty'] and host_xxh_version != self.local_xxh_version:
                 ask = f"Local xxh version '{self.local_xxh_version}' is not equal host xxh version '{host_xxh_version}'."
 
             if ask:
@@ -782,15 +805,17 @@ class xxh:
                 elif choice == 'u':
                     local_time = datetime.datetime.now().isoformat()[:19]
                     self.eprint(f"Move {host}:{host_xxh_home} to {host}:{host_xxh_home}-{local_time}")
-                    self.S('echo "mv {host_xxh_home} {host_xxh_home}-{local_time}" | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
-                        host_xxh_home=A(host_xxh_home),
-                        local_time=A(local_time),
-                        sshpass=A(self.sshpass),
-                        ssh=A(self.ssh_command),
-                        ssh_arg_v=A(self.ssh_arg_v),
-                        ssh_arguments=A(self.ssh_arguments),
-                        host=A(host)
-                    ))
+                    if self.local:
+                        self.S('echo "mv {host_xxh_home} {host_xxh_home}-{local_time}" | bash'.format(
+                            host_xxh_home=A(host_xxh_home),
+                            local_time=A(local_time)
+                        ))
+                    else:
+                        self.S('echo "mv {host_xxh_home} {host_xxh_home}-{local_time}" | {ssh_pipe_command}'.format(
+                            host_xxh_home=A(host_xxh_home),
+                            local_time=A(local_time),
+                            ssh_pipe_command=ssh_pipe_command
+                        ))
                     opt.install = True
                 elif choice == 'f' or choice.strip() == '':
                     opt.install = True
@@ -814,7 +839,6 @@ class xxh:
             self.eprint(f"Install {self.shell} to {host}:{host_xxh_home}" )
 
             # Build xxh packages
-            shell_build_dir = self.local_xxh_home / '.xxh/shells' / self.shell / 'build'
             build_any_plugins = [p.name for p in (self.local_xxh_home / '.xxh/plugins').glob(f'xxh-plugin-prerun-*') ]
             build_shell_plugins = [p.name for p in (self.local_xxh_home / '.xxh/plugins').glob(f'xxh-plugin-{self.short_shell_name}-*') ]
             self.packages_install([self.shell] + build_any_plugins + build_shell_plugins)
@@ -822,25 +846,27 @@ class xxh:
             # Remove xxh home directories
             if opt.install_force_full:
                 self.eprint(f'Remove {host}:{host_xxh_home}')
-                self.S('echo "rm -rf {host_xxh_home}" | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
-                    host_xxh_home=host_xxh_home,
-                    sshpass=A(self.sshpass),
-                    ssh=A(self.ssh_command),
-                    ssh_arg_v=A(self.ssh_arg_v),
-                    ssh_arguments=A(self.ssh_arguments),
-                    host=A(host)
-                ))
+                if self.local:
+                    self.S('echo "rm -rf {host_xxh_home}" | bash'.format(
+                        host_xxh_home=host_xxh_home
+                    ))
+                else:
+                    self.S('echo "rm -rf {host_xxh_home}" | {ssh_pipe_command}'.format(
+                        host_xxh_home=host_xxh_home,
+                        ssh_pipe_command=ssh_pipe_command
+                    ))
 
             elif opt.install_force:
                 self.eprint(f'Remove {host}:{host_xxh_home}/.xxh')
-                self.S('echo "rm -rf {host_xxh_home}/.xxh" | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
-                    host_xxh_home=host_xxh_home,
-                    sshpass=A(self.sshpass),
-                    ssh=A(self.ssh_command),
-                    ssh_arg_v=A(self.ssh_arg_v),
-                    ssh_arguments=A(self.ssh_arguments),
-                    host=A(host)
-                ))
+                if self.local:
+                    self.S('echo "rm -rf {host_xxh_home}/.xxh" | bash'.format(
+                        host_xxh_home=host_xxh_home
+                    ))
+                else:
+                    self.S('echo "rm -rf {host_xxh_home}/.xxh" | {ssh_pipe_command}'.format(
+                        host_xxh_home=host_xxh_home,
+                        ssh_pipe_command=ssh_pipe_command
+                    ))
 
             # Create host xxh home directories
 
@@ -854,32 +880,32 @@ class xxh:
             host_xdg_config_dir = host_xxh_home / '.config'
             host_xxh_shell_dir = host_xxh_home / f'.xxh/shells/{self.shell}'
             host_xxh_shell_build_dir = host_xxh_shell_dir  / 'build'
-            self.S('echo "mkdir -p {host_xdg_config_dir} {host_xxh_shell_build_dir} {host_xxh_dirs_str}" | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
+
+            self.S('echo "mkdir -p {host_xdg_config_dir} {host_xxh_shell_build_dir} {host_xxh_dirs_str}" | {ssh_pipe_command}'.format(
                 host_xdg_config_dir=host_xdg_config_dir,
                 host_xxh_shell_build_dir=host_xxh_shell_build_dir,
                 host_xxh_dirs_str=host_xxh_dirs_str,
                 host_xxh_home=host_xxh_home,
-                sshpass=A(self.sshpass),
-                ssh=A(self.ssh_command),
-                ssh_arg_v=A(self.ssh_arg_v),
-                ssh_arguments=A(self.ssh_arguments),
-                host=A(host)
-            ))
-            self.S('echo "echo {xxh_version} > {host_xxh_home}/.xxh/xxh_version" | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
-                host_xxh_home=host_xxh_home,
-                xxh_version=self.local_xxh_version,
-                sshpass=A(self.sshpass),
-                ssh=A(self.ssh_command),
-                ssh_arg_v=A(self.ssh_arg_v),
-                ssh_arguments=A(self.ssh_arguments),
-                host=A(host)
+                ssh_pipe_command=ssh_pipe_command
             ))
 
+            self.S('echo "echo {xxh_version} > {host_xxh_home}/.xxh/xxh_version" | {ssh_pipe_command}'.format(
+                host_xxh_home=host_xxh_home,
+                xxh_version=self.local_xxh_version,
+                ssh_pipe_command=ssh_pipe_command
+            ))
 
             # Upload files
             bash_wrap_begin = "bash -c 'shopt -s dotglob && "
             bash_wrap_end = "'"
-            if which('rsync') and host_info['rsync']:
+
+            shell_build_dir = self.local_xxh_home / '.xxh/shells' / self.shell / 'build'
+
+            copy_method = None
+            if self.local:
+                copy_method = 'cp'
+
+            if copy_method == 'rsync' or (copy_method is None and which('rsync') and host_info['rsync']):
                 self.eprint('First time upload using rsync (this will be omitted on the next connections)')
 
                 rsync = "rsync {ssh_arg_v} -e \"{sshpass} {ssh} {ssh_arg_v} {ssh_arguments}\" {arg_q} -az {progress} --cvs-exclude --include core ".format(
@@ -912,7 +938,7 @@ class xxh:
                         host_xxh_plugins_dir=host_xxh_plugins_dir,
                         local_plugin_name=local_plugin_name
                     ))
-            elif which('scp') and host_info['scp']:
+            elif copy_method == 'scp' or (copy_method is None and which('scp') and host_info['scp']):
                 self.eprint("First time upload using scp (this will be omitted on the next connections).\nNote: you can install rsync on local and remote host to increase speed.")
                 scp = "{sshpass} scp {ssh_arg_v} {ssh_arguments} -r -C {arg_q}".format(
                     sshpass=A(self.sshpass),
@@ -920,6 +946,7 @@ class xxh:
                     ssh_arguments=A(self.ssh_arguments),
                     arg_q=A(arg_q)
                 )
+
                 self.S('{bb}{scp} {shell_build_dir} {host}:{host_xxh_shell_dir}/ 1>&2{be}'.format(
                     bb=bash_wrap_begin,
                     be=bash_wrap_end,
@@ -941,7 +968,29 @@ class xxh:
                         host_xxh_plugins_dir=host_xxh_plugins_dir,
                         local_plugin_name=local_plugin_name
                     ))
+            elif copy_method == 'cp':
+                self.eprint('First time copying using cp (this will be omitted on the next time)')
 
+                self.S('{bb}cp -r {shell_build_dir} {host_xxh_shell_dir}/ 1>&2{be}'.format(
+                    bb=bash_wrap_begin,
+                    be=bash_wrap_end,
+                    shell_build_dir=shell_build_dir,
+                    host_xxh_shell_dir=host_xxh_shell_dir
+                ))
+
+                for local_plugin_dir in list(local_plugins_dir.glob(f'xxh-plugin-{self.short_shell_name}-*')) + list(local_plugins_dir.glob(f'xxh-plugin-{self.short_shell_name}-*')):
+                    local_plugin_build_dir = local_plugin_dir/'build'
+                    local_plugin_name = local_plugin_dir.name
+                    self.S('{bb}cp -r {local_plugin_build_dir}/* {host_xxh_plugins_dir}/{local_plugin_name}/build/ 1>&2{be}'.format(
+                        bb=bash_wrap_begin,
+                        be=bash_wrap_end,
+                        local_plugin_build_dir=local_plugin_build_dir,
+                        host_xxh_plugins_dir=host_xxh_plugins_dir,
+                        local_plugin_name=local_plugin_name
+                    ))
+            elif copy_method == 'skip':
+                if self.verbose:
+                    self.eprint('Skip copying')
             else:
                 self.eprint('Please install rsync or scp!')
 
@@ -969,35 +1018,48 @@ class xxh:
         if opt.host_home_xdg:
             host_home_xdg = f'-X {opt.host_home_xdg}'
 
-        lcs = []
-        for lc in ['LC_TIME','LC_MONETARY','LC_ADDRESS','LC_IDENTIFICATION','LC_MEASUREMENT','LC_NAME','LC_NUMERIC','LC_PAPER','LC_TELEPHONE']:
-            lcs.append(f"{lc}=POSIX")
+        if self.local:
+            self.S("bash {entrypoint} {host_execute_file} {host_execute_command} {host_entrypoint_verbose} {env_args} {host_home} {host_home_xdg}".format(
+                entrypoint=A(str(host_xxh_home/'.xxh/shells'/self.shell/'build/entrypoint.sh')),
+                host_execute_file=A(host_execute_file),
+                host_execute_command=A(host_execute_command),
+                host_entrypoint_verbose=A(host_entrypoint_verbose),
+                env_args=A(env_args),
+                host_home=A(host_home),
+                host_home_xdg=A(host_home_xdg)
+            ))
+        else:
+            lcs = []
+            for lc in ['LC_TIME','LC_MONETARY','LC_ADDRESS','LC_IDENTIFICATION','LC_MEASUREMENT','LC_NAME','LC_NUMERIC','LC_PAPER','LC_TELEPHONE']:
+                lcs.append(f"{lc}=POSIX")
 
-        self.S("{lcs} {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -t 'bash {entrypoint} {host_execute_file} {host_execute_command} {host_entrypoint_verbose} {env_args} {host_home} {host_home_xdg}'".format(
-            lcs=A(lcs),
-            sshpass=A(self.sshpass),
-            ssh=A(self.ssh_command),
-            ssh_arg_v=A(self.ssh_arg_v),
-            ssh_arguments=A(self.ssh_arguments),
-            host=A(host),
-            entrypoint=A(str(host_xxh_home/'.xxh/shells'/self.shell/'build/entrypoint.sh')),
-            host_execute_file=A(host_execute_file),
-            host_execute_command=A(host_execute_command),
-            host_entrypoint_verbose=A(host_entrypoint_verbose),
-            env_args=A(env_args),
-            host_home=A(host_home),
-            host_home_xdg=A(host_home_xdg)
-        ))
-
-        if opt.host_xxh_home_remove:
-            if self.verbose:
-                self.eprint(f'Remove {host}:{host_xxh_home}')
-            self.S('echo "rm -rf {host_xxh_home}" | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T "bash -s"'.format(
-                host_xxh_home=host_xxh_home,
+            self.S("{lcs} {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -t 'bash {entrypoint} {host_execute_file} {host_execute_command} {host_entrypoint_verbose} {env_args} {host_home} {host_home_xdg}'".format(
+                lcs=A(lcs),
                 sshpass=A(self.sshpass),
                 ssh=A(self.ssh_command),
                 ssh_arg_v=A(self.ssh_arg_v),
                 ssh_arguments=A(self.ssh_arguments),
-                host=A(host)
+                host=A(host),
+                entrypoint=A(str(host_xxh_home/'.xxh/shells'/self.shell/'build/entrypoint.sh')),
+                host_execute_file=A(host_execute_file),
+                host_execute_command=A(host_execute_command),
+                host_entrypoint_verbose=A(host_entrypoint_verbose),
+                env_args=A(env_args),
+                host_home=A(host_home),
+                host_home_xdg=A(host_home_xdg)
             ))
+
+        if opt.host_xxh_home_remove:
+            if self.verbose:
+                self.eprint(f'Remove {host}:{host_xxh_home}')
+
+            if self.local:
+                self.S('echo "rm -rf {host_xxh_home}" | bash'.format(
+                    host_xxh_home=host_xxh_home
+                ))
+            else:
+                self.S('echo "rm -rf {host_xxh_home}" | {ssh_pipe_command}'.format(
+                    host_xxh_home=host_xxh_home,
+                    ssh_pipe_command=ssh_pipe_command
+                ))
 
