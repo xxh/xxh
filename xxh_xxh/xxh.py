@@ -555,7 +555,7 @@ class xxh:
         argp.add_argument('+ES', '++extract-sourcing-files', action='store_true', dest='extract_sourcing_files', help="Used for AppImage. Extract seamless mode files.")
         argp.usage = "xxh <host from ~/.ssh/config>\n" \
             + "usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]\n" \
-            + "usage: xxh here [xxh arguments]\n" \
+            + "usage: xxh local [xxh arguments]\n" \
             + "usage: xxh [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY]\n" \
             + "           [-o SSH_OPTION -o ...] [+c SSH_COMMAND] [+P PASSWORD] [+PP]\n" \
             + "           [user@]host[:port]\n" \
