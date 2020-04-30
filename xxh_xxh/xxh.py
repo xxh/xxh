@@ -355,9 +355,15 @@ class xxh:
 
     def create_xxh_env(self):
         home = p(self.local_xxh_home)
-        if not home.exists():
-            self.S(f"mkdir -p {home} {home / '.xxh/shells'} {home / '.xxh/plugins'}")
-            self.S(f"echo {XXH_VERSION} > {home / '.xxh/xxh_version'}")
+
+        check_dirs = [home, home / '.xxh/shells', home / '.xxh/plugins']
+        for d in check_dirs:
+            if not d.exists():
+                self.S(f"mkdir -p {d}")
+
+        xxh_version_file = home / '.xxh/xxh_version'
+        if not xxh_version_file.exists():
+            self.S(f"echo {XXH_VERSION} > {xxh_version_file}")
 
         config_file = p(self.config_file)
         sample_config_file = self.package_dir_path / 'config.xxhc'
@@ -577,6 +583,13 @@ class xxh:
             exit(0)
 
         if opt.destination == 'local':
+            tools = ['git', 'wget', 'curl']
+            tools_not_found = [t for t in tools if not which(t)]
+            if tools_not_found:
+                self.eprint("In the current xxh version we haven't portable versions of all tools to run xxh local. Feel free to contribute.\n"
+                            "For now if you have access please install on the host: " + ', '.join(tools_not_found))
+                exit(1)
+
             self.local = True
             if p(self.local_xxh_home).absolute() == p(self.host_xxh_home).absolute():
                 opt.local_xxh_home = str(p(opt.local_xxh_home) / '.xxh_local')
@@ -785,9 +798,7 @@ class xxh:
             # Check version
 
             ask = False
-            if host_xxh_version == 'version_not_found':
-                ask = f'Host xxh home is not empty but something went wrong while getting host xxh version.'
-            elif host_xxh_version not in ['dir_not_found', 'dir_empty'] and host_xxh_version != self.local_xxh_version:
+            if host_xxh_version not in ['dir_not_found', 'dir_empty', 'version_not_found'] and host_xxh_version != self.local_xxh_version:
                 ask = f"Local xxh version '{self.local_xxh_version}' is not equal host xxh version '{host_xxh_version}'."
 
             if ask:
@@ -956,7 +967,7 @@ class xxh:
                     host_xxh_shell_dir=host_xxh_shell_dir
                 ))
 
-                for local_plugin_dir in list(local_plugins_dir.glob(f'xxh-plugin-{self.short_shell_name}-*')) + list(local_plugins_dir.glob(f'xxh-plugin-{self.short_shell_name}-*')):
+                for local_plugin_dir in list(local_plugins_dir.glob(f'xxh-plugin-prerun-*')) + list(local_plugins_dir.glob(f'xxh-plugin-{self.short_shell_name}-*')):
                     local_plugin_build_dir = local_plugin_dir/'build'
                     local_plugin_name = local_plugin_dir.name
                     self.S('{bb}{scp} {local_plugin_build_dir}/* {host}:{host_xxh_plugins_dir}/{local_plugin_name}/build/ 1>&2{be}'.format(
@@ -978,7 +989,7 @@ class xxh:
                     host_xxh_shell_dir=host_xxh_shell_dir
                 ))
 
-                for local_plugin_dir in list(local_plugins_dir.glob(f'xxh-plugin-{self.short_shell_name}-*')) + list(local_plugins_dir.glob(f'xxh-plugin-{self.short_shell_name}-*')):
+                for local_plugin_dir in list(local_plugins_dir.glob(f'xxh-plugin-prerun-*')) + list(local_plugins_dir.glob(f'xxh-plugin-{self.short_shell_name}-*')):
                     local_plugin_build_dir = local_plugin_dir/'build'
                     local_plugin_name = local_plugin_dir.name
                     self.S('{bb}cp -r {local_plugin_build_dir}/* {host_xxh_plugins_dir}/{local_plugin_name}/build/ 1>&2{be}'.format(
