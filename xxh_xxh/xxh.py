@@ -7,7 +7,7 @@ from base64 import b64encode
 from signal import signal, SIGINT
 from .shell import *
 
-XXH_VERSION = '0.8.0'
+XXH_VERSION = '0.8.1'
 
 def sigint_handler(signal_received, frame):
     sys.exit(0)
@@ -1048,7 +1048,7 @@ class xxh:
             for lc in ['LC_TIME','LC_MONETARY','LC_ADDRESS','LC_IDENTIFICATION','LC_MEASUREMENT','LC_NAME','LC_NUMERIC','LC_PAPER','LC_TELEPHONE']:
                 lcs.append(f"{lc}=POSIX")
 
-            self.S("{lcs} {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -t 'bash {entrypoint} {host_execute_file} {host_execute_command} {host_entrypoint_verbose} {env_args} {host_home} {host_home_xdg}'".format(
+            self.S("{lcs} {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -t '{entrypoint} {host_execute_file} {host_execute_command} {host_entrypoint_verbose} {env_args} {host_home} {host_home_xdg}'".format(
                 lcs=A(lcs),
                 sshpass=A(self.sshpass),
                 ssh=A(self.ssh_command),
