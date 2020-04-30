@@ -582,7 +582,12 @@ class xxh:
             print(f'Sourcing files extracted to {cdir}')
             exit(0)
 
+        self.local_xxh_home = p(opt.local_xxh_home).absolute()
+        self.host_xxh_home = opt.host_xxh_home
+
         if opt.destination == 'local':
+            self.local = True
+
             tools = ['git', 'wget', 'curl']
             tools_not_found = [t for t in tools if not which(t)]
             if tools_not_found:
@@ -590,9 +595,8 @@ class xxh:
                             "For now if you have access please install on the host: " + ', '.join(tools_not_found))
                 exit(1)
 
-            self.local = True
-            if p(self.local_xxh_home).absolute() == p(self.host_xxh_home).absolute():
-                opt.local_xxh_home = str(p(opt.local_xxh_home) / '.xxh_local')
+            if self.local_xxh_home == p(self.host_xxh_home).absolute():
+                self.local_xxh_home = self.local_xxh_home / '.xxh_local'
 
         opt.xxh_config = p(opt.xxh_config)
         if self.config_file != opt.xxh_config:
@@ -654,6 +658,13 @@ class xxh:
         self.verbose = opt.verbose
         self.vverbose = opt.vverbose
 
+        def packages_operations():
+            if opt.install_xxh_packages:
+                installed = self.packages_install(opt.install_xxh_packages)
+            if opt.reinstall_xxh_packages:
+                reinstalled = self.packages_reinstall(opt.reinstall_xxh_packages)
+            if opt.remove_xxh_packages:
+                removed = self.packages_remove(opt.remove_xxh_packages)
 
         packages_opration = opt.install_xxh_packages \
                             or opt.reinstall_xxh_packages \
@@ -661,16 +672,12 @@ class xxh:
                             or opt.list_xxh_packages \
                             or opt.list_xxh_packages == []
 
+        if not self.local:
+            packages_operations()
+
         if packages_opration or self.destination_exists:
-            self.local_xxh_home = p(opt.local_xxh_home)
             self.create_xxh_env()
 
-        if opt.install_xxh_packages:
-            installed = self.packages_install(opt.install_xxh_packages)
-        if opt.reinstall_xxh_packages:
-            reinstalled = self.packages_reinstall(opt.reinstall_xxh_packages)
-        if opt.remove_xxh_packages:
-            removed = self.packages_remove(opt.remove_xxh_packages)
         if opt.list_xxh_packages or opt.list_xxh_packages == []:
             found = self.packages_list(opt.list_xxh_packages)
 
@@ -680,9 +687,7 @@ class xxh:
             else:
                 self.eeprint(argp.format_usage()+'\nThe following arguments are required: [user@]host[:port]')
 
-        if not opt.shell.startswith('xxh-shell-'):
-            opt.shell = 'xxh-shell-'+opt.shell
-        self.shell = opt.shell
+        self.shell = opt.shell if opt.shell.startswith('xxh-shell-') else 'xxh-shell-'+opt.shell
 
         if self.shell.startswith('xxh-shell-'):
             self.short_shell_name = self.shell.split('-')[2]
@@ -753,11 +758,8 @@ class xxh:
             shells_dir=(self.local_xxh_home / '.xxh/shells')
         ))
 
-        if p(opt.host_xxh_home) == p(f'/'):
+        if p(self.host_xxh_home) == p(f'/'):
             self.eeprint("Host xxh home path {host_xxh_home} looks like /. Please check twice!")
-
-        if self.host_xxh_home != opt.host_xxh_home:
-            self.host_xxh_home = opt.host_xxh_home
 
         host_info = self.get_host_info()
 
@@ -849,11 +851,6 @@ class xxh:
         if opt.install:
             self.eprint(f"Install {self.shell} to {host}:{host_xxh_home}" )
 
-            # Build xxh packages
-            build_any_plugins = [p.name for p in (self.local_xxh_home / '.xxh/plugins').glob(f'xxh-plugin-prerun-*') ]
-            build_shell_plugins = [p.name for p in (self.local_xxh_home / '.xxh/plugins').glob(f'xxh-plugin-{self.short_shell_name}-*') ]
-            self.packages_install([self.shell] + build_any_plugins + build_shell_plugins)
-
             # Remove xxh home directories
             if opt.install_force_full:
                 self.eprint(f'Remove {host}:{host_xxh_home}')
@@ -878,6 +875,13 @@ class xxh:
                         host_xxh_home=host_xxh_home,
                         ssh_pipe_command=ssh_pipe_command
                     ))
+
+            # Build xxh packages
+            if self.local:
+                packages_operations()
+            build_any_plugins = [p.name for p in (self.local_xxh_home / '.xxh/plugins').glob(f'xxh-plugin-prerun-*') ]
+            build_shell_plugins = [p.name for p in (self.local_xxh_home / '.xxh/plugins').glob(f'xxh-plugin-{self.short_shell_name}-*') ]
+            self.packages_install([self.shell] + build_any_plugins + build_shell_plugins)
 
             # Create host xxh home directories
 
