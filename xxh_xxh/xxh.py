@@ -62,7 +62,9 @@ class xxh:
     def get_config_filepath(self):
         if os.environ.get('XDG_CONFIG_HOME'):
             return p(os.environ['XDG_CONFIG_HOME']) / 'xxh/config.xxhc'
-        return p(os.environ['HOME']) / '.config/xxh/config.xxhc'
+        if os.environ.get('HOME'):
+            return p(os.environ['HOME']) / '.config/xxh/config.xxhc'
+        return p(self.local_xxh_home) / '.config/xxh/config.xxhc'
 
     def get_current_shell(self):
         if 'SHELL' in os.environ:
@@ -615,7 +617,7 @@ class xxh:
 
         self.url = url = self.parse_destination(opt.destination)
 
-        if self.destination_exists and self.config_file.exists():
+        if self.destination_exists and self.config_file and self.config_file.exists():
             if self.verbose:
                 self.eprint(f'Load xxh config from {self.config_file}')
             with open(self.config_file) as f:
@@ -770,6 +772,9 @@ class xxh:
         host_xxh_version = host_info['xxh_version']
 
         if self.local and host_xxh_version in ['dir_not_found', 'dir_empty', 'version_not_found'] and not opt.quiet and not opt.install_force and not opt.install_force_full:
+            self.eprint('The `xxh local` feature is experimental and will be more portable in the next releases.')
+            if not which('git'):
+                self.eeprint("Git not found on the host. At this time we haven't portable versions of git.")
             yn = input("At this time we haven't portable versions of all tools to build your xxh packages.\n"
                        "The tools from this host will be used.\n"
                        "But there is no guarantee that xxh package you use will not required another missing tools and fails while building.\n"
