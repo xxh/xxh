@@ -770,10 +770,11 @@ class xxh:
         host_xxh_version = host_info['xxh_version']
 
         if self.local and host_xxh_version in ['dir_not_found', 'dir_empty', 'version_not_found'] and not opt.quiet and not opt.install_force and not opt.install_force_full:
-            yn = input("In the current xxh version we haven't portable versions of all tools to build xxh packages.\n"
-                       "Most of tools you need are curl, wget or git. But there is no guarantee that xxh package\n"
-                       "you use doesn't required other tool. Continue? [Y/n]").strip().lower()
-            if yn != 'y':
+            yn = input("At this time we haven't portable versions of all tools to build your xxh packages.\n"
+                       "The tools from this host will be used.\n"
+                       "But there is no guarantee that xxh package you use will not required another missing tools and fails while building.\n"
+                       "Continue? [Y/n]").strip().lower()
+            if yn == 'n':
                 self.eeprint('Stopped')
 
         if host_info['xxh_home_writable'] == '0' and host_info['xxh_parent_home_writable'] == '0':
@@ -1044,7 +1045,7 @@ class xxh:
         )
 
         if self.local:
-            self.S("bash {entrypoint_command}".format(entrypoint_command=entrypoint_command))
+            self.S("bash -i {entrypoint_command}".format(entrypoint_command=entrypoint_command))
         else:
             lcs = []
             for lc in ['LC_TIME', 'LC_MONETARY', 'LC_ADDRESS', 'LC_IDENTIFICATION', 'LC_MEASUREMENT', 'LC_NAME', 'LC_NUMERIC', 'LC_PAPER','LC_TELEPHONE']:
