@@ -93,11 +93,11 @@ xxh local +s xonsh                                # build xxh environment on loc
 To reusing arguments and simplifying xxh usage to `xxh anyhost` there is [config file](https://github.com/xxh/xxh/wiki#config-file).
 
 ### Install xxh packages
-```
+```bash
 xxh [+I xxh-package +I ...] [+L] [+RI xxh-package +RI ...] [+R xxh-package +R ...]
 ```
 Different ways to set the xxh package source:
-```
+```yaml
 xxh +I xxh-shell-example                                         # install from https://github.com/xxh
 xxh +I https://github.com/xxh/xxh-shell-example                  # short url for github only, for other sources use examples below or add support
 xxh +I https://github.com/xxh/xxh-shell-example/tree/mybranch    # short url for github only, for other sources use examples below or add support
