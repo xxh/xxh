@@ -7,7 +7,7 @@ from base64 import b64encode
 from signal import signal, SIGINT
 from .shell import *
 
-XXH_VERSION = '0.8.1'
+XXH_VERSION = '0.8.2'
 
 def sigint_handler(signal_received, frame):
     sys.exit(0)
@@ -588,13 +588,6 @@ class xxh:
         if opt.destination == 'local':
             self.local = True
 
-            tools = ['git', 'wget', 'curl']
-            tools_not_found = [t for t in tools if not which(t)]
-            if tools_not_found:
-                self.eprint("In the current xxh version we haven't portable versions of all tools to run xxh local. Feel free to contribute.\n"
-                            "For now if you have access please install on the host: " + ', '.join(tools_not_found))
-                exit(1)
-
             if self.local_xxh_home == p(self.host_xxh_home).absolute():
                 self.local_xxh_home = self.local_xxh_home / '.xxh_local'
 
@@ -776,12 +769,19 @@ class xxh:
         host_xxh_home = p(f"{host_xxh_home}")
         host_xxh_version = host_info['xxh_version']
 
+        if self.local and host_xxh_version in ['dir_not_found', 'dir_empty', 'version_not_found'] and not opt.quiet and not opt.install_force and not opt.install_force_full:
+            yn = input("In the current xxh version we haven't portable versions of all tools to build xxh packages.\n"
+                       "Most of tools you need are curl, wget or git. But there is no guarantee that xxh package\n"
+                       "you use doesn't required other tool. Continue? [Y/n]").strip().lower()
+            if yn != 'y':
+                self.eeprint('Stopped')
+
         if host_info['xxh_home_writable'] == '0' and host_info['xxh_parent_home_writable'] == '0':
             yn = input(f"{host}:{host_xxh_home} is not writable. Continue? [y/n] ").strip().lower()
             if yn != 'y':
                 self.eeprint('Stopped')
 
-        if host_info['scp'] == '' and host_info['rsync'] == '':
+        if not self.local and host_info['scp'] == '' and host_info['rsync'] == '':
             self.eeprint(f"There are no rsync or scp on target host. Sad but files can't be uploaded.")
 
         if self.local:
@@ -1033,35 +1033,31 @@ class xxh:
         if opt.host_home_xdg:
             host_home_xdg = f'-X {opt.host_home_xdg}'
 
+        entrypoint_command = "{entrypoint} {host_execute_file} {host_execute_command} {host_entrypoint_verbose} {env_args} {host_home} {host_home_xdg}".format(
+            entrypoint=A(str(host_xxh_home/'.xxh/shells'/self.shell/'build/entrypoint.sh')),
+            host_execute_file=A(host_execute_file),
+            host_execute_command=A(host_execute_command),
+            host_entrypoint_verbose=A(host_entrypoint_verbose),
+            env_args=A(env_args),
+            host_home=A(host_home),
+            host_home_xdg=A(host_home_xdg)
+        )
+
         if self.local:
-            self.S("bash {entrypoint} {host_execute_file} {host_execute_command} {host_entrypoint_verbose} {env_args} {host_home} {host_home_xdg}".format(
-                entrypoint=A(str(host_xxh_home/'.xxh/shells'/self.shell/'build/entrypoint.sh')),
-                host_execute_file=A(host_execute_file),
-                host_execute_command=A(host_execute_command),
-                host_entrypoint_verbose=A(host_entrypoint_verbose),
-                env_args=A(env_args),
-                host_home=A(host_home),
-                host_home_xdg=A(host_home_xdg)
-            ))
+            self.S("bash {entrypoint_command}".format(entrypoint_command=entrypoint_command))
         else:
             lcs = []
-            for lc in ['LC_TIME','LC_MONETARY','LC_ADDRESS','LC_IDENTIFICATION','LC_MEASUREMENT','LC_NAME','LC_NUMERIC','LC_PAPER','LC_TELEPHONE']:
+            for lc in ['LC_TIME', 'LC_MONETARY', 'LC_ADDRESS', 'LC_IDENTIFICATION', 'LC_MEASUREMENT', 'LC_NAME', 'LC_NUMERIC', 'LC_PAPER','LC_TELEPHONE']:
                 lcs.append(f"{lc}=POSIX")
 
-            self.S("{lcs} {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -t '{entrypoint} {host_execute_file} {host_execute_command} {host_entrypoint_verbose} {env_args} {host_home} {host_home_xdg}'".format(
+            self.S("{lcs} {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -t '{entrypoint_command}'".format(
                 lcs=A(lcs),
                 sshpass=A(self.sshpass),
                 ssh=A(self.ssh_command),
                 ssh_arg_v=A(self.ssh_arg_v),
                 ssh_arguments=A(self.ssh_arguments),
                 host=A(host),
-                entrypoint=A(str(host_xxh_home/'.xxh/shells'/self.shell/'build/entrypoint.sh')),
-                host_execute_file=A(host_execute_file),
-                host_execute_command=A(host_execute_command),
-                host_entrypoint_verbose=A(host_entrypoint_verbose),
-                env_args=A(env_args),
-                host_home=A(host_home),
-                host_home_xdg=A(host_home_xdg)
+                entrypoint_command=entrypoint_command
             ))
 
         if opt.host_xxh_home_remove:
