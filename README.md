@@ -114,7 +114,7 @@ exectly like `xxh remote_host` and creates hermetic environment in `~/.xxh` by d
 At this time we haven't portable build tools like `git`, `wget`, `curl`, `tar` and others which 
 could be required by xxh packages build scripts. The `xxh local` expects the tools are on host.
 
-To run xxh inplace just copy and paste this bash commands:
+To run xxh inplace on Linux x86_64 just copy and paste this bash commands:
 ```bash
 XH=~/.xxh \
  && XD=https://github.com/xxh/xxh-portable/raw/master/result/xxh-portable-musl-alpine-Linux-x86_64.tar.gz \
