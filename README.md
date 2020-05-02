@@ -217,7 +217,7 @@ platforms that could be forked and stuffed.
 - [New questions](https://github.com/xxh/xxh/wiki#new-questions)
 
 ## Development
-In the [xxh-dev](https://github.com/xxh/xxh-dev) repo there is full [docker](https://www.docker.com/)ised environment 
+In the [xxh-dev](https://github.com/xxh/xxh-dev) repo there is full [dockerised](https://www.docker.com/) environment 
 for development, testing and contribution. The process of testing and development is orchestrated by `xde` tool and as 
 easy as possible.
 
