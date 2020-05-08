@@ -30,6 +30,11 @@ If you like the idea of xxh click ⭐ on the repo and stay tuned.
 pip3 install xxh-xxh
 ```
 
+#### [pipx](https://pipxproject.github.io/pipx/)
+```shell script
+pipx install xxh-xxh
+```
+
 #### [Homebrew](https://brew.sh/)
 ```shell script
 brew install python3 && pip3 install xxh-xxh
