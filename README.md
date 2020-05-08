@@ -32,7 +32,7 @@ pip3 install xxh-xxh
 
 #### [Homebrew](https://brew.sh/)
 ```shell script
-brew install python3 && pip3 install xxh-xxh
+brew install xxh
 ```
 
 #### Linux portable binary
