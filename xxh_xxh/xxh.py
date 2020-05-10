@@ -1,4 +1,5 @@
 import os, sys, argparse, yaml, datetime, re, getpass, pexpect
+from xxh_xxh import __version__
 from shutil import which
 from sys import exit
 from argparse import RawTextHelpFormatter
@@ -6,8 +7,6 @@ from urllib.parse import urlparse
 from base64 import b64encode
 from signal import signal, SIGINT
 from .shell import *
-
-XXH_VERSION = '0.8.2'
 
 def sigint_handler(signal_received, frame):
     sys.exit(0)
@@ -17,7 +16,6 @@ class xxh:
         self.package_dir_path = p(f"{__file__}").parent
         self.url_xxh_github = 'https://github.com/xxh/xxh'
         self.url_xxh_plugins_search = 'https://github.com/search?q=xxh-plugin'
-        self.local_xxh_version = XXH_VERSION
         self.ssh_command = 'ssh'
         self.local_xxh_home = p('~/.xxh')
         self.config_file = self.get_config_filepath()
@@ -365,7 +363,7 @@ class xxh:
 
         xxh_version_file = home / '.xxh/xxh_version'
         if not xxh_version_file.exists():
-            self.S(f"echo {XXH_VERSION} > {xxh_version_file}")
+            self.S(f"echo {__version__} > {xxh_version_file}")
 
         config_file = p(self.config_file)
         sample_config_file = self.package_dir_path / 'config.xxhc'
@@ -529,7 +527,7 @@ class xxh:
 
     def main(self):
         argp = argparse.ArgumentParser(description=f"Your favorite shell wherever you go through the ssh.\n{self.d2F0Y2ggLW4uMiB4eGggLWg()}", formatter_class=RawTextHelpFormatter, prefix_chars='-+')
-        argp.add_argument('--version', '-V', action='version', version=f"xxh/{self.local_xxh_version}")
+        argp.add_argument('--version', '-V', action='version', version=f"xxh/{__version__}")
         argp.add_argument('-p', dest='ssh_port', help="Port to connect to on the remote host.")
         argp.add_argument('-l', dest='ssh_login', help="Specifies the user to log in as on the remote machine.")
         argp.add_argument('-i', dest='ssh_private_key', help="File from which the identity (private key) for public key authentication is read.")
@@ -806,8 +804,8 @@ class xxh:
             # Check version
 
             ask = False
-            if host_xxh_version not in ['dir_not_found', 'dir_empty', 'version_not_found'] and host_xxh_version != self.local_xxh_version:
-                ask = f"Local xxh version '{self.local_xxh_version}' is not equal host xxh version '{host_xxh_version}'."
+            if host_xxh_version not in ['dir_not_found', 'dir_empty', 'version_not_found'] and host_xxh_version != __version__:
+                ask = f"Local xxh version '{__version__}' is not equal host xxh version '{host_xxh_version}'."
 
             if ask:
                 choice = input(f"{ask} What's next? \n"
@@ -912,7 +910,7 @@ class xxh:
 
             self.S('echo "echo {xxh_version} > {host_xxh_home}/.xxh/xxh_version" | {ssh_pipe_command}'.format(
                 host_xxh_home=host_xxh_home,
-                xxh_version=self.local_xxh_version,
+                xxh_version=__version__,
                 ssh_pipe_command=ssh_pipe_command
             ))
 
