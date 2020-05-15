@@ -28,6 +28,7 @@ class xxh:
         self.ssh_arg_v = []
         self.sshpass = []
         self.use_pexpect = True
+        self.pexpect_timeout = 3
         self._password = None
         self._verbose = False
         self._vverbose = False
@@ -94,7 +95,7 @@ class xxh:
             host_password = self.password
 
         if self.vverbose:
-            self.eprint('Try pexpect command: '+cmd)
+            self.eprint(f'Pexpect command (timeout={self.pexpect_timeout}): '+cmd)
 
         sess = pexpect.spawn(cmd)
         user_host_accept = None
@@ -104,7 +105,7 @@ class xxh:
                     'Enter passphrase for key.*', 'password:', pexpect.EOF, '[$#~]', 'Last login.*']
         while True:
             try:
-                i = sess.expect(patterns, timeout=3)
+                i = sess.expect(patterns, timeout=self.pexpect_timeout)
             except:
                 if self.vverbose:
                     print('Unknown answer details:')
@@ -559,6 +560,7 @@ class xxh:
         argp.add_argument('+RI', '++reinstall-xxh-packages', action='append', metavar='xxh-package', dest='reinstall_xxh_packages', help="Local reinstall xxh packages.")
         argp.add_argument('+R', '++remove-xxh-packages', action='append', metavar='xxh-package', dest='remove_xxh_packages', help="Local remove xxh packages.")
         argp.add_argument('+ES', '++extract-sourcing-files', action='store_true', dest='extract_sourcing_files', help="Used for AppImage. Extract seamless mode files.")
+        argp.add_argument('++pexpect-timeout', default=self.pexpect_timeout, help=f"Set timeout for pexpect in seconds. Default: {self.pexpect_timeout}")
         argp.usage = "xxh <host from ~/.ssh/config>\n" \
             + "usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]\n" \
             + "usage: xxh local [xxh arguments]\n" \
@@ -582,6 +584,7 @@ class xxh:
             print(f'Sourcing files extracted to {cdir}')
             exit(0)
 
+        self.pexpect_timeout = int(opt.pexpect_timeout)
         self.local_xxh_home = p(opt.local_xxh_home).absolute()
         self.host_xxh_home = opt.host_xxh_home
 
