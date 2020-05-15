@@ -112,6 +112,9 @@ xxh +I xxh-shell-example+path+/home/user/my-xxh-dev/xxh-shell-example           
 ```
 
 ### Using xxh inplace without ssh connection
+
+This is experimental magic. Please read the text below twice.
+
 If you have a shell access on the host or you're in docker container and you can't ssh to it 
 then you can download and build hermetic xxh environment inplace. The `xxh local` command works 
 exectly like `xxh remote_host` and creates hermetic environment in `~/.xxh` by default.
