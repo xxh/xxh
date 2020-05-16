@@ -237,7 +237,7 @@ class xxh:
 
         host = self.url.hostname
         host_info_s = """
-            xxh_home_realpath=$([ ! -x "$(command -v realpath)" ] && readlink -f {host_xxh_home} || realpath -m {host_xxh_home})
+            xxh_home_realpath=$(dirname {host_xxh_home})/$(basename {host_xxh_home})
             xxh_version="dir_not_found"
             if [[ -d $xxh_home_realpath ]]; then
                 xxh_version=$([ "$(ls -A $xxh_home_realpath)" ] && echo "version_not_found" || echo "dir_empty")
@@ -754,7 +754,7 @@ class xxh:
             shells_dir=(self.local_xxh_home / '.xxh/shells')
         ))
 
-        if p(self.host_xxh_home) == p(f'/'):
+        if p(self.host_xxh_home).resolve() == p('/'):
             self.eeprint("Host xxh home path {host_xxh_home} looks like /. Please check twice!")
 
         host_info = self.get_host_info()
