@@ -567,7 +567,7 @@ class xxh:
         argp.add_argument('+R', '++remove-xxh-packages', action='append', metavar='xxh-package', dest='remove_xxh_packages', help="Local remove xxh packages.")
         argp.add_argument('+ES', '++extract-sourcing-files', action='store_true', dest='extract_sourcing_files', help="Used for AppImage. Extract seamless mode files.")
         argp.add_argument('++pexpect-timeout', default=self.pexpect_timeout, help=f"Set timeout for pexpect in seconds. Default: {self.pexpect_timeout}")
-        argp.add_argument('++scp', default=False, action='store_true', help="Force scp as copy method. Default is autodetect and prefer rsync. Does not affect local commands")
+        argp.add_argument('++copy-method', default=None, help="Copy method: scp or rsync. Default is autodetect and prefer rsync.")
         argp.add_argument('++scp-command', default=self.scp_command, help="Command to execute instead of 'scp'.")
         argp.usage = "xxh <host from ~/.ssh/config>\n" \
             + "usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]\n" \
@@ -934,8 +934,9 @@ class xxh:
 
             shell_build_dir = self.local_xxh_home / '.xxh/shells' / self.shell / 'build'
 
-            if opt.scp:
-                copy_method = 'scp'
+            copy_method = None
+            if opt.copy_method:
+                copy_method = opt.copy_method
             if self.local:
                 copy_method = 'cp'
 
