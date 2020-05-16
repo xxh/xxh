@@ -17,6 +17,7 @@ class xxh:
         self.url_xxh_github = 'https://github.com/xxh/xxh'
         self.url_xxh_plugins_search = 'https://github.com/search?q=xxh-plugin'
         self.ssh_command = 'ssh'
+        self.scp_command = 'scp'
         self.local_xxh_home = p('~/.xxh')
         self.config_file = self.get_config_filepath()
         self.host_xxh_home = '~/.xxh'
@@ -566,6 +567,8 @@ class xxh:
         argp.add_argument('+R', '++remove-xxh-packages', action='append', metavar='xxh-package', dest='remove_xxh_packages', help="Local remove xxh packages.")
         argp.add_argument('+ES', '++extract-sourcing-files', action='store_true', dest='extract_sourcing_files', help="Used for AppImage. Extract seamless mode files.")
         argp.add_argument('++pexpect-timeout', default=self.pexpect_timeout, help=f"Set timeout for pexpect in seconds. Default: {self.pexpect_timeout}")
+        argp.add_argument('++copy-method', default=None, help="Copy method: scp or rsync. Default is autodetect and prefer rsync.")
+        argp.add_argument('++scp-command', default=self.scp_command, help="Command to execute instead of 'scp'.")
         argp.usage = "xxh <host from ~/.ssh/config>\n" \
             + "usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]\n" \
             + "usage: xxh local [xxh arguments]\n" \
@@ -722,6 +725,9 @@ class xxh:
 
         if self.verbose:
             self.eprint(f'ssh arguments: {self.ssh_arguments}')
+
+        if opt.scp_command:
+            self.scp_command = opt.scp_command
 
         if opt.password is not None:
             self.password = opt.password
@@ -929,6 +935,8 @@ class xxh:
             shell_build_dir = self.local_xxh_home / '.xxh/shells' / self.shell / 'build'
 
             copy_method = None
+            if opt.copy_method:
+                copy_method = opt.copy_method
             if self.local:
                 copy_method = 'cp'
 
@@ -967,8 +975,9 @@ class xxh:
                     ))
             elif copy_method == 'scp' or (copy_method is None and which('scp') and host_info['scp']):
                 self.eprint("First time upload using scp (this will be omitted on the next connections).\nNote: you can install rsync on local and remote host to increase speed.")
-                scp = "{sshpass} scp {ssh_arg_v} {ssh_arguments} -r -C {arg_q}".format(
+                scp = "{sshpass} {scp_command} {ssh_arg_v} {ssh_arguments} -r -C {arg_q}".format(
                     sshpass=A(self.sshpass),
+                    scp_command=A(self.scp_command),
                     ssh_arg_v=A(self.ssh_arg_v),
                     ssh_arguments=A(self.ssh_arguments),
                     arg_q=A(arg_q)
