@@ -76,7 +76,7 @@ Currently supported OS is Linux on x86_64.
 Pinned plugins: **[sudo](https://github.com/xxh/xxh-plugin-prerun-sudo), [dotfiles](https://github.com/xxh/xxh-plugin-prerun-dotfiles), [docker](https://github.com/xxh/xxh-plugin-prerun-docker), [python](https://github.com/xxh/xxh-plugin-prerun-python), [xxh](https://github.com/xxh/xxh-plugin-prerun-xxh), [vim](https://github.com/xxh/xxh-plugin-prerun-vim)**. 
 
 ## Usage
-Use `xxh` as replace `ssh` to connecting to the host without changing ssh arguments:
+Use `xxh` as replace `ssh` to connecting to the Linux host without changing ssh arguments:
 ```
 xxh <host from ~/.ssh/config>
 xxh [ssh arguments] [user@]host[:port] [xxh arguments]
