@@ -28,7 +28,7 @@ class xxh:
         self.ssh_arg_v = []
         self.sshpass = []
         self.use_pexpect = True
-        self.pexpect_timeout = 3
+        self.pexpect_timeout = 5
         self._password = None
         self._verbose = False
         self._vverbose = False
@@ -107,10 +107,15 @@ class xxh:
             try:
                 i = sess.expect(patterns, timeout=self.pexpect_timeout)
             except:
+                if sess.after is pexpect.exceptions.TIMEOUT:
+                    print('Probably the connection takes more time than expected.\n'
+                          'Try to increase the timeout by adding "++pexpect-timeout 10" argument.')
+                else:
+                    print('Unknown answer from host. Check your connection to the host using ssh\n'
+                          'and if it works try xxh with +vv argument.')
                 if self.vverbose:
-                    print('Unknown answer details:')
+                    print('Pexpect details:')
                     print(sess)
-                print('Unknown answer from host')
                 return {}
 
             if self.vverbose:
@@ -292,7 +297,7 @@ class xxh:
                 break
 
             if pr == {}:
-                self.eeprint('Answer from host is empty. Try again with +v or +vv or try ssh before xxh')
+                self.eeprint('Answer from host is empty. Try again with +v or +vv or try ssh before xxh.')
 
             if self.verbose:
                 self.eprint('Pexpect result:')
@@ -302,7 +307,7 @@ class xxh:
                 self.password = pr['user_host_password']
 
             if 'output' not in pr:
-                self.eeprint('Unexpected output. Try again with +v or +vv or try ssh before xxh')
+                self.eeprint('Unexpected output. Try again with +v or +vv or try ssh before xxh.')
 
             r = pr['output']
         else:
