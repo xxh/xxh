@@ -543,7 +543,7 @@ class xxh:
         argp.add_argument('+P', '++password', help="Password for ssh auth.")
         argp.add_argument('+PP', '++password-prompt', default=False, action='store_true', help="Enter password manually using prompt.")
         argp.add_argument('destination', nargs='?', metavar='[user@]host[:port]', help="Destination may be specified as [ssh://][user@]host[:port] or host from ~/.ssh/config or 'local' to run xxh on current host.")
-        argp.add_argument('+i', '++install', default=False, action='store_true', help="Install xxh to destination host.")
+        argp.add_argument('+i', '++install', default=False, action='store_true', help="Install xxh to destination host without questions.")
         argp.add_argument('+if', '++install-force', default=False, action='store_true', help="Removing the host xxh package and install xxh again.")
         argp.add_argument('+iff', '++install-force-full', default=False, action='store_true', help="Removing the host xxh home and install xxh again. WARNING! All your files, configs, packages in xxh home on the host WILL BE LOST.")
         argp.add_argument('+xc', '++xxh-config', default=self.config_file, help=f"Xxh config file in yaml. Default: {self.config_file}")
@@ -859,7 +859,7 @@ class xxh:
                 else:
                     self.eeprint('Unknown answer')
 
-        if (host_xxh_version in ['dir_not_found', 'dir_empty'] or host_info['xxh_shell_exists'] == '0') and opt.install_force == False and opt.install_force_full == False:
+        if (host_xxh_version in ['dir_not_found', 'dir_empty'] or host_info['xxh_shell_exists'] == '0') and opt.install is False and opt.install_force is False and opt.install_force_full is False and not self.quiet:
             yn = input(f"{host}:{host_xxh_home}/.xxh/shells/{self.shell} not found. Install {self.shell}? [Y/n] ").strip().lower()
             if yn == 'y' or yn == '':
                 opt.install = True
