@@ -866,6 +866,9 @@ class xxh:
             else:
                 self.eeprint('Unknown answer')
 
+        if opt.install is True and opt.install_force is False and opt.install_force_full is False and host_xxh_version not in ['dir_not_found', 'dir_empty']:
+            opt.install = False
+
         if opt.install:
             self.eprint(f"Install {self.shell} to {host}:{host_xxh_home}" )
 
