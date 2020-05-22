@@ -29,7 +29,7 @@ class xxh:
         self.ssh_arg_v = []
         self.sshpass = []
         self.use_pexpect = True
-        self.pexpect_timeout = 5
+        self.pexpect_timeout = 6
         self._password = None
         self._verbose = False
         self._vverbose = False
