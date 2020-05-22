@@ -57,7 +57,7 @@ chmod +x xxh && ./xxh
 
 ## Shells
 
-Currently supported OS is Linux on x86_64.
+Currently supported OS for target host is Linux on x86_64.
 
 | xxh-shell                                                             | status     | [plugins](https://github.com/xxh/xxh/wiki#plugins) | [seamless](https://github.com/xxh/xxh/wiki#seamless-mode) | demo |
 |-----------------------------------------------------------------------|------------|-------------|---------|------|
