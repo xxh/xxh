@@ -234,7 +234,7 @@ of passionate people who could help or support in complex questions. Some people
 newbie in another shell and mutual assistance is the key to xxh evolution. [Ask join.](https://github.com/xxh/xxh/issues/50)
 
 ## Thanks
-* **niess** for great [linuxdeploy-plugin-python](https://github.com/niess/linuxdeploy-plugin-python/) 
+* **niess** for great [python-appimage](https://github.com/niess/python-appimage) 
 * **probonopd** and **TheAssassin** for hard-working [AppImage](https://github.com/AppImage)
 * **Roman Perepelitsa** for incredible [statically-linked, hermetic, relocatable Zsh](https://github.com/romkatv/zsh-bin) 
 * **Anthony Scopatz**, **Gil Forsyth**, **Jamie Bliss**, **David Strobach**, **Morten Enemark Lund** and **@xore** for amazing [xonsh](https://github.com/xonsh/xonsh) shell
