@@ -85,15 +85,15 @@ xxh local [xxh arguments]
 
 Common examples (use `xxh --help` to get info about arguments):
 ```yaml
-xxh anyhost                                       # connect to the host
-xxh -i id_rsa -p 2222 anyhost                     # using ssh arguments: port and key
-xxh anyhost +s zsh                                # set the shell
-xxh anyhost +s xonsh +hhh "~"                     # set /home/user as home directory (read Q&A)
-xxh anyhost +s bash +I xxh-plugin-bash-vim        # preinstall the plugin
-xxh anyhost +if +q                                # install without questions in quiet mode
-xxh anyhost +hh /tmp/xxh +hhr                     # upload xxh to /tmp/xxh and remove when disconnect 
-source xxh.zsh anyhost +I xxh-plugin-zsh-ohmyzsh  # connect in seamless mode with ohmyzsh plugin
-xxh local +s xonsh                                # build xxh environment on localhost
+xxh anyhost                                       # Connect to the host
+xxh -i id_rsa -p 2222 anyhost                     # Using ssh arguments: port and key
+xxh anyhost +s zsh +i                             # Set the shell and install it without yes-no question
+xxh anyhost +s xonsh +hhh "~"                     # Set /home/user as home directory (read Q&A)
+xxh anyhost +s bash +I xxh-plugin-bash-vim        # Preinstall the plugin
+xxh anyhost +if +q                                # Force reinstall xxh on the host in quiet mode
+xxh anyhost +hh /tmp/xxh +hhr                     # Upload xxh to /tmp/xxh and remove when disconnect 
+source xxh.zsh anyhost +I xxh-plugin-zsh-ohmyzsh  # Connect in seamless mode with ohmyzsh plugin
+xxh local +s xonsh                                # Experimental: build xxh environment inplace and without ssh
 ```
 To reusing arguments and simplifying xxh usage to `xxh anyhost` there is [config file](https://github.com/xxh/xxh/wiki#config-file).
 
@@ -236,6 +236,6 @@ newbie in another shell and mutual assistance is the key to xxh evolution. [Ask 
 ## Thanks
 * **niess** for great [python-appimage](https://github.com/niess/python-appimage) 
 * **probonopd** and **TheAssassin** for hard-working [AppImage](https://github.com/AppImage)
+* **Anthony Scopatz**, **Gil Forsyth**, **Jamie Bliss**, **David Strobach**, **Morten Enemark Lund** and **@xore** for amazing [xonsh shell](https://github.com/xonsh/xonsh)
 * **Roman Perepelitsa** for incredible [statically-linked, hermetic, relocatable Zsh](https://github.com/romkatv/zsh-bin) 
-* **Anthony Scopatz**, **Gil Forsyth**, **Jamie Bliss**, **David Strobach**, **Morten Enemark Lund** and **@xore** for amazing [xonsh](https://github.com/xonsh/xonsh) shell
 * **Johannes Altmanninger** and **Fabian Homborg** for extensive and portable [fish shell](https://github.com/fish-shell/fish-shell)
