@@ -332,7 +332,7 @@ class xxh:
             self.eeprint('Empty answer from host when getting first info. Often this is a connection error.\n'
                     + 'Check your connection parameters using the same command but with ssh.')
 
-        r = dict([l.split('=') for l in r.replace('\r','').split('\n') if l.strip() != '' and '=' in l])
+        r = dict([l.split('=') for l in r.replace('\r','').split('\n') if l.strip() != '' and '=' in l and '|' not in l])
         r = {k: (v[1:-1] if v[:1] == "'" and v[-1:] == "'" else v) for k, v in r.items()}
 
         return r
