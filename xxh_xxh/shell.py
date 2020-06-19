@@ -14,9 +14,16 @@ def SC(cmd):
     [out, err] = proc.communicate()
     return (out, err, proc)
 
-def A(args, q=0):
+def A(args, q=0, i=0):
     if type(args) == list:
-        args = ' '.join([str(a) for a in args])
+        if i == 1:
+            args = ' '.join([f"'{a}'" for a in args])
+        elif i == 2:
+            args = ' '.join([f'"{a}"' for a in args])
+        elif i == 3:
+            args = ' '.join([f'\\"{a}\\"' for a in args])
+        else:
+            args = ' '.join([str(a) for a in args])
     if q == 1:
         return f"'{args}'"
     elif q == 2:

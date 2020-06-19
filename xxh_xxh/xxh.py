@@ -284,7 +284,7 @@ class xxh:
                     host_info_s=host_info_s.strip().replace('\n','\\n').replace('"','\\"').replace('$','\\$').replace('`','\\`'),
                     ssh=self.ssh_command,
                     ssh_v=('' if not self.ssh_arg_v else '-v'),
-                    ssh_arguments=A(self.ssh_arguments),
+                    ssh_arguments=A(self.ssh_arguments, 0, 2),
                     host=host
                 )
 
@@ -318,7 +318,7 @@ class xxh:
                 sshpass=A(self.sshpass),
                 ssh=A(self.ssh_command),
                 ssh_arg_v=A(self.ssh_arg_v),
-                ssh_arguments=A(self.ssh_arguments),
+                ssh_arguments=A(self.ssh_arguments, 0, 2),
                 host=A(host)
             ))
             r = o.strip()
@@ -809,7 +809,7 @@ class xxh:
                 sshpass=A(self.sshpass),
                 ssh=A(self.ssh_command),
                 ssh_arg_v=A(self.ssh_arg_v),
-                ssh_arguments=A(self.ssh_arguments),
+                ssh_arguments=A(self.ssh_arguments, 0, 2),
                 host=A(host)
             )
 
@@ -951,7 +951,7 @@ class xxh:
                     sshpass=A(self.sshpass),
                     ssh=A(self.ssh_command),
                     ssh_arg_v=('' if self.ssh_arg_v == [] else '-v'),
-                    ssh_arguments=A(self.ssh_arguments),
+                    ssh_arguments=A(self.ssh_arguments, 0, 3),
                     arg_q=A(arg_q),
                     progress=('' if self.quiet or not self.verbose else '--progress')
                 )
@@ -982,7 +982,7 @@ class xxh:
                     sshpass=A(self.sshpass),
                     scp_command=A(self.scp_command),
                     ssh_arg_v=A(self.ssh_arg_v),
-                    ssh_arguments=A(self.ssh_arguments),
+                    ssh_arguments=A(self.ssh_arguments, 0, 1),
                     arg_q=A(arg_q)
                 )
 
@@ -1079,7 +1079,7 @@ class xxh:
                 sshpass=A(self.sshpass),
                 ssh=A(self.ssh_command),
                 ssh_arg_v=A(self.ssh_arg_v),
-                ssh_arguments=A(self.ssh_arguments),
+                ssh_arguments=A(self.ssh_arguments, 0, 1),
                 host=A(host),
                 entrypoint_command=entrypoint_command
             ))
