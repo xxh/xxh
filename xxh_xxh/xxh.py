@@ -261,7 +261,7 @@ class xxh:
             echo scp=`command -v scp`
             echo shell=`command -v {short_shell_name}`
             echo kernel=`uname -s`
-            echo arch=`uname -m`            
+            echo arch=`uname -m`
             """.format(
                 host_xxh_home=self.host_xxh_home,
                 shell=self.shell,
@@ -708,7 +708,7 @@ class xxh:
             opt.ssh_login = url.username
         if opt.ssh_login:
             username = opt.ssh_login
-        
+
         self.ssh_command = opt.ssh_command
         self.ssh_arguments = ['-o', 'StrictHostKeyChecking=accept-new']
         if not self.verbose:
