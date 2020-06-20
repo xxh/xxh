@@ -748,6 +748,8 @@ class xxh:
 
         local_xxh_home_parent = self.local_xxh_home.parent
 
+        self.host_xxh_home = opt.host_xxh_home
+
         if self.local_xxh_home.exists():
             if not os.access(self.local_xxh_home, os.W_OK):
                 self.eeprint(f"The local xxh home path isn't writable: {self.local_xxh_home}" )
