@@ -664,6 +664,7 @@ class xxh:
 
         self.verbose = opt.verbose
         self.vverbose = opt.vverbose
+        self.use_pexpect = not opt.pexpect_disable
 
         def packages_operations():
             if opt.install_xxh_packages:
