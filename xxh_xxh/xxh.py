@@ -312,18 +312,19 @@ class xxh:
 
             r = pr['output']
         else:
-            [o,e,p] = self.SC("bash -c 'echo -e \"{host_info_s}\" | {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -T \"bash -s\"'".format(
-                host_info_sh=A(host_info_s),
+            if self.verbose:
+                self.eprint('Try ssh without pexpect')
+            [o,e,p] = self.SC("bash -c 'echo -e \"{host_info_s}\" | {sshpass} {ssh} {ssh_v} {ssh_arguments} {host} -T \"bash -s\"'".format(
+                host_info_s=host_info_s.strip().replace('\n','\\n').replace('"','\\"').replace('$','\\$').replace('`','\\`'),
                 host_xxh_home=A(self.host_xxh_home),
                 sshpass=A(self.sshpass),
                 ssh=A(self.ssh_command),
-                ssh_arg_v=A(self.ssh_arg_v),
+                ssh_v=('' if not self.ssh_arg_v else '-v'),
                 ssh_arguments=A(self.ssh_arguments, 0, 2),
                 host=A(host)
             ))
             r = o.strip()
-            print(r)
-            exit()
+            r = r.decode("utf-8")
 
         if self.verbose:
             self.eprint(f'Host info:\n{r}')
@@ -569,6 +570,7 @@ class xxh:
         argp.add_argument('++pexpect-timeout', default=self.pexpect_timeout, help=f"Set timeout for pexpect in seconds. Default: {self.pexpect_timeout}")
         argp.add_argument('++copy-method', default=None, help="Copy method: scp or rsync. Default is autodetect and prefer rsync.")
         argp.add_argument('++scp-command', default=self.scp_command, help="Command to execute instead of 'scp'.")
+        argp.add_argument('++pexpect-disable', default=False, action='store_true', help="Disable pexpect.")
         argp.usage = "xxh <host from ~/.ssh/config>\n" \
             + "usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]\n" \
             + "usage: xxh local [xxh arguments]\n" \
@@ -595,6 +597,7 @@ class xxh:
         self.pexpect_timeout = int(opt.pexpect_timeout)
         self.local_xxh_home = p(opt.local_xxh_home).absolute()
         self.host_xxh_home = opt.host_xxh_home
+        self.use_pexpect = not opt.pexpect_disable
 
         if opt.destination == 'local':
             self.local = True
