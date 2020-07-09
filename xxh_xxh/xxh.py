@@ -666,6 +666,11 @@ class xxh:
         self.vverbose = opt.vverbose
         self.use_pexpect = not opt.pexpect_disable
 
+        self.quiet = opt.quiet
+        arg_q = ['-q'] if self.quiet else []
+        self.verbose = opt.verbose if not self.quiet else False
+        self.vverbose = opt.vverbose if not self.quiet else False
+
         def packages_operations():
             if opt.install_xxh_packages:
                 installed = self.packages_install(opt.install_xxh_packages)
