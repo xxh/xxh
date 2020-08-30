@@ -48,7 +48,7 @@ tar -xzf xxh-portable-musl-alpine-Linux-x86_64.tar.gz
 ./xxh
 ```
 
-#### [AppImage](https://appimage.org/)
+#### Linux [AppImage](https://appimage.org/)
 ```shell script
 mkdir ~/xxh && cd ~/xxh
 wget -O xxh https://github.com/xxh/xxh-appimage/releases/download/continuous/xxh-release-x86_64.AppImage
