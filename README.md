@@ -142,7 +142,7 @@ anyhost> python --version
 Python 3.8.2
 ```
 You'll get python-powered [xonsh](https://xon.sh) shell with portable python and pip on the host without any system installations on the host. 
-You can install PyPi packages manually or bring it with you automatically by using [https://github.com/xxh/xxh-plugin-prerun-dotfiles](https://github.com/xxh/xxh-plugin-prerun-dotfiles). Also don't forget about xxh-plugins like [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump).
+You can install PyPi packages manually or bring it with you automatically by using [xxh-plugin-prerun-dotfiles](https://github.com/xxh/xxh-plugin-prerun-dotfiles). Also don't forget about xxh-plugins like [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump).
 
 #### Way 2. Using portable python on any xxh shell
 ```
