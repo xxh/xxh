@@ -25,6 +25,7 @@ class xxh:
         self.short_shell_name = self.shell.split('-')[2]
         self.build_file_exts = ['xsh', 'zsh', 'fish', 'sh']
         self.url = None
+        self.hostname = None
         self.ssh_arguments = []
         self.ssh_arg_v = []
         self.sshpass = []
@@ -237,11 +238,22 @@ class xxh:
         url = urlparse(destination)
         return url
 
+    def get_case_sensitive_hostname(self, url):
+        """
+        By default urllib returns hostname in lower case. This function returns case sensitive hostname.
+        :param url: urllib object
+        :return: case sensitive hostname
+        """
+        pos_start = url.netloc.lower().find(url.hostname)
+        pos_end = pos_start + len(url.hostname)
+        return url.netloc[pos_start:pos_end]
+
+
     def get_host_info(self):
         if '|' in self.host_xxh_home:
             self.eeprint(f'Wrong host xxh home: {self.host_xxh_home}')
 
-        host = self.url.hostname
+        host = self.hostname
         host_info_s = """
             xxh_home_realpath=$(dirname {host_xxh_home})/$(basename {host_xxh_home})
             xxh_version="dir_not_found"
@@ -628,6 +640,7 @@ class xxh:
             self.destination_exists = True
 
         self.url = url = self.parse_destination(opt.destination)
+        self.hostname = self.get_case_sensitive_hostname(url)
 
         if self.destination_exists and self.config_file and self.config_file.exists():
             if self.verbose:
@@ -639,7 +652,7 @@ class xxh:
                 sys_args = sys.argv[1:]
                 conf_args = []
                 for h, hc in xxh_config['hosts'].items():
-                    if re.match(h, url.hostname):
+                    if re.match(h, self.hostname):
                         if self.verbose:
                             self.eprint('Load xxh config for host ' + h)
                         if hc and len(hc) > 0:
@@ -708,7 +721,7 @@ class xxh:
             self.short_shell_name = self.shell
 
         username = getpass.getuser()
-        host = url.hostname
+        host = self.hostname
         if not host:
             self.eeprint(f"Wrong destination '{host}'")
         if url.port:
