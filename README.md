@@ -35,6 +35,12 @@ pip3 install xxh-xxh
 pipx install xxh-xxh
 ```
 
+#### [Conda-forge](https://conda-forge.org/) [feedstock](https://github.com/conda-forge/xxh-xxh-feedstock)
+```shell script
+conda config --add channels conda-forge
+conda install xxh-xxh
+```
+
 #### [Homebrew](https://brew.sh/)
 ```shell script
 brew install xxh
