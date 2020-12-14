@@ -104,7 +104,7 @@ class xxh:
         user_host_password = None
         user_key_password = None
         patterns = ['Are you sure you want to continue connecting.*', "Please type 'yes' or 'no':",
-                    'Enter passphrase for key.*', 'password:', pexpect.EOF, '[$#~]', 'Last login.*']
+                    'Enter passphrase for key.*', 'Password:', 'password:', pexpect.EOF, '[$#~]', 'Last login.*']
         while True:
             try:
                 i = sess.expect(patterns, timeout=self.pexpect_timeout)
