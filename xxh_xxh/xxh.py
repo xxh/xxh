@@ -152,7 +152,7 @@ class xxh:
                 else:
                     sess.sendline(key_password)
 
-            if i == 3:
+            if i == [3,4]:
                 # Expected:
                 #   <host>`s password:
                 if host_password is None:
@@ -161,7 +161,7 @@ class xxh:
                 else:
                     sess.sendline(host_password)
 
-            if i == 4:
+            if i == 5:
                 # Getting result
                 output = sess.before.decode("utf-8")
                 output = re.sub('\r\nConnection to (.*) closed.\r\r\n', '', output)
@@ -176,7 +176,7 @@ class xxh:
 
                 return result
 
-            if i == [5,6]:
+            if i in [6,7]:
                 # Prompt
                 print(sess.before.decode("utf-8"))
                 sess.interact()
