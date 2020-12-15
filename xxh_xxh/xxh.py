@@ -103,11 +103,19 @@ class xxh:
         user_host_accept = None
         user_host_password = None
         user_key_password = None
-        patterns = ['Are you sure you want to continue connecting.*', "Please type 'yes' or 'no':",
-                    'Enter passphrase for key.*', 'Password:', 'password:', pexpect.EOF, '[$#~]', 'Last login.*']
+        patterns = [
+            'Are you sure you want to continue connecting.*',  # 0
+            "Please type 'yes' or 'no':",                      # 1
+            'Enter passphrase for key.*',                      # 2
+            'Password:',                                       # 3
+            'password:',                                       # 4
+            pexpect.EOF,                                       # 5
+            '[$#~]',                                           # 6
+            'Last login.*'                                     # 7
+        ]
         while True:
             try:
-                i = sess.expect(patterns, timeout=self.pexpect_timeout)
+                pattern = sess.expect(patterns, timeout=self.pexpect_timeout)
             except:
                 if sess.after is pexpect.exceptions.TIMEOUT:
                     print('Probably the connection takes more time than expected.\n'
@@ -123,7 +131,7 @@ class xxh:
             if self.vverbose:
                 self.eprint(f'Pexpect caught pattern: {patterns[i]}')
 
-            if i in [0,1]:
+            if pattern in [0,1]:
                 # Expected:
                 #   The authenticity of host '<...>' can't be established.
                 #   ECDSA key fingerprint is <...>
@@ -143,7 +151,7 @@ class xxh:
                 else:
                     sess.sendline('no')
 
-            if i == 2:
+            if pattern == 2:
                 # Expected:
                 #   Enter passphrase for key '<keyfile>':
                 if key_password is None:
@@ -152,7 +160,7 @@ class xxh:
                 else:
                     sess.sendline(key_password)
 
-            if i == [3,4]:
+            if pattern == [3,4]:
                 # Expected:
                 #   <host>`s password:
                 if host_password is None:
@@ -161,7 +169,7 @@ class xxh:
                 else:
                     sess.sendline(host_password)
 
-            if i == 5:
+            if pattern == 5:
                 # Getting result
                 output = sess.before.decode("utf-8")
                 output = re.sub('\r\nConnection to (.*) closed.\r\r\n', '', output)
@@ -176,7 +184,7 @@ class xxh:
 
                 return result
 
-            if i in [6,7]:
+            if pattern in [6,7]:
                 # Prompt
                 print(sess.before.decode("utf-8"))
                 sess.interact()
