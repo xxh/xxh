@@ -1,4 +1,4 @@
-<p align="center">You stuffed command shell with aliases, tools and colors but you lose it all when using ssh. The mission of xxh is to bring your favorite shell wherever you go through the ssh without root access and system installations.</p>
+<p align="center">You stuffed command shell with aliases, tools and colors but you lose it all when using ssh. The mission of xxh is to bring your favorite shell wherever you go through ssh without root access and system installations.</p>
 
 <p align="center">  
 If you like the idea of xxh click ⭐ on the repo and <a href="https://twitter.com/intent/tweet?text=Bring%20your%20favorite%20shell%20wherever%20you%20go%20through%20the%20ssh.&url=https://github.com/xxh/xxh" target="_blank">tweet now</a>.
@@ -12,14 +12,14 @@ If you like the idea of xxh click ⭐ on the repo and <a href="https://twitter.c
 <col style="width:33%">
 <tbody>
 <tr style="border: 0px !important;">
-<td valign="top" style="border: 0px !important;"><b>Portable</b>. Preparing portable shells and plugins occurs locally and then xxh uploads the result to host. No installations or root access on the host required. The security and careful about environment on the host are behind it.</td>
-<td valign="top" style="border: 0px !important;"><b>Hermetic</b>. If you delete <code>~/.xxh</code> directory from the remote host then xxh has never been on the host. By default your home is <code>.xxh</code> directory and you can <a href="https://github.com/xxh/xxh/wiki#how-to-set-homeuser-as-home-on-host">choose the hermetic level of your xxh session</a>.</td>
-<td valign="top" style="border: 0px !important;"><b>Careful</b>. No blindfold copying config files from local to remote host. Following the privacy and repeatability reasons the better way is to fork the xxh plugin or shell example and pack your configs to it. </td>
+<td valign="top" style="border: 0px !important;"><b>Portable</b>. Preparing portable shells and plugins occurs locally and then xxh uploads the result to the host. No installations or root access on the host required. Security and host environment a prime focus.</td>
+<td valign="top" style="border: 0px !important;"><b>Hermetic</b>. Deleting <code>~/.xxh</code> directory from the remote host will make the remote environment function as if xxh was never there. By default your home is the <code>.xxh</code> directory and you can <a href="https://github.com/xxh/xxh/wiki#how-to-set-homeuser-as-home-on-host">choose the hermetic level of your xxh session</a>.</td>
+<td valign="top" style="border: 0px !important;"><b>Careful</b>. No blindfold copying config files from local to remote host. Following privacy and repeatability practices the best way is to fork the xxh plugin or shell example and pack your configs into it. </td>
 </tr>
 <tr style="border: 0px !important;">
-<td valign="top" style="border: 0px !important;"><b>Be open and fork-ready</b>. Every xxh repo could be forked, customized and reused without waiting for package management system, xxh releases or any third party. Currently supported five shells and the count could be increased by community.</td>
-<td valign="top" style="border: 0px !important;"><b>Do more</b>. The xxh packages are not only about shells. Any type of tool or code could be behind entrypoint. If you want to run <a href="https://github.com/browsh-org/browsh">browsh</a> on the remote host just put it as entrypoint in xxh-shell.</td>
-<td valign="top" style="border: 0px !important;"><b>Chameleon</b>. Switching the shells as easy as possible and not really needed to use only one shell. Choose your current shell along with task you want to solve: <code>xxh anyhost +s xonsh</code> for python environment, osquery for simple querying, fish for modern features or time-tested zsh and bash. </td>   
+<td valign="top" style="border: 0px !important;"><b>Be open and fork-ready</b>. Every xxh repo could be forked, customized and reused without waiting for a package management system, xxh release or any third party packages. Five shells are currently supported and the and more could be added by the community.</td>
+<td valign="top" style="border: 0px !important;"><b>Do more</b>. The xxh packages are not only about shells. Any type of tool or code could be behind an entrypoint. If you want to run <a href="https://github.com/browsh-org/browsh">browsh</a> on the remote host just put it as an entrypoint in the xxh-shell.</td>
+<td valign="top" style="border: 0px !important;"><b>Chameleon</b>. Switching the shells is as easy as possible and you don't have to be locked in to one shell. Choose your current shell based on the task you want to solve: <code>xxh anyhost +s xonsh</code> for a python environment, osquery for simple querying, fish for modern features or time-tested zsh and bash for speed. </td>   
 </tr>
 </tbody>
 </table>
@@ -77,12 +77,12 @@ Currently supported OS for target host is Linux on x86_64.
 [Search xxh shell on Github](https://github.com/search?q=xxh-shell&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-shell) or [create your shell entrypoint](https://github.com/xxh/xxh-shell-example) to use another portable shell.  
 
 ### Prerun plugins
-[Prerun plugins](https://github.com/xxh/xxh/wiki#plugins) allow to bring any portable tools, dotfiles, aliases to xxh session before running shell. 
+[Prerun plugins](https://github.com/xxh/xxh/wiki#plugins) allow you to bring any portable tools, dotfiles or aliases to xxh session before running shell. 
 
 Pinned plugins: **[core](https://github.com/xxh/xxh-plugin-prerun-core)** (xxh-sudo, xxh-screen), **[dotfiles](https://github.com/xxh/xxh-plugin-prerun-dotfiles)**, **[docker](https://github.com/xxh/xxh-plugin-prerun-docker)**, **[python](https://github.com/xxh/xxh-plugin-prerun-python)**, **[xxh](https://github.com/xxh/xxh-plugin-prerun-xxh)**, **[vim](https://github.com/xxh/xxh-plugin-prerun-vim)**. 
 
 ## Usage
-Use `xxh` as replace `ssh` to connecting to the Linux host without changing ssh arguments:
+Use `xxh` instead of `ssh` when connecting to Linux hosts without changing ssh arguments:
 ```
 xxh <host from ~/.ssh/config>
 xxh [ssh arguments] [user@]host[:port] [xxh arguments]
@@ -93,17 +93,17 @@ Common examples (use `xxh --help` to get info about arguments):
 ```yaml
 xxh anyhost                                       # Connect to the host
 xxh -i id_rsa -p 2222 anyhost                     # Using ssh arguments: port and key
-xxh anyhost +s zsh +i                             # Set the shell and install it without yes-no question
+xxh anyhost +s zsh +i                             # Set the shell and install it without yes/no question
 xxh anyhost +s xonsh +hhh "~"                     # Set /home/user as home directory (read Q&A)
-xxh anyhost +s bash +I xxh-plugin-bash-vim        # Preinstall the plugin
+xxh anyhost +s bash +I xxh-plugin-bash-vim        # Preinstall a plugin
 xxh anyhost +if +q                                # Force reinstall xxh on the host in quiet mode
-xxh anyhost +hh /tmp/xxh +hhr                     # Upload xxh to /tmp/xxh and remove when disconnect 
+xxh anyhost +hh /tmp/xxh +hhr                     # Upload xxh to /tmp/xxh and remove when disconnecting
 source xxh.zsh anyhost +I xxh-plugin-zsh-ohmyzsh  # Connect in seamless mode with ohmyzsh plugin
 xxh local +s xonsh                                # Experimental: build xxh environment inplace and without ssh
 ```
-To reusing arguments and simplifying xxh usage to `xxh anyhost` there is [config file](https://github.com/xxh/xxh/wiki#config-file).
+For reusing arguments and simplifying xxh usage (like shortening to `xxh anyhost`) there is a [config file](https://github.com/xxh/xxh/wiki#config-file).
 
-### Install xxh packages
+### Installing xxh packages
 ```bash
 xxh [+I xxh-package +I ...] [+L] [+RI xxh-package +RI ...] [+R xxh-package +R ...]
 ```
@@ -121,14 +121,14 @@ xxh +I xxh-shell-example+path+/home/user/my-xxh-dev/xxh-shell-example           
 
 This is experimental magic. Please read the text below twice.
 
-If you have a shell access on the host or you're in docker container and you can't ssh to it 
+If you have shell access on the host or you're in a docker container and you can't ssh to it 
 then you can download and build hermetic xxh environment inplace. The `xxh local` command works 
-exectly like `xxh remote_host` and creates hermetic environment in `~/.xxh` by default.
+exectly like `xxh remote_host` and creates a hermetic environment in `~/.xxh` by default.
 
-At this time we haven't portable build tools like `git`, `wget`, `curl`, `tar` and others which 
-could be required by xxh packages build scripts. The `xxh local` expects the tools are on host.
+At this time we don't have portable build tools like `git`, `wget`, `curl`, `tar` and others which 
+could be required by some xxh package build scripts. When running `xxh local` it is expected that the tools are present on the host.
 
-To run xxh inplace on Linux x86_64 just copy and paste this bash commands:
+To run xxh inplace on Linux x86_64 just copy and paste these bash commands:
 ```bash
 XH=~/.xxh \
  && XD=https://github.com/xxh/xxh-portable/raw/master/result/xxh-portable-musl-alpine-Linux-x86_64.tar.gz \
@@ -136,7 +136,7 @@ XH=~/.xxh \
  && ( [[ -x $(command -v curl) ]] && curl -L $XD || wget -O- $XD ) | tar zxf - xxh \
  && echo 'Usage: ./xxh local [+s xonsh/zsh/fish/osquery/bash]'
 ```
-Next time you're on host just run `~/.xxh/xxh local` and you will be in your xxh environment. 
+Next time you're on host just run `~/.xxh/xxh local` and you will enter your xxh environment. 
 
 ## Examples of use cases
 ### Python with pip everywhere without installation
@@ -148,7 +148,7 @@ anyhost> python --version
 Python 3.8.2
 ```
 You'll get python-powered [xonsh](https://xon.sh) shell with portable python and pip on the host without any system installations on the host. 
-You can install PyPi packages manually or bring it with you automatically by using [xxh-plugin-prerun-dotfiles](https://github.com/xxh/xxh-plugin-prerun-dotfiles). Also don't forget about xxh-plugins like [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump).
+You can install PyPi packages manually or bring them with you automatically by using [xxh-plugin-prerun-dotfiles](https://github.com/xxh/xxh-plugin-prerun-dotfiles). Also don't forget about xxh-plugins like [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump).
 
 #### Way 2. Using portable python on any xxh shell
 ```
@@ -159,8 +159,8 @@ anyhost> python --version
 Python 3.8.2
 anyhost> pip install pandas
 ```
-Using [xxh-plugin-prerun-python](https://github.com/xxh/xxh-plugin-prerun-python) you'll get portable 
-Python AppImage which can be used on host without python and with any xxh shell.
+Using [xxh-plugin-prerun-python](https://github.com/xxh/xxh-plugin-prerun-python) you'll get a portable 
+Python AppImage which can be used on a host without python and with any xxh shell.
 
 ### Using docker on host without root access
 
@@ -179,7 +179,7 @@ anyhost> xxh-docker-stop
 
 ### Bring dotfiles to xxh session
 
-There is [xxh-plugin-prerun-dotfiles](https://github.com/xxh/xxh-plugin-prerun-dotfiles) which creates config files 
+There is the [xxh-plugin-prerun-dotfiles](https://github.com/xxh/xxh-plugin-prerun-dotfiles) plugin which creates config files 
 when you go to the host using xxh. You can fork it and create your cozy settings once and forever.
 
 ### Seamless Oh My Zsh ([demo](https://asciinema.org/a/rCiT9hXQ5IdwqOwg6rifyFZzb))
@@ -201,8 +201,8 @@ osquery> SELECT * FROM users WHERE username='news';
 ```   
 
 ### All in one portable home
-The xxh is very agile. You can create your own `xxh-shell` (shell word means it has entrypoint) which has any portable tools
-that you could help you on the host. [Bash](https://github.com/xxh/xxh-shell-bash) xxh-shell is one of this 
+xxh is very agile. You can create your own `xxh-shell` (the shell part means it has an entrypoint) which can have any portable tools
+that could help you on the host. [Bash](https://github.com/xxh/xxh-shell-bash) xxh-shell is one of these 
 platforms that could be forked and stuffed.
 
 ## [Questions and answers](https://github.com/xxh/xxh/wiki)
@@ -231,11 +231,11 @@ platforms that could be forked and stuffed.
 
 ## Development
 In the [xxh-dev](https://github.com/xxh/xxh-dev) repo there is full [dockerised](https://www.docker.com/) environment 
-for development, testing and contribution. The process of testing and development is orchestrated by `xde` tool and as 
+for development, testing and contribution. The process of testing and development is orchestrated by `xde` tool and is as 
 easy as possible.
 
-**We have teams.** If you're in team it does not oblige to do something. The main goal of teams is to create group 
-of passionate people who could help or support in complex questions. Some people could be expert in one shell and 
+**We have teams.** If you're in a team it does not mean you have an obligation to do something. The main goal of teams is to create groups 
+of passionate people who could help or support solving complex problems. Some people could be an expert in one shell and a
 newbie in another shell and mutual assistance is the key to xxh evolution. [Ask join.](https://github.com/xxh/xxh/issues/50)
 
 ## Thanks
