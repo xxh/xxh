@@ -30,7 +30,7 @@ If you like the idea of xxh click ⭐ on the repo and <a href="https://twitter.c
 pip3 install xxh-xxh
 ```
 
-#### [pipx](https://pipxproject.github.io/pipx/) - good alternative to brew and pip, read [comparision](https://pipxproject.github.io/pipx/comparisons/)
+#### [pipx](https://pipxproject.github.io/pipx/) - good alternative to brew and pip, read [comparison](https://pipxproject.github.io/pipx/comparisons/)
 ```shell script
 pipx install xxh-xxh
 ```
@@ -123,7 +123,7 @@ This is experimental magic. Please read the text below twice.
 
 If you have shell access on the host or you're in a docker container and you can't ssh to it 
 then you can download and build hermetic xxh environment inplace. The `xxh local` command works 
-exectly like `xxh remote_host` and creates a hermetic environment in `~/.xxh` by default.
+exactly like `xxh remote_host` and creates a hermetic environment in `~/.xxh` by default.
 
 At this time we don't have portable build tools like `git`, `wget`, `curl`, `tar` and others which 
 could be required by some xxh package build scripts. When running `xxh local` it is expected that the tools are present on the host.
