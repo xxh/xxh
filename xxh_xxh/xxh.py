@@ -160,7 +160,7 @@ class xxh:
                 else:
                     sess.sendline(key_password)
 
-            if pattern == [3,4]:
+            if pattern in [3,4]:
                 # Expected:
                 #   <host>`s password:
                 if host_password is None:
