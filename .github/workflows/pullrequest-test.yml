@@ -24,7 +24,7 @@ jobs:
     - name: xde up
       run: cd ../xxh-dev && ./xde up
     - name: xde test
-      run: cd ../xxh-dev && ./xde test
+      run: cd ../xxh-dev && ./xde test --not-interactive
 
 
 
