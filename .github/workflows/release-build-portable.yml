@@ -1,4 +1,4 @@
-name: Build portable Fish shell
+name: Build portable xxh
 
 on:
   release:
