@@ -11,7 +11,14 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: '3.8'
-    - name: Install xxh
-      run: pip install .
-    - name: Run xxh
-      run: xxh --version
+    - name: Install xxh-dev
+      run: |
+        cd ..
+        git clone --depth 1 https://github.com/xxh/xxh-dev
+        cd xxh-dev
+        ./xde build
+    - name: Run test
+      run: ../xxh-dev/xde test
+
+
+
