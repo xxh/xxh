@@ -1,4 +1,4 @@
-name: Test xxh after merging new commits
+name: Test xxh after push
 
 on: push
 
