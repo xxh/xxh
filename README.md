@@ -1,7 +1,7 @@
 <p align="center">You stuffed command shell with aliases, tools and colors but you lose it all when using ssh. The mission of xxh is to bring your favorite shell wherever you go through ssh without root access and system installations.</p>
 
 <p align="center">  
-If you like the idea of xxh click ⭐ on the repo and <a href="https://twitter.com/intent/tweet?text=Bring%20your%20favorite%20shell%20wherever%20you%20go%20through%20the%20ssh.&url=https://github.com/xxh/xxh" target="_blank">tweet</a>.123
+If you like the idea of xxh click ⭐ on the repo and <a href="https://twitter.com/intent/tweet?text=Bring%20your%20favorite%20shell%20wherever%20you%20go%20through%20the%20ssh.&url=https://github.com/xxh/xxh" target="_blank">tweet</a>.1234
 </p>
 
 <a href='https://github.com/xxh/xxh#installation-methods'><img alt='[xxh demo]' src='https://raw.githubusercontent.com/xxh/static/master/xxh-demo2.gif'></a>
