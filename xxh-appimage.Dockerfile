@@ -10,4 +10,4 @@ RUN echo '/xxh' > requirements.txt && cat pre-requirements.txt >> requirements.t
 
 WORKDIR /xxh
 RUN python -m python_appimage build app /xxh/appimage
-CMD cp xxh-*.AppImage /result
+CMD cp xxh-*.AppImage /result && ls -sh1 /result
