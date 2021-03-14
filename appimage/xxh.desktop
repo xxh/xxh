@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=xxh
+Exec=xxh
+Comment=xxh on Python {{ python-fullversion }}
+Icon=python
+Categories=System;
+Terminal=true
