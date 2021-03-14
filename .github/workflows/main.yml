@@ -9,8 +9,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
     - name: Install xonsh shell
-      run: apt update && apt install -y git python3-pip && pip3 install xonsh
+      run: pip install xonsh
     - name: Build xxh-appimage
       run: xonsh xxh-appimage-build.xsh
     - name: Build xxh-portable-musl-alpine-build
