@@ -20,9 +20,9 @@ jobs:
         cd xxh-dev
         pip install -r requirements.txt
     - name: xde build
-      run: ../xxh-dev/xde build
+      run: cd ../xxh-dev && xde build
     - name: xde test
-      run: ../xxh-dev/xde test
+      run: cd ../xxh-dev && xde test
 
 
 
