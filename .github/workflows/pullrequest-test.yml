@@ -1,4 +1,4 @@
-name: Test xxh after push
+name: Test xxh after pull request
 
 on: pull_request
 
