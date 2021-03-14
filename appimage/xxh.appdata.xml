@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+    <id>xxh</id>
+    <metadata_license>BSD</metadata_license>
+    <project_license>BSD</project_license>
+    <name>xxh</name>
+    <summary>xxh on Python {{ python-fullversion }}</summary>
+    <description>
+        <p>Bring your favorite shell wherever you go through the ssh.</p>
+    </description>
+    <launchable type="desktop-id">xxh.desktop</launchable>
+    <url type="homepage">https://github.com/xxh/xxh</url>
+    <provides>
+        <binary>python{{ python-version }}</binary>
+    </provides>
+</component>
