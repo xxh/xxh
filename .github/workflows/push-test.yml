@@ -1,4 +1,4 @@
-name: Test xxh after push
+name: Test xxh on push
 
 on: push
 
