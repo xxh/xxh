@@ -49,7 +49,7 @@ brew install xxh
 #### Linux portable binary
 ```shell script
 mkdir ~/xxh && cd ~/xxh
-wget https://github.com/xxh/xxh-portable/raw/master/result/xxh-portable-musl-alpine-Linux-x86_64.tar.gz
+wget https://github.com/xxh/xxh/releases/download/0.8.7/xxh-portable-musl-alpine-Linux-x86_64.tar.gz
 tar -xzf xxh-portable-musl-alpine-Linux-x86_64.tar.gz
 ./xxh
 ```
@@ -57,7 +57,7 @@ tar -xzf xxh-portable-musl-alpine-Linux-x86_64.tar.gz
 #### Linux [AppImage](https://appimage.org/)
 ```shell script
 mkdir ~/xxh && cd ~/xxh
-wget -O xxh https://github.com/xxh/xxh-appimage/releases/download/continuous/xxh-release-x86_64.AppImage
+wget -O xxh https://github.com/xxh/xxh/releases/download/0.8.7/xxh-x86_64.AppImage
 chmod +x xxh && ./xxh
 ```
 
