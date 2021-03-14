@@ -11,5 +11,7 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: '3.8'
-    - name: Build xxh-appimage
-      run: ./xxh --version
+    - name: Install xxh
+      run: pip install .
+    - name: Run xxh
+      run: xxh --version
