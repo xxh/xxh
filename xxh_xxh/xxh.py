@@ -129,7 +129,7 @@ class xxh:
                 return {}
 
             if self.vverbose:
-                self.eprint(f'Pexpect caught pattern: {patterns[i]}')
+                self.eprint(f'Pexpect caught pattern: {patterns[pattern]}')
 
             if pattern in [0,1]:
                 # Expected:
