@@ -18,8 +18,10 @@ jobs:
         cd ..
         git clone --depth 1 https://github.com/xxh/xxh-dev
         cd xxh-dev
-        ./xde build
-    - name: Run test
+        pip install -r requirements.txt
+    - name: xde build
+      run: ../xxh-dev/xde build
+    - name: xde test
       run: ../xxh-dev/xde test
 
 
