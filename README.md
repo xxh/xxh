@@ -60,6 +60,7 @@ mkdir ~/xxh && cd ~/xxh
 wget -O xxh https://github.com/xxh/xxh/releases/download/0.8.7/xxh-x86_64.AppImage
 chmod +x xxh && ./xxh
 ```
+To run AppImage on Alpine linux install [alpine-pkg-glibc](https://github.com/sgerrand/alpine-pkg-glibc) with [localedef](https://github.com/sgerrand/alpine-pkg-glibc#locales).
 
 ## Shells
 
