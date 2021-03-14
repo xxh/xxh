@@ -17,6 +17,8 @@ jobs:
       run: pip install xonsh
     - name: Build xxh-portable-musl-alpine-build
       run: xonsh xxh-portable-musl-alpine-build.xsh
+    - name: Test
+      run: ls -lah build/xxh-portable-musl-alpine-Linux-x86_64.tar.gz
     - name: Release
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')

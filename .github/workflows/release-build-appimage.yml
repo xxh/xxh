@@ -17,6 +17,8 @@ jobs:
       run: pip install xonsh
     - name: Build xxh-appimage
       run: xonsh xxh-appimage-build.xsh
+    - name: Test
+      run: ls -lah build/xxh-x86_64.AppImage
     - name: Release
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
