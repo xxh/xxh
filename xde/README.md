@@ -4,19 +4,6 @@ Development and test environment for [xxh/xxh](https://github.com/xxh/xxh) conta
 network of docker containers which allow to test the ssh connections and xxh functionality 
 with or without [FUSE](https://github.com/AppImage/AppImageKit/wiki/FUSE). 
 
-Docker containers in the network:
-
-| Hostname  | Auth             | FUSE | rsync | users                            |
-|-----------|------------------|------|-------|----------------------------------|
-| start     | `./xde g start`  |      |       | `root`, `uxonsh`, `uzsh`, `ufish`, `ubash` |
-| ubuntu_k  | key              |      |       | `root`                           |
-| ubuntu_kf | key              | yes  |  yes  | `root`                           |
-| centos_k  | key              |      |       | `root`                           |
-| arch_p    | password         |      |       | `root`, `docker`                 |
-
-Every container has `/xxh` it is the volume. For example if you'll add a file to `tests/new.xsh` 
-it appears on all hosts immediately in `/xxh/xde/tests/new.xsh`.
-
 ## Workflow
 
 This workflow was originally developed on `ubuntu 20.04`, `docker 19.03.5`, `docker-compose 1.25.3`, `xonsh 0.9.14`, `pycharm 2019.3.3`.
@@ -63,6 +50,19 @@ echo $ZSH_THEME
 5. Run tests `./xde t` (don't forget about `./xde t --help` and fast mode `./xde t -sr`) 
 6. After end of work you can `./xde stop` or `./xde remove` the containers. 
 7. You rock! Try to find easter egg in the xxh code now.
+
+## Docker containers in the network
+
+| Hostname  | Auth             | FUSE | rsync | users                            |
+|-----------|------------------|------|-------|----------------------------------|
+| start     | `./xde g start`  |      |       | `root`, `uxonsh`, `uzsh`, `ufish`, `ubash` |
+| ubuntu_k  | key              |      |       | `root`                           |
+| ubuntu_kf | key              | yes  |  yes  | `root`                           |
+| centos_k  | key              |      |       | `root`                           |
+| arch_p    | password         |      |       | `root`, `docker`                 |
+
+Every container has `/xxh` it is the volume. For example if you'll add a file to `tests/new.xsh` 
+it appears on all hosts immediately in `/xxh/xde/tests/new.xsh`.
 
 ## xxh development environment tool
 
