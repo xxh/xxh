@@ -49,7 +49,7 @@ jobs:
           build/xxh-portable-musl-alpine-Linux-x86_64.tar.gz
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  publish-python:
+  publish-python-package:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
