@@ -24,7 +24,6 @@ This workflow was originally developed on `ubuntu 20.04`, `docker 19.03.5`, `doc
 0. Install packages: 
 ```bash
 apt install -y docker git  # Or install docker from official repo - https://docs.docker.com/engine/install/ubuntu/
-pip install -r requirements.txt
 ```
 
 1. Create directory for xxh development:
@@ -32,6 +31,7 @@ pip install -r requirements.txt
 mkdir -p ~/git && cd ~/git
 git clone https://github.com/xxh/xxh
 cd xxh/xde
+pip install -r requirements.txt
 ./xde build             # build docker containers
 ./xde up                # run docker containers
 ./xde test              # run tests first time
