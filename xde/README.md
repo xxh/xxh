@@ -8,7 +8,7 @@ with or without [FUSE](https://github.com/AppImage/AppImageKit/wiki/FUSE).
 
 This workflow was originally developed on `ubuntu 20.04`, `docker 19.03.5`, `docker-compose 1.25.3`, `xonsh 0.9.14`, `pycharm 2019.3.3`.
 
-1. Create base environment:
+1. Creating base environment and running test first time:
 ```bash
 apt install -y docker git  # Or install docker from official repo - https://docs.docker.com/engine/install/ubuntu/
 mkdir -p ~/git && cd ~/git
