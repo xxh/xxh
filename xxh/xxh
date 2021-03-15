@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import os, sys
 from shutil import which
 from xxh_xxh.xxh import xxh, eeprint
 

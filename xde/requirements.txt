@@ -1,0 +1,9 @@
+docker-compose
+argparse
+pyyaml
+setuptools
+wheel
+twine
+xonsh
+argcomplete
+xontrib-argcomplete

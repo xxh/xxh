@@ -3,7 +3,7 @@ name: Test xxh on pull request
 on: pull_request
 
 jobs:
-  deploy:
+  test-full:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -11,20 +11,14 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: '3.8'
-    - name: Install xonsh
-      run: pip install xonsh
-    - name: Install xxh-dev
-      run: |
-        cd ..
-        git clone --depth 1 https://github.com/xxh/xxh-dev
-        cd xxh-dev
-        pip install -r requirements.txt
+    - name: Install xde
+      run: cd xde && pip install -r requirements.txt
     - name: xde build
-      run: cd ../xxh-dev && ./xde build
+      run: cd xde && ./xde build
     - name: xde up
-      run: cd ../xxh-dev && ./xde up
+      run: cd xde && ./xde up
     - name: xde test
-      run: cd ../xxh-dev && ./xde test --not-interactive
+      run: cd xde && ./xde test --not-interactive
 
 
 

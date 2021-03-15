@@ -1,0 +1,11 @@
+#!/usr/bin/env xonsh
+
+import os, sys, argparse
+
+argp = argparse.ArgumentParser(description=f"Fast testing without rebuilding.")
+argp.add_argument('-sr', '--skip-repos-update', default=True, action='store_true', help="Skip repos update before test running.")
+argp.add_argument('-s', '--shell', default='xxh-shell-xonsh', help="Shells to test")
+argp.add_argument('-H', '--hosts', default='ubuntu_k', help="Comma separated hosts list")
+opt = argp.parse_args()
+
+./xde test @(['-sr'] if opt.skip_repos_update else []) --hosts @(opt.hosts) -s @(opt.shell)

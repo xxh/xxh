@@ -1,0 +1,60 @@
+version: "3"
+services:
+  start:
+    hostname: start
+    image: xxh/xxh-dev-start
+    depends_on:
+      - ubuntu_k
+      - ubuntu_kf
+      - arch_p
+      - centos_k
+    volumes:
+      - ..:/xxh
+    working_dir: /root
+
+  ubuntu_k:
+    hostname: ubuntu_k
+    image: xxh/xxh-dev-ubuntu-k
+    volumes:
+      - ..:/xxh
+
+  ubuntu_kf:
+    hostname: ubuntu_kf
+    image: xxh/xxh-dev-ubuntu-kf
+    volumes:
+      - ..:/xxh
+    cap_add:
+      - SYS_ADMIN
+      - MKNOD
+    devices:
+      - /dev/fuse
+    security_opt:
+      - apparmor:unconfined
+
+  centos_k:
+    hostname: centos_k
+    image: xxh/xxh-dev-centos-k
+    volumes:
+      - ..:/xxh
+
+  arch_p:
+    hostname: arch_p
+    image: yantis/archlinux-small-ssh-hpn  # https://github.com/yantis/docker-archlinux-ssh-hpn
+    volumes:
+      - ..:/xxh
+
+#  # Alpine is not supported (https://github.com/AppImage/AppImageKit/issues/1015)
+#  alpine_p:
+#    hostname: alpine_without_fuse
+#    image: linuxserver/openssh-server
+#    environment:
+#      - PUID=1000
+#      - PGID=1000
+#      - TZ=Europe/London
+#      - USER_NAME=luke
+#      - USER_PASSWORD=skywalker
+#      - PASSWORD_ACCESS=true
+#      - SUDO_ACCESS=true
+#      - PUBLIC_KEY_FILE=/xxh-dev/keys/id_rsa.pub
+#    volumes:
+#      - ..:/xxh

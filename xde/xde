@@ -1,0 +1,175 @@
+#!/usr/bin/env xonsh
+# PYTHON_ARGCOMPLETE_OK
+import os, sys, argparse, yaml, requests, argcomplete
+from argcomplete.completers import ChoicesCompleter
+
+class XxhDevEnv(object):
+    def __init__(self):
+        with open('docker-compose.yml') as docker_compose:
+            self.containers = sorted(yaml.load(docker_compose, Loader=yaml.FullLoader)['services'].keys())
+        parser = argparse.ArgumentParser(
+            usage='xde <command>\n\n'
+                + 'xxh development environment commands:\n\n'
+                + '   clone       Git clone repos from https://github.com/xxh\n'
+                + '   build       Build the docker containers and git clone the xxh repos if needed\n'
+                + '   up          Docker-compose up the containers\n'
+                + '   test    t   Run tests\n'
+                + '   goto    g   Open bash by the container name part\n'
+                + '   start       Docker-compose start the containers\n'
+                + '   stop        Docker-compose stop the containers\n'
+                + '   remove      Docker-compose remove the containers\n\n'
+                + 'Try `./xde <command> --help` to get more info.\n')
+        parser.add_argument('command', help='Command to run').completer=ChoicesCompleter(('clone', 'build', 'up', 'test', 'goto', 'start', 'stop', 'remove'))
+        argcomplete.autocomplete(parser)
+        args = parser.parse_args(sys.argv[1:2])
+        if not hasattr(self, args.command):
+            print('Unrecognized command\n')
+            parser.print_help()
+            sys.exit(1)
+
+        getattr(self, args.command)()
+
+    def clone(self):
+        parser = argparse.ArgumentParser(description='')
+        parser.add_argument('-n','--name', help=f"Clone repo by name. Example: xxh")
+        parser.add_argument('-p','--prefix', help=f"Clone repo by prefix. Example: xxh-shell")
+        parser.add_argument('-s','--substr', help=f"Clone repo by substring. Example: fish")
+        parser.usage = parser.format_usage().replace('usage: xde ', 'xde clone ')
+        argcomplete.autocomplete(parser)
+        args = parser.parse_args(sys.argv[2:])
+
+        data = requests.get('https://api.github.com/orgs/xxh/repos')
+        for r in data.json():
+            repo_name = r['name']
+
+            if args.name and not repo_name == args.name:
+                continue
+            if args.prefix and not repo_name.startswith(args.prefix):
+                continue
+            if args.substr and not (args.substr in repo_name):
+                continue
+
+            repo_path = p'..' / repo_name
+            if not repo_path.exists():
+                print(f"Git clone {repo_name} to {repo_path}")
+                git clone -q @(r['clone_url']) @(repo_path)
+            else:
+                print(f"Already exists: {repo_path}")
+
+    def build(self):
+        base_path = pf"{os.path.realpath(__file__)}"
+        xxh_path = base_path.parent.parent
+
+#        clone_repos = []
+#        repo_base_path = 'https://github.com/xxh'
+
+        parser = argparse.ArgumentParser(description='')
+        parser.add_argument('-v', '--verbose', action='store_true', help=f"Verbose mode")
+#        parser.add_argument('-rb', '--repo-base', default=repo_base_path, help=f"Repos base path. Default: {repo_base_path}")
+        parser.usage = parser.format_usage().replace('usage: xde ', 'xde remove ')
+        argcomplete.autocomplete(parser)
+        args = parser.parse_args(sys.argv[2:])
+
+#        repo_base_path = args.repo_base
+        quiet = [] if args.verbose else ['-q']
+
+#        for repo in clone_repos:
+#            if not (xxh_path/repo).exists():
+#                print(f'git clone {repo}')
+#                git clone @(quiet) @(repo_base_path)/@(repo) @(xxh_path/repo)
+
+        for dockerfile in sorted(p'.'.glob('xxh-dev-*.Dockerfile')):
+            container_name = str(dockerfile).split('.Dockerfile')[0]
+            print(f'docker build {container_name}')
+            docker build . -f @(dockerfile) -t xxh/@(container_name) @(quiet)
+
+    def up(self):
+        parser = argparse.ArgumentParser(description='')
+        parser.usage = parser.format_usage().replace('xde ', 'xde up ')
+        argcomplete.autocomplete(parser)
+        args = parser.parse_args(sys.argv[2:])
+
+        docker-compose up -d
+
+    def start(self):
+        parser = argparse.ArgumentParser(description='')
+        parser.usage = parser.format_usage().replace('xde ', 'xde start ')
+        argcomplete.autocomplete(parser)
+        args = parser.parse_args(sys.argv[2:])
+
+        docker-compose start
+
+    def stop(self):
+        parser = argparse.ArgumentParser(description='')
+        parser.usage = parser.format_usage().replace('xde ', 'xde stop ')
+        argcomplete.autocomplete(parser)
+        args = parser.parse_args(sys.argv[2:])
+
+        docker-compose stop
+
+    def remove(self):
+        parser = argparse.ArgumentParser(description='')
+        parser.add_argument('-f', '--full', action='store_true', help=f"Full remove: containers, images")
+        parser.usage = parser.format_usage().replace('usage: xde ', 'xde remove ')
+        argcomplete.autocomplete(parser)
+        args = parser.parse_args(sys.argv[2:])
+
+        docker-compose rm -f -s
+        if args.full:
+            containers = ['xxh/'+str(c).replace('.Dockerfile','') for c in p'.'.glob('xxh-dev-*.Dockerfile')]
+            docker image rm @(containers)
+
+    def t(self):
+        return self.test()
+
+    def test(self):
+        it = [] if '--not-interactive' in sys.argv or '-ni' in sys.argv else ['-it']
+        r = ![docker exec @(it) xde_start_1 xonsh /xxh/xde/tests/tests.xsh @(sys.argv[2:])]
+        sys.exit(r.rtn)
+
+    def g(self):
+        return self.goto()
+
+    def goto(self):
+        parser = argparse.ArgumentParser(description='')
+        parser.add_argument('container', help=f"Container name: {', '.join(self.containers)}")
+        parser.usage = parser.format_usage().replace('usage: xde ', 'xde goto ')
+        argcomplete.autocomplete(parser)
+        args = parser.parse_args(sys.argv[2:])
+
+        match_containers = [c for c in self.containers if args.container in c]
+        matched_cnt = len(match_containers)
+
+        if matched_cnt == 0:
+            print(f"Container {args.container} not found among: {', '.join(self.containers)}")
+            sys.exit(1)
+        elif matched_cnt == 1 or match_containers[0] == args.container:
+            args.container = match_containers[0]
+        else:
+            print(f"Container '{args.container}' found many times: {', '.join(match_containers)}")
+            sys.exit(1)
+
+        container_name = f'xde_{args.container}_1'
+        docker exec -it @(container_name) bash
+
+    def release(self):
+        parser = argparse.ArgumentParser(description='')
+        parser.add_argument('-r', '--remove', action='store_true', help=f"Remove build dirs after release")
+        parser.usage = parser.format_usage().replace('xde ', 'xde release ')
+        argcomplete.autocomplete(parser)
+        args = parser.parse_args(sys.argv[2:])
+
+        cd ../xxh && python3 setup.py sdist bdist_wheel && twine upload dist/*
+
+        if args.remove:
+            print('Remove build dirs')
+            rm -rf ./build ./dist ./xxh_xxh.egg-info
+
+    def portable(self):
+        if p'../xxh-portable'.exists():
+            cd ../xxh-portable
+            docker image rm xxh/xxh-portable-musl-alpine
+            ./build-xxh-portable-musl-alpine.sh
+
+if __name__ == '__main__':
+    XxhDevEnv()
