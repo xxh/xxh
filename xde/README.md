@@ -21,13 +21,9 @@ it appears on all hosts immediately in `/xxh/xde/tests/new.xsh`.
 
 This workflow was originally developed on `ubuntu 20.04`, `docker 19.03.5`, `docker-compose 1.25.3`, `xonsh 0.9.14`, `pycharm 2019.3.3`.
 
-0. Install packages: 
+1. Create base environment:
 ```bash
 apt install -y docker git  # Or install docker from official repo - https://docs.docker.com/engine/install/ubuntu/
-```
-
-1. Create directory for xxh development:
-```bash
 mkdir -p ~/git && cd ~/git
 git clone https://github.com/xxh/xxh
 cd xxh/xde
@@ -37,7 +33,7 @@ pip install -r requirements.txt
 ./xde test              # run tests first time
 ```
 
-2. Open `~/git/xxh` in your IDE to make changes and commit many repos.
+2. Open `~/git/xxh` in your IDE to make changes and commit.
 3. Now you can go to `start` host and try your first connect using xxh:
 ```shell script
 ./xde goto start
