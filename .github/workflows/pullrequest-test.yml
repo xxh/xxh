@@ -3,7 +3,7 @@ name: Test xxh on pull request
 on: pull_request
 
 jobs:
-  deploy:
+  test-full:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
