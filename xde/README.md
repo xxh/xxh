@@ -1,6 +1,8 @@
+# Xxh Development Environment (xde)
+
 Development and test environment for [xxh/xxh](https://github.com/xxh/xxh) contains 
 network of docker containers which allow to test the ssh connections and xxh functionality 
-with or without [AppImage FUSE](https://github.com/AppImage/AppImageKit/wiki/FUSE). 
+with or without [FUSE](https://github.com/AppImage/AppImageKit/wiki/FUSE). 
 
 Docker containers in the network:
 
