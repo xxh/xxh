@@ -80,7 +80,7 @@ Currently supported OS for target host is Linux on x86_64.
 ### Prerun plugins
 [Prerun plugins](https://github.com/xxh/xxh/wiki#plugins) allow you to bring any portable tools, dotfiles or aliases to xxh session before running shell. 
 
-Pinned plugins: **[core](https://github.com/xxh/xxh-plugin-prerun-core)** (xxh-sudo, xxh-screen), **[dotfiles](https://github.com/xxh/xxh-plugin-prerun-dotfiles)**, **[docker](https://github.com/xxh/xxh-plugin-prerun-docker)**, **[python](https://github.com/xxh/xxh-plugin-prerun-python)**, **[xxh](https://github.com/xxh/xxh-plugin-prerun-xxh)**, **[vim](https://github.com/xxh/xxh-plugin-prerun-vim)**. 
+Pinned plugins: **[core](https://github.com/xxh/xxh-plugin-prerun-core)** (xxh-sudo, xxh-screen), **[dotfiles](https://github.com/xxh/xxh-plugin-prerun-dotfiles)**, **[docker](https://github.com/xxh/xxh-plugin-prerun-docker)**, **[python](https://github.com/xxh/xxh-plugin-prerun-python)**, **[xxh](https://github.com/xxh/xxh-plugin-prerun-xxh)**, **[vim](https://github.com/xxh/xxh-plugin-prerun-vim)**, **[zoxide](https://github.com/xxh/xxh-plugin-prerun-zoxide)**. 
 
 ## Usage
 Use `xxh` instead of `ssh` when connecting to Linux hosts without changing ssh arguments:
