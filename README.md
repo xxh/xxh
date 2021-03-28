@@ -115,6 +115,7 @@ xxh +I https://github.com/xxh/xxh-shell-example                  # short url for
 xxh +I https://github.com/xxh/xxh-shell-example/tree/mybranch    # short url for github only, for other sources use examples below or add support
 xxh +I xxh-shell-example+git+https://github.com/xxh/xxh-shell-example                 # long url for any git repo
 xxh +I xxh-shell-example+git+https://github.com/xxh/xxh-shell-example/tree/mybranch   # github only branch support
+xxh +I xxh-shell-example+git+git@github.com:githubuser/xxh-shell-example.git          # install from private repository using ssh
 xxh +I xxh-shell-example+path+/home/user/my-xxh-dev/xxh-shell-example                 # install from local path
 ```
 
