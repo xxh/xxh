@@ -18,7 +18,7 @@ If you like the idea of xxh click ⭐ on the repo and <a href="https://twitter.c
 </tr>
 <tr style="border: 0px !important;">
 <td valign="top" style="border: 0px !important;"><b>Be open and fork-ready</b>. Every xxh repo could be forked, customized and reused without waiting for a package management system, xxh release or any third party packages. Five shells are currently supported and the and more could be added by the community.</td>
-<td valign="top" style="border: 0px !important;"><b>Do more</b>. The xxh packages are not only about shells. Any type of tool or code could be behind an entrypoint. If you want to run <a href="https://github.com/browsh-org/browsh">browsh</a> on the remote host just put it as an entrypoint in the xxh-shell.</td>
+<td valign="top" style="border: 0px !important;"><b>Do more</b>. The xxh packages are not only about shells. Any type of tool or code could be behind an entrypoint. If you want to run <a href="https://github.com/browsh-org/browsh">browsh</a> on the remote host just put it portable version as an entrypoint in the xxh-shell.</td>
 <td valign="top" style="border: 0px !important;"><b>Chameleon</b>. Switching the shells is as easy as possible and you don't have to be locked in to one shell. Choose your current shell based on the task you want to solve: <code>xxh anyhost +s xonsh</code> for a python environment, osquery for simple querying, fish for modern features or time-tested zsh and bash for speed. </td>   
 </tr>
 </tbody>
