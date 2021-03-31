@@ -25,7 +25,6 @@ RUN cp libpython$PYTHON_LIB_VER.a /usr/lib
 RUN echo 'Add xxh'
 
 WORKDIR /xxh
-#RUN git clone --depth 1 https://github.com/xxh/xxh
 ENV LDFLAGS "-static -l:libpython3.8.a"
 RUN nuitka3 --python-flag=no_site --python-flag=no_warnings --show-progress --standalone --follow-imports xxh
 RUN ls -la
