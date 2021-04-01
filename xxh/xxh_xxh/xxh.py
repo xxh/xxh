@@ -131,7 +131,7 @@ class xxh:
             if self.vverbose:
                 self.eprint(f'Pexpect caught pattern: {patterns[pattern]}')
 
-            if pattern in [0,1]:
+            if pattern in [0, 1]:
                 # Expected:
                 #   The authenticity of host '<...>' can't be established.
                 #   ECDSA key fingerprint is <...>
@@ -154,13 +154,15 @@ class xxh:
             if pattern == 2:
                 # Expected:
                 #   Enter passphrase for key '<keyfile>':
-                if key_password is None:
+                if user_key_password:
+                    sess.sendline(user_key_password)
+                elif key_password:
+                    sess.sendline(key_password)
+                else:
                     user_key_password = getpass.getpass(prompt=(sess.before + sess.after).decode("utf-8")+' ')
                     sess.sendline(user_key_password)
-                else:
-                    sess.sendline(key_password)
 
-            if pattern in [3,4]:
+            if pattern in [3, 4]:
                 # Expected:
                 #   <host>`s password:
                 if host_password is None:
@@ -177,22 +179,22 @@ class xxh:
                 output = output[3:] if output.startswith(' \r\n') else output
                 result = {
                     'user_host_accept': user_host_accept,
-                    'user_host_password':user_host_password,
-                    'user_key_password':user_key_password,
+                    'user_host_password': user_host_password,
+                    'user_key_password': user_key_password,
                     'output':output
                 }
 
                 return result
 
-            if pattern in [6,7]:
+            if pattern in [6, 7]:
                 # Prompt
                 print(sess.before.decode("utf-8"))
                 sess.interact()
 
                 result = {
                     'user_host_accept': user_host_accept,
-                    'user_host_password':user_host_password,
-                    'user_key_password':user_key_password
+                    'user_host_password': user_host_password,
+                    'user_key_password': user_key_password
                 }
                 return result
 
