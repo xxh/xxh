@@ -46,6 +46,11 @@ conda install xxh-xxh
 brew install xxh
 ```
 
+#### [Macports](https://www.macports.org/)
+```shell script
+sudo port install xxh
+```
+
 #### Linux portable binary
 ```shell script
 mkdir ~/xxh && cd ~/xxh
