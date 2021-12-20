@@ -6,7 +6,7 @@ ADD . /xxh
 ENV PYTHON_VER 3.8.2
 ENV PYTHON_LIB_VER 3.8
 
-RUN apk update && apk add --update musl-dev gcc python3-dev py3-pip chrpath git vim mc wget make openssh-client
+RUN apk update && apk add --update musl-dev gcc patchelf python3-dev py3-pip chrpath git vim mc wget make openssh-client
 RUN pip3 install -U pip
 RUN pip3 install -U "https://github.com/Nuitka/Nuitka/archive/factory.zip"
 RUN pip3 install pexpect pyyaml
