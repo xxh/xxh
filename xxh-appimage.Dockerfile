@@ -10,5 +10,5 @@ WORKDIR /xxh/appimage
 RUN echo '/xxh' > requirements.txt && cat pre-requirements.txt >> requirements.txt
 
 WORKDIR /xxh
-RUN python -m python_appimage build app /xxh/appimage
+RUN python -m python_appimage build app -p 3.8 /xxh/appimage
 CMD cp /xxh/xxh-x86_64.AppImage /result && ls -sh1 /result
