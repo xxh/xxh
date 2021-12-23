@@ -110,8 +110,8 @@ xxh local +s xonsh                                # Experimental: build xxh envi
 ```
 For reusing arguments and simplifying xxh usage (like shortening to `xxh anyhost`) there is a [config file](https://github.com/xxh/xxh/wiki#config-file).
 
-**Why the plus sign for the xxh arguments?** The xxh is using the plus sign for the xxh arguments to save the ability to use minus sign for the original ssh arguments. This allows just replace the first two letters in the `ssh` command to convert it to the `xxh` command.
-
+**Why the plus sign for the xxh arguments?** The xxh is using the plus sign for the xxh arguments to save the ability to use the minus sign for the original ssh arguments. This allows just replace the first two letters in the `ssh` command to convert it to the `xxh` command.
+ 
 ### Installing xxh packages
 ```bash
 xxh [+I xxh-package +I ...] [+L] [+RI xxh-package +RI ...] [+R xxh-package +R ...]
