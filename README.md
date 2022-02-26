@@ -1,6 +1,6 @@
 <p align="center">You stuffed command shell with aliases, tools and colors but you lose it all when using ssh. The mission of xxh is to bring your favorite shell wherever you go through ssh without root access and system installations.</p>
 
-<p align="center">
+<p align="center">  
 If you like the idea of xxh click ⭐ on the repo and <a href="https://twitter.com/intent/tweet?text=Bring%20your%20favorite%20shell%20wherever%20you%20go%20through%20the%20ssh.&url=https://github.com/xxh/xxh" target="_blank">tweet</a>.
 </p>
 
@@ -19,11 +19,12 @@ If you like the idea of xxh click ⭐ on the repo and <a href="https://twitter.c
 <tr style="border: 0px !important;">
 <td valign="top" style="border: 0px !important;"><b>Be open and fork-ready</b>. Every xxh repo could be forked, customized and reused without waiting for a package management system, xxh release or any third party packages. Five shells are currently supported and more could be added by the community.</td>
 <td valign="top" style="border: 0px !important;"><b>Do more</b>. The xxh packages are not only about shells. Any type of tool or code could be behind an entrypoint. If you want to run <a href="https://github.com/browsh-org/browsh">browsh</a> on the remote host, just put its portable version as an entrypoint in the xxh-shell.</td>
-<td valign="top" style="border: 0px !important;"><b>Chameleon</b>. Switching the shells is as easy as possible and you don't have to be locked in to one shell. Choose your current shell based on the task you want to solve: <code>xxh anyhost +s xonsh</code> for a python environment, osquery for simple querying, fish for modern features or time-tested zsh and bash for speed. </td>
+<td valign="top" style="border: 0px !important;"><b>Chameleon</b>. Switching the shells is as easy as possible and you don't have to be locked in to one shell. Choose your current shell based on the task you want to solve: <code>xxh anyhost +s xonsh</code> for a python environment, osquery for simple querying, fish for modern features or time-tested zsh and bash for speed. </td>   
 </tr>
 </tbody>
 </table>
 
+ 
 ## Installation methods
 #### [PyPi 3](https://pypi.org/project/xxh-xxh/)
 ```shell script
@@ -112,6 +113,7 @@ For reusing arguments and simplifying xxh usage (like shortening to `xxh anyhost
 
 **Why the plus sign for the xxh arguments?** The xxh is using the plus sign for the xxh arguments to save the ability to use the minus sign for the original ssh arguments. This allows just replace the first two letters in the `ssh` command to convert it to the `xxh` command. Also see the [discussion](https://github.com/xxh/xxh/issues/129).
 
+ 
 ### Installing xxh packages
 ```bash
 xxh [+I xxh-package +I ...] [+L] [+RI xxh-package +RI ...] [+R xxh-package +R ...]
@@ -131,11 +133,11 @@ xxh +I xxh-shell-example+path+/home/user/my-xxh-dev/xxh-shell-example           
 
 This is experimental magic. Please read the text below twice.
 
-If you have shell access on the host or you're in a docker container and you can't ssh to it
-then you can download and build hermetic xxh environment inplace. The `xxh local` command works
+If you have shell access on the host or you're in a docker container and you can't ssh to it 
+then you can download and build hermetic xxh environment inplace. The `xxh local` command works 
 exactly like `xxh remote_host` and creates a hermetic environment in `~/.xxh` by default.
 
-At this time we don't have portable build tools like `git`, `wget`, `curl`, `tar` and others which
+At this time we don't have portable build tools like `git`, `wget`, `curl`, `tar` and others which 
 could be required by some xxh package build scripts. When running `xxh local` it is expected that the tools are present on the host.
 
 To run xxh inplace on Linux x86_64 just copy and paste these bash commands:
@@ -146,7 +148,7 @@ XH=~/.xxh \
  && ( [[ -x $(command -v curl) ]] && curl -L $XD || wget -O- $XD ) | tar zxf - xxh \
  && echo 'Usage: ./xxh local [+s xonsh/zsh/fish/osquery/bash]'
 ```
-Next time you're on host just run `~/.xxh/xxh local` and you will enter your xxh environment.
+Next time you're on host just run `~/.xxh/xxh local` and you will enter your xxh environment. 
 
 ## Examples of use cases
 ### Python with pip everywhere without installation
@@ -180,7 +182,7 @@ xxh +RI xxh-plugin-prerun-docker
 xxh anyhost +if
 
 anyhost> xxh-docker-run
-anyhost> docker ps
+anyhost> docker ps                                                                                                                                                                                                                            
 CONTAINER ID        IMAGE               COMMAND
 anyhost> docker run --rm hello-world | grep Hello
 Hello from Docker!
@@ -194,9 +196,9 @@ when you go to the host using xxh. You can fork it and create your cozy settings
 
 ### Seamless Oh My Zsh ([demo](https://asciinema.org/a/rCiT9hXQ5IdwqOwg6rifyFZzb))
 ```shell script
-source xxh.zsh anyhost +I xxh-plugin-zsh-ohmyzsh +if +q
+source xxh.zsh anyhost +I xxh-plugin-zsh-ohmyzsh +if +q 
 ```
-This command brings your current Oh My Zsh session theme to the xxh session. If you need more complex settings just fork
+This command brings your current Oh My Zsh session theme to the xxh session. If you need more complex settings just fork 
 the [xxh-plugin-zsh-ohmyzsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh) and hack it.
 
 ### Read host as a table with [osquery](https://github.com/xxh/xxh-shell-osquery)
@@ -208,7 +210,7 @@ osquery> SELECT * FROM users WHERE username='news';
 +-----+-----+----------+-------------+-----------------+-------------------+
 | 9   | 9   | news     | news        | /var/spool/news | /usr/sbin/nologin |
 +-----+-----+----------+-------------+-----------------+-------------------+
-```
+```   
 
 ### All in one portable home
 xxh is very agile. You can create your own `xxh-shell` (the shell part means it has an entrypoint) which can have any portable tools
@@ -244,7 +246,7 @@ platforms that could be forked and stuffed.
 ### xxh Development Environment
 
 In the [xxh development environment](https://github.com/xxh/xxh/tree/master/xde) there is full [dockerised](https://www.docker.com/) environment
-for development, testing and contribution. The process of testing and development is orchestrated by `xde` tool and is as
+for development, testing and contribution. The process of testing and development is orchestrated by `xde` tool and is as 
 easy as possible.
 
 ### Vagrant based Plugin Development
