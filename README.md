@@ -251,6 +251,8 @@ easy as possible.
 
 To develop plugins, [Vagrant](https://www.vagrantup.com) supports starting [many configurations](https://app.vagrantup.com/boxes/search) of virtual machines using Virtualbox.
 
+See [the Plugin Development folder](./plugin-development) for more details
+
 ### We have teams
 
 If you're in a team it does not mean you have an obligation to do something. The main goal of teams is to create groups
