@@ -23,11 +23,9 @@ If you like the idea of xxh click ⭐ on the repo and <a href="https://twitter.c
 </tr>
 </tbody>
 </table>
-
-
  
 ## Installation methods
-#### [PyPi 3](https://pypi.org/project/xxh-xxh/)
+#### [PyPi 3](https://pypi.org/project/xxh-xxh/) 
 ```shell script
 pip3 install xxh-xxh
 ```
@@ -75,7 +73,7 @@ Currently supported OS for target host is Linux on x86_64.
 
 | xxh-shell                                                             | status     | [xxh-plugins](https://github.com/xxh/xxh/wiki#plugins) | [seamless](https://github.com/xxh/xxh/wiki#seamless-mode) | demo |
 |-----------------------------------------------------------------------|------------|-------------|---------|------|
-| **[xonsh](https://github.com/xxh/xxh-shell-xonsh)**                   | stable     | [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump), [[+]](https://github.com/xxh/xxh-plugin-xonsh-example) | `xxh.xsh` | <a href="https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7" target="_blank">demo</a> |
+| **[xonsh](https://github.com/xxh/xxh-shell-xonsh)**                   | stable     | [autojump](https://github.com/xxh/xxh-plugin-xonsh-autojump), [[+]](https://github.com/xxh/xxh-plugin-xonsh-example) | `xxh.xsh` | <a href="https://asciinema.org/a/osSEzqnmH9pMYEZibNe2K7ZL7" target="_blank">demo</a> | 
 | **[zsh](https://github.com/xxh/xxh-shell-zsh)**                       | stable     | [ohmyzsh](https://github.com/xxh/xxh-plugin-zsh-ohmyzsh), [p10k](https://github.com/xxh/xxh-plugin-zsh-powerlevel10k), [[+]](https://github.com/xxh/xxh-plugin-zsh-example)  | `xxh.zsh`   |  <a href="https://asciinema.org/a/rCiT9hXQ5IdwqOwg6rifyFZzb" target="_blank">demo</a> |
 | **[fish](https://github.com/xxh/xxh-shell-fish)**                     | stable     | [ohmyfish](https://github.com/xxh/xxh-plugin-fish-ohmyfish), [fisher](https://github.com/xxh/xxh-plugin-fish-fisher), [userconfig](https://github.com/xxh/xxh-plugin-fish-userconfig), [[+]](https://github.com/xxh/xxh-plugin-fish-example) | [todo](https://github.com/xxh/xxh/issues/74) |
 | **[bash](https://github.com/xxh/xxh-shell-bash)**                     | stable     | [ohmybash](https://github.com/xxh/xxh-plugin-bash-ohmybash), [[+]](https://github.com/xxh/xxh-plugin-bash-example) | `xxh.bash`  | <a href="https://asciinema.org/a/314508" target="_blank">demo</a> |
@@ -83,10 +81,10 @@ Currently supported OS for target host is Linux on x86_64.
 | **[fish-appimage](https://github.com/xxh/xxh-shell-fish-appimage)**   | alpha      |             | | |
 | **[elvish](https://github.com/krageon/xxh-shell-elvish)**   | alpha      |             | | |
 
-[Search xxh shell on Github](https://github.com/search?q=xxh-shell&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-shell) or [create your shell entrypoint](https://github.com/xxh/xxh-shell-example) to use another portable shell.
+[Search xxh shell on Github](https://github.com/search?q=xxh-shell&type=Repositories) or [Bitbucket](https://bitbucket.org/repo/all?name=xxh-shell) or [create your shell entrypoint](https://github.com/xxh/xxh-shell-example) to use another portable shell.  
 
 ### Prerun plugins
-[Prerun plugins](https://github.com/xxh/xxh/wiki#plugins) allow you to bring any portable tools, dotfiles or aliases to xxh session before running shell.
+[Prerun plugins](https://github.com/xxh/xxh/wiki#plugins) allow you to bring any portable tools, dotfiles or aliases to xxh session before running shell. 
 
 Pinned plugins: **[core](https://github.com/xxh/xxh-plugin-prerun-core)** (xxh-sudo, xxh-screen, xxh-tmux), **[dotfiles](https://github.com/xxh/xxh-plugin-prerun-dotfiles)**, **[docker](https://github.com/xxh/xxh-plugin-prerun-docker)**, **[python](https://github.com/xxh/xxh-plugin-prerun-python)**, **[xxh](https://github.com/xxh/xxh-plugin-prerun-xxh)**, **[vim](https://github.com/xxh/xxh-plugin-prerun-vim)**, **[zoxide](https://github.com/xxh/xxh-plugin-prerun-zoxide)**, **[starship](https://github.com/izissise/xxh-plugin-prerun-starship)**. There is [cookiecutter template to create prerun plugin](https://github.com/xxh/cookiecutter-xxh-plugin-prerun).
 
@@ -113,8 +111,6 @@ xxh local +s xonsh                                # Experimental: build xxh envi
 For reusing arguments and simplifying xxh usage (like shortening to `xxh anyhost`) there is a [config file](https://github.com/xxh/xxh/wiki#config-file).
 
 **Why the plus sign for the xxh arguments?** The xxh is using the plus sign for the xxh arguments to save the ability to use the minus sign for the original ssh arguments. This allows just replace the first two letters in the `ssh` command to convert it to the `xxh` command. Also see the [discussion](https://github.com/xxh/xxh/issues/129).
-
-
  
 ### Installing xxh packages
 ```bash
@@ -161,7 +157,7 @@ xxh anyhost +s xonsh
 anyhost> python --version
 Python 3.8.2
 ```
-You'll get python-powered [xonsh](https://xon.sh) shell with portable python and pip on the host without any system installations on the host.
+You'll get python-powered [xonsh](https://xon.sh) shell with portable python and pip on the host without any system installations on the host. 
 You can install PyPi packages manually or bring them with you automatically by using [xxh-plugin-prerun-dotfiles](https://github.com/xxh/xxh-plugin-prerun-dotfiles). Also don't forget about xxh-plugins like [zoxide](https://github.com/xxh/xxh-plugin-prerun-zoxide).
 
 #### Way 2. Using portable python on any xxh shell
@@ -173,7 +169,7 @@ anyhost> python --version
 Python 3.8.2
 anyhost> pip install pandas
 ```
-Using [xxh-plugin-prerun-python](https://github.com/xxh/xxh-plugin-prerun-python) you'll get a portable
+Using [xxh-plugin-prerun-python](https://github.com/xxh/xxh-plugin-prerun-python) you'll get a portable 
 Python AppImage which can be used on a host without python and with any xxh shell.
 
 ### Using docker on host without root access
@@ -193,7 +189,7 @@ anyhost> xxh-docker-stop
 
 ### Bring dotfiles to xxh session
 
-There is the [xxh-plugin-prerun-dotfiles](https://github.com/xxh/xxh-plugin-prerun-dotfiles) plugin which creates config files
+There is the [xxh-plugin-prerun-dotfiles](https://github.com/xxh/xxh-plugin-prerun-dotfiles) plugin which creates config files 
 when you go to the host using xxh. You can fork it and create your cozy settings once and forever.
 
 ### Seamless Oh My Zsh ([demo](https://asciinema.org/a/rCiT9hXQ5IdwqOwg6rifyFZzb))
@@ -216,7 +212,7 @@ osquery> SELECT * FROM users WHERE username='news';
 
 ### All in one portable home
 xxh is very agile. You can create your own `xxh-shell` (the shell part means it has an entrypoint) which can have any portable tools
-that could help you on the host. [Bash](https://github.com/xxh/xxh-shell-bash) xxh-shell is one of these
+that could help you on the host. [Bash](https://github.com/xxh/xxh-shell-bash) xxh-shell is one of these 
 platforms that could be forked and stuffed.
 
 ## [Questions and answers](https://github.com/xxh/xxh/wiki)
