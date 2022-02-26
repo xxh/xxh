@@ -24,6 +24,7 @@ If you like the idea of xxh click ⭐ on the repo and <a href="https://twitter.c
 </tbody>
 </table>
 
+
  
 ## Installation methods
 #### [PyPi 3](https://pypi.org/project/xxh-xxh/)
@@ -112,6 +113,7 @@ xxh local +s xonsh                                # Experimental: build xxh envi
 For reusing arguments and simplifying xxh usage (like shortening to `xxh anyhost`) there is a [config file](https://github.com/xxh/xxh/wiki#config-file).
 
 **Why the plus sign for the xxh arguments?** The xxh is using the plus sign for the xxh arguments to save the ability to use the minus sign for the original ssh arguments. This allows just replace the first two letters in the `ssh` command to convert it to the `xxh` command. Also see the [discussion](https://github.com/xxh/xxh/issues/129).
+
 
  
 ### Installing xxh packages
@@ -251,9 +253,11 @@ easy as possible.
 
 ### Vagrant based Plugin Development
 
-To develop plugins, [Vagrant](https://www.vagrantup.com) supports starting [many configurations](https://app.vagrantup.com/boxes/search) of 
+To develop plugins, [Vagrant](https://www.vagrantup.com) supports starting [many configurations](https://app.vagrantup.com/boxes/search) of virtual machines using Virtualbox.
 
-**We have teams.** If you're in a team it does not mean you have an obligation to do something. The main goal of teams is to create groups
+### We have teams
+
+If you're in a team it does not mean you have an obligation to do something. The main goal of teams is to create groups
 of passionate people who could help or support solving complex problems. Some people could be an expert in one shell and a
 newbie in another shell and mutual assistance is the key to xxh evolution. [Ask join.](https://github.com/xxh/xxh/issues/50)
 
