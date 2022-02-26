@@ -240,17 +240,28 @@ platforms that could be forked and stuffed.
 - [New questions](https://github.com/xxh/xxh/wiki#new-questions)
 
 ## Development
-In the [xxh development environment](https://github.com/xxh/xxh/tree/master/xde) there is full [dockerised](https://www.docker.com/) environment 
+
+### xxh Development Environment
+
+In the [xxh development environment](https://github.com/xxh/xxh/tree/master/xde) there is full [dockerised](https://www.docker.com/) environment
 for development, testing and contribution. The process of testing and development is orchestrated by `xde` tool and is as 
 easy as possible.
 
-**We have teams.** If you're in a team it does not mean you have an obligation to do something. The main goal of teams is to create groups 
+### Vagrant based Plugin Development
+
+To develop plugins, [Vagrant](https://www.vagrantup.com) supports starting [many configurations](https://app.vagrantup.com/boxes/search) of virtual machines using Virtualbox.
+
+See [the Plugin Development folder](./plugin-development) for more details
+
+### We have teams
+
+If you're in a team it does not mean you have an obligation to do something. The main goal of teams is to create groups
 of passionate people who could help or support solving complex problems. Some people could be an expert in one shell and a
 newbie in another shell and mutual assistance is the key to xxh evolution. [Ask join.](https://github.com/xxh/xxh/issues/50)
 
 ## Thanks
-* **niess** for great [python-appimage](https://github.com/niess/python-appimage) 
+* **niess** for great [python-appimage](https://github.com/niess/python-appimage)
 * **probonopd** and **TheAssassin** for hard-working [AppImage](https://github.com/AppImage)
 * **Anthony Scopatz**, **Gil Forsyth**, **Jamie Bliss**, **David Strobach**, **Morten Enemark Lund** and **@xore** for amazing [xonsh shell](https://github.com/xonsh/xonsh)
-* **Roman Perepelitsa** for incredible [statically-linked, hermetic, relocatable Zsh](https://github.com/romkatv/zsh-bin) 
+* **Roman Perepelitsa** for incredible [statically-linked, hermetic, relocatable Zsh](https://github.com/romkatv/zsh-bin)
 * **Johannes Altmanninger** and **Fabian Homborg** for extensive and portable [fish shell](https://github.com/fish-shell/fish-shell)
