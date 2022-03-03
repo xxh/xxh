@@ -100,6 +100,7 @@ Common examples (use `xxh --help` to get info about arguments):
 ```yaml
 xxh anyhost                                       # Connect to the host
 xxh -i id_rsa -p 2222 anyhost                     # Using ssh arguments: port and key
+xxh +c et user@host                               # Using EternalTerminal (https://github.com/MisterTea/EternalTerminal)
 xxh anyhost +s zsh +i                             # Set the shell and install it without yes/no question
 xxh anyhost +s xonsh +hhh "~"                     # Set /home/user as home directory (read Q&A)
 xxh anyhost +s bash +I xxh-plugin-bash-vim        # Preinstall a plugin
