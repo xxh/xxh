@@ -17,6 +17,7 @@ class xxh:
         self.url_xxh_github = 'https://github.com/xxh/xxh'
         self.url_xxh_plugins_search = 'https://github.com/search?q=xxh-plugin'
         self.ssh_command = 'ssh'
+        self.use_et = False
         self.scp_command = 'scp'
         self.local_xxh_home = p('~/.xxh')
         self.config_file = self.get_config_filepath()
@@ -27,7 +28,9 @@ class xxh:
         self.url = None
         self.hostname = None
         self.ssh_arguments = []
+        self.et_arguments = []
         self.ssh_arg_v = []
+        self.et_arg_v = []
         self.sshpass = []
         self.use_pexpect = True
         self.pexpect_timeout = 6
@@ -236,6 +239,8 @@ class xxh:
         if self._vverbose:
             self.verbose = True
             self.ssh_arg_v = ['-v']
+            if self.use_et:
+                self.et_arg_v = ['-v', '1']
             if self.sshpass and ['-v'] not in self.sshpass:
                 self.sshpass += ['-v']
         else:
@@ -264,6 +269,8 @@ class xxh:
             self.eeprint(f'Wrong host xxh home: {self.host_xxh_home}')
 
         host = self.hostname
+        host_info_s = ""
+        #if self.ssh_command == 'ssh':
         host_info_s = """
             xxh_home_realpath=$(dirname {host_xxh_home})/$(basename {host_xxh_home})
             xxh_version="dir_not_found"
@@ -562,7 +569,7 @@ class xxh:
         argp.add_argument('-l', dest='ssh_login', help="Specifies the user to log in as on the remote machine.")
         argp.add_argument('-i', dest='ssh_private_key', help="File from which the identity (private key) for public key authentication is read.")
         argp.add_argument('-o', dest='ssh_options', metavar='SSH_OPTION -o ...', action='append', help="SSH options are described in ssh man page. Example: -o Port=22 -o User=snail")
-        argp.add_argument('+c', dest='ssh_command', default=self.ssh_command, help="Command to execute instead of 'ssh'.")
+        argp.add_argument('+c', dest='ssh_command', default=self.ssh_command, help="Command to execute instead of 'ssh' i.e. 'et' to use EternalTerminal.")
         argp.add_argument('+P', '++password', help="Password for ssh auth.")
         argp.add_argument('+PP', '++password-prompt', default=False, action='store_true', help="Enter password manually using prompt.")
         argp.add_argument('destination', nargs='?', metavar='[user@]host[:port]', help="Destination may be specified as [ssh://][user@]host[:port] or host from ~/.ssh/config or 'local' to run xxh on current host.")
@@ -742,21 +749,41 @@ class xxh:
             username = opt.ssh_login
 
         self.ssh_command = opt.ssh_command
-        self.ssh_arguments = ['-o', 'StrictHostKeyChecking=accept-new']
+        if self.ssh_command == 'et':
+          self.use_et = True
+          self.ssh_command = 'ssh'
+        opt_flag = '-o'
+        self.ssh_arguments = [opt_flag, 'StrictHostKeyChecking=accept-new']
         if not self.verbose:
-           self.ssh_arguments += ['-o', 'LogLevel=QUIET']
+           self.ssh_arguments += [opt_flag, 'LogLevel=QUIET']
         if opt.ssh_port:
-            self.ssh_arguments += ['-o', f'Port={opt.ssh_port}']
+            self.ssh_arguments += [opt_flag, f'Port={opt.ssh_port}']
         if opt.ssh_private_key:
-            self.ssh_arguments += ['-o', f'IdentityFile={opt.ssh_private_key}']
+            self.ssh_arguments += [opt_flag, f'IdentityFile={opt.ssh_private_key}']
         if opt.ssh_login:
-            self.ssh_arguments += ['-o', f'User={opt.ssh_login}']
+            self.ssh_arguments += [opt_flag, f'User={opt.ssh_login}']
         if opt.ssh_options:
             for ssh_option in opt.ssh_options:
-                self.ssh_arguments += ['-o', ssh_option]
+                self.ssh_arguments += [opt_flag, ssh_option]
+        if self.use_et:
+            opt_flag = '--ssh-option'
+            self.et_arguments = [opt_flag, 'StrictHostKeyChecking=accept-new']
+            if not self.verbose:
+                self.et_arguments += [opt_flag, 'LogLevel=QUIET']
+            if opt.ssh_port:
+                self.et_arguments += [opt_flag, f'Port={opt.ssh_port}']
+            if opt.ssh_private_key:
+                self.et_arguments += [opt_flag, f'IdentityFile={opt.ssh_private_key}']
+            if opt.ssh_login:
+                self.et_arguments += [opt_flag, f'User={opt.ssh_login}']
+            if opt.ssh_options:
+                for ssh_option in opt.ssh_options:
+                    self.et_arguments += [opt_flag, ssh_option]
 
         if self.verbose:
             self.eprint(f'ssh arguments: {self.ssh_arguments}')
+            if self.use_et:
+                self.eprint(f'et arguments: {self.et_arguments}')
 
         if opt.scp_command:
             self.scp_command = opt.scp_command
@@ -1108,15 +1135,27 @@ class xxh:
             for lc in ['LC_TIME', 'LC_MONETARY', 'LC_ADDRESS', 'LC_IDENTIFICATION', 'LC_MEASUREMENT', 'LC_NAME', 'LC_NUMERIC', 'LC_PAPER','LC_TELEPHONE']:
                 lcs.append(f"{lc}=POSIX")
 
-            self.S("{lcs} {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -t '{entrypoint_command}'".format(
-                lcs=A(lcs),
-                sshpass=A(self.sshpass),
-                ssh=A(self.ssh_command),
-                ssh_arg_v=A(self.ssh_arg_v),
-                ssh_arguments=A(self.ssh_arguments, 0, 1),
-                host=A(host),
-                entrypoint_command=entrypoint_command
-            ))
+            if self.use_et:
+                if self.verbose:
+                    self.eprint('Connecting to host using et...')
+                self.S("{lcs} {sshpass} et {et_arg_v} {et_arguments} -c '{entrypoint_command}' {host}".format(
+                    lcs=A(lcs),
+                    sshpass=A(self.sshpass),
+                    et_arg_v=A(self.et_arg_v),
+                    et_arguments=A(self.et_arguments, 0, 0),
+                    host=A(host),
+                    entrypoint_command=entrypoint_command
+                ))                
+            else:
+                self.S("{lcs} {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -t '{entrypoint_command}'".format(
+                    lcs=A(lcs),
+                    sshpass=A(self.sshpass),
+                    ssh=A(self.ssh_command),
+                    ssh_arg_v=A(self.ssh_arg_v),
+                    ssh_arguments=A(self.ssh_arguments, 0, 1),
+                    host=A(host),
+                    entrypoint_command=entrypoint_command
+                ))
 
         if opt.host_xxh_home_remove:
             if self.verbose:
