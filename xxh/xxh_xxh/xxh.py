@@ -568,6 +568,7 @@ class xxh:
         argp.add_argument('-p', dest='ssh_port', help="Port to connect to on the remote host.")
         argp.add_argument('-l', dest='ssh_login', help="Specifies the user to log in as on the remote machine.")
         argp.add_argument('-i', dest='ssh_private_key', help="File from which the identity (private key) for public key authentication is read.")
+        argp.add_argument('-J', dest='ssh_jump_host', help='Intermediate jump host which can be used to connect to the destination host by establishing a TCP forwarding. Shortcut to the ProxyJump ssh option.')
         argp.add_argument('-o', dest='ssh_options', metavar='SSH_OPTION -o ...', action='append', help="SSH options are described in ssh man page. Example: -o Port=22 -o User=snail")
         argp.add_argument('+c', dest='ssh_command', default=self.ssh_command, help="Command to execute instead of 'ssh' i.e. 'et' to use EternalTerminal.")
         argp.add_argument('+P', '++password', help="Password for ssh auth.")
@@ -603,7 +604,7 @@ class xxh:
         argp.usage = "xxh <host from ~/.ssh/config>\n" \
             + "usage: xxh [ssh arguments] [user@]host[:port] [xxh arguments]\n" \
             + "usage: xxh local [xxh arguments]\n" \
-            + "usage: xxh [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY]\n" \
+            + "usage: xxh [-p SSH_PORT] [-l SSH_LOGIN] [-i SSH_PRIVATE_KEY] [-J SSH_JUMP_HOST]\n" \
             + "           [-o SSH_OPTION -o ...] [+c SSH_COMMAND] [+P PASSWORD] [+PP]\n" \
             + "           [user@]host[:port]\n" \
             + "           [+i] [+if] [+iff] [+hhr] [+s SHELL] [+e NAME=VAL +e ...] [+v] [+vv] [+q]\n" \
@@ -762,6 +763,8 @@ class xxh:
             self.ssh_arguments += [opt_flag, f'IdentityFile={opt.ssh_private_key}']
         if opt.ssh_login:
             self.ssh_arguments += [opt_flag, f'User={opt.ssh_login}']
+        if opt.ssh_jump_host:
+            self.ssh_arguments += [opt_flag, f'ProxyJump={opt.ssh_jump_host}']
         if opt.ssh_options:
             for ssh_option in opt.ssh_options:
                 self.ssh_arguments += [opt_flag, ssh_option]
