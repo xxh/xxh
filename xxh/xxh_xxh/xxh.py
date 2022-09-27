@@ -494,7 +494,7 @@ class xxh:
                 self.eprint(f"Package source path: {package_source}")
                 package_source = p(package_source)
                 if package_source.exists():
-                    self.S(f'mkdir -p {package_dir} && cp -r {package_source}/* {package_dir}')
+                    self.S(f'mkdir -p {package_dir} && cp -R {package_source}/* {package_dir}')
             else:
                 self.eeprint(f'Unknown source type: {package_source_type}')
 
@@ -1074,7 +1074,7 @@ class xxh:
             elif copy_method == 'cp':
                 self.eprint('First time copying using cp (this will be omitted on the next time)')
 
-                self.S('{bb}cp -r {shell_build_dir} {host_xxh_shell_dir}/ 1>&2{be}'.format(
+                self.S('{bb}cp -R {shell_build_dir} {host_xxh_shell_dir}/ 1>&2{be}'.format(
                     bb=bash_wrap_begin,
                     be=bash_wrap_end,
                     shell_build_dir=shell_build_dir,
@@ -1084,7 +1084,7 @@ class xxh:
                 for local_plugin_dir in list(local_plugins_dir.glob(f'xxh-plugin-prerun-*')) + list(local_plugins_dir.glob(f'xxh-plugin-{self.short_shell_name}-*')):
                     local_plugin_build_dir = local_plugin_dir/'build'
                     local_plugin_name = local_plugin_dir.name
-                    self.S('{bb}cp -r {local_plugin_build_dir}/* {host_xxh_plugins_dir}/{local_plugin_name}/build/ 1>&2{be}'.format(
+                    self.S('{bb}cp -R {local_plugin_build_dir}/* {host_xxh_plugins_dir}/{local_plugin_name}/build/ 1>&2{be}'.format(
                         bb=bash_wrap_begin,
                         be=bash_wrap_end,
                         local_plugin_build_dir=local_plugin_build_dir,
