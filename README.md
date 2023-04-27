@@ -261,8 +261,8 @@ of passionate people who could help or support solving complex problems. Some pe
 newbie in another shell and mutual assistance is the key to xxh evolution. [Ask to join.](https://github.com/xxh/xxh/issues/50)
 
 ## Thanks
-* **niess** for great [python-appimage](https://github.com/niess/python-appimage)
-* **probonopd** and **TheAssassin** for hard-working [AppImage](https://github.com/AppImage)
-* **Anthony Scopatz**, **Gil Forsyth**, **Jamie Bliss**, **David Strobach**, **Morten Enemark Lund** and **@xore** for amazing [xonsh shell](https://github.com/xonsh/xonsh)
-* **Roman Perepelitsa** for incredible [statically-linked, hermetic, relocatable Zsh](https://github.com/romkatv/zsh-bin)
-* **Johannes Altmanninger** and **Fabian Homborg** for extensive and portable [fish shell](https://github.com/fish-shell/fish-shell)
+* **niess** for great [python-appimage](https://github.com/niess/python-appimage).
+* **probonopd** and **TheAssassin** for hard-working [AppImage](https://github.com/AppImage).
+* **Anthony Scopatz**, **Gil Forsyth**, **Jamie Bliss**, **David Strobach**, **Morten Enemark Lund** and **@xore** for amazing [xonsh shell](https://github.com/xonsh/xonsh).
+* **Roman Perepelitsa** for incredible [statically-linked, hermetic, relocatable Zsh](https://github.com/romkatv/zsh-bin).
+* **Johannes Altmanninger** and **Fabian Homborg** for extensive and portable [fish shell](https://github.com/fish-shell/fish-shell).
