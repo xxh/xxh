@@ -940,10 +940,17 @@ class xxh:
             if opt.install_force_full:
                 self.eprint(f'Remove {host}:{host_xxh_home}')
                 if self.local:
+                    self.S('echo "chmod -R u+w {host_xxh_home}" | bash'.format(
+                        host_xxh_home=host_xxh_home
+                    ))
                     self.S('echo "rm -rf {host_xxh_home}" | bash'.format(
                         host_xxh_home=host_xxh_home
                     ))
                 else:
+                    self.S('echo "chmod -R u+w {host_xxh_home}" | {ssh_pipe_command}'.format(
+                        host_xxh_home=host_xxh_home,
+                        ssh_pipe_command=ssh_pipe_command
+                    ))
                     self.S('echo "rm -rf {host_xxh_home}" | {ssh_pipe_command}'.format(
                         host_xxh_home=host_xxh_home,
                         ssh_pipe_command=ssh_pipe_command
@@ -1148,7 +1155,7 @@ class xxh:
                     et_arguments=A(self.et_arguments, 0, 0),
                     host=A(host),
                     entrypoint_command=entrypoint_command
-                ))                
+                ))
             else:
                 self.S("{lcs} {sshpass} {ssh} {ssh_arg_v} {ssh_arguments} {host} -t '{entrypoint_command}'".format(
                     lcs=A(lcs),
@@ -1165,10 +1172,17 @@ class xxh:
                 self.eprint(f'Remove {host}:{host_xxh_home}')
 
             if self.local:
+                self.S('echo "chmod -R u+w {host_xxh_home}" | bash'.format(
+                    host_xxh_home=host_xxh_home
+                ))
                 self.S('echo "rm -rf {host_xxh_home}" | bash'.format(
                     host_xxh_home=host_xxh_home
                 ))
             else:
+                self.S('echo "chmod -R u+w {host_xxh_home}" | {ssh_pipe_command}'.format(
+                    host_xxh_home=host_xxh_home,
+                    ssh_pipe_command=ssh_pipe_command
+                ))
                 self.S('echo "rm -rf {host_xxh_home}" | {ssh_pipe_command}'.format(
                     host_xxh_home=host_xxh_home,
                     ssh_pipe_command=ssh_pipe_command
