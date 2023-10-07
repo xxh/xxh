@@ -695,6 +695,7 @@ class xxh:
 
         self.verbose = opt.verbose
         self.vverbose = opt.vverbose
+        self.pexpect_timeout = int(opt.pexpect_timeout)
         self.use_pexpect = not opt.pexpect_disable
 
         self.quiet = opt.quiet
