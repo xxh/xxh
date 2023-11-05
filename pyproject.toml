@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "xxh-xxh"
+authors = [
+    { name="xxh", email="author@example.com" },
+]
+description = "Bring your favorite shell wherever you go through the ssh"
+readme = "README.md"
+dynamic = ["version"]
+requires-python = ">=3.6"
+license = {text = "BSD"}
+dependencies = [
+    'pexpect >= 4.8.0',
+    'pyyaml',
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Unix Shell",
+    "Topic :: System :: Shells",
+    "Topic :: System :: System Shells",
+    "Topic :: Terminals",
+    "Topic :: System :: Networking",
+    "License :: OSI Approved :: BSD License",
+]
+
+[project.urls]
+"Documentation" = "https://github.com/xxh/xxh/blob/master/README.md"
+"Code" = "https://github.com/xxh/xxh"
+"Issue tracker" = "https://github.com/xxh/xxh/issues"
+
+[tool.setuptools]
+packages = ['xxh_xxh']
+package-dir = {'xxh_xxh' = 'xxh/xxh_xxh'}
+script-files = ["xxh/xxh", "xxh/xxh_xxh/xxh.zsh", "xxh/xxh_xxh/xxh.xsh", "xxh/xxh_xxh/xxh.bash"]
+
+[tool.setuptools.package-data]
+xxh_xxh = ["*.py", "*.xxhc", "xxh.*"]
+
+[tool.setuptools.dynamic]
+version = {attr = "xxh.xxh_xxh.__version__"}
