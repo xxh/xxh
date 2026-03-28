@@ -1018,9 +1018,9 @@ class xxh:
             if copy_method == 'rsync' or (copy_method is None and which('rsync') and host_info['rsync']):
                 self.eprint('First time upload using rsync (this will be omitted on the next connections)')
 
-                rsync = "rsync {ssh_arg_v} -e \"{sshpass} {ssh} {ssh_arg_v} {ssh_arguments}\" {arg_q} -az {progress} --cvs-exclude --include core ".format(
+                rsync = "rsync {ssh_arg_v} -e \"{sshpass}{ssh} {ssh_arg_v} {ssh_arguments}\" {arg_q} -az {progress} --cvs-exclude --include core ".format(
                     host_xxh_home=host_xxh_home,
-                    sshpass=A(self.sshpass),
+                    sshpass=A(self.sshpass) + ' ' if A(self.sshpass) else '',
                     ssh=A(self.ssh_command),
                     ssh_arg_v=('' if self.ssh_arg_v == [] else '-v'),
                     ssh_arguments=A(self.ssh_arguments, 0, 3),
