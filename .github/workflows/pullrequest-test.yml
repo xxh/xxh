@@ -6,11 +6,11 @@ jobs:
   test-full:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
-        python-version: '3.8'
+        python-version: '3.13'
     - name: Install xde
       run: cd xde && pip install -r requirements.txt
     - name: xde build
