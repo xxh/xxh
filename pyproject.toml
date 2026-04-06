@@ -11,7 +11,7 @@ description = "Bring your favorite shell wherever you go through the ssh"
 readme = "README.md"
 dynamic = ["version"]
 requires-python = ">=3.6"
-license = {text = "BSD"}
+license = "BSD-2-Clause"
 dependencies = [
     'pexpect >= 4.8.0',
     'pyyaml',
@@ -23,7 +23,6 @@ classifiers = [
     "Topic :: System :: System Shells",
     "Topic :: Terminals",
     "Topic :: System :: Networking",
-    "License :: OSI Approved :: BSD License",
 ]
 
 [project.urls]
