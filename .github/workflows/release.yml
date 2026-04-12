@@ -67,4 +67,4 @@ jobs:
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
         pipx run build
-        twine upload dist/*
+        twine upload dist/* --verbose
