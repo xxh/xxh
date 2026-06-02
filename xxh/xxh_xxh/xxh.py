@@ -119,7 +119,7 @@ class xxh:
         while True:
             try:
                 pattern = sess.expect(patterns, timeout=self.pexpect_timeout)
-            except:
+            except Exception:
                 if sess.after is pexpect.exceptions.TIMEOUT:
                     print('Probably the connection takes more time than expected.\n'
                           'Try to increase the timeout by adding "++pexpect-timeout 10" argument.')
@@ -416,7 +416,7 @@ class xxh:
         try:
             terminal = os.get_terminal_size()
             terminal_cols = terminal.columns
-        except:
+        except Exception:
             terminal_cols=70
         if terminal_cols < 70:
             return f"\n\nContribution: {self.url_xxh_github}\n\nPlugins: {self.url_xxh_plugins_search}"
